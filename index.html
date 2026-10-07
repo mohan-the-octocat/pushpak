@@ -1,0 +1,2440 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Antigravity in Gemini Enterprise — Usage Simulator</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Dark Mode is the unconditional default (:root / html:not(.sim-light)).
+       Light Mode activates only when the user explicitly toggles .sim-light. */
+    :root,
+    html:not(.sim-light) {
+      --sim-bg: #0b1120;
+      --sim-card: #131c31;
+      --sim-subcard: #1a2640;
+      --sim-input: #0f172a;
+      --sim-border: #2c3e60;
+      --sim-border-strong: #3b527e;
+      --sim-text: #f1f5f9;
+      --sim-muted: #94a3b8;
+      --sim-grid: rgba(148, 163, 184, 0.16);
+      color-scheme: dark;
+    }
+    html.sim-light {
+      --sim-bg: #f1f5f9;
+      --sim-card: #ffffff;
+      --sim-subcard: #f8fafc;
+      --sim-input: #ffffff;
+      --sim-border: #cbd5e1;
+      --sim-border-strong: #94a3b8;
+      --sim-text: #0f172a;
+      --sim-muted: #475569;
+      --sim-grid: rgba(71, 85, 105, 0.15);
+      color-scheme: light;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Google Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    body {
+      background-color: var(--sim-bg);
+      color: var(--sim-text);
+    }
+    .sim-card {
+      background-color: var(--sim-card);
+      border: 1.5px solid var(--sim-border);
+    }
+    .sim-subcard {
+      background-color: var(--sim-subcard);
+      border: 1.5px solid var(--sim-border);
+    }
+    .sim-input {
+      background-color: var(--sim-input);
+      border: 1.5px solid var(--sim-border-strong);
+      color: var(--sim-text);
+    }
+    .sim-muted {
+      color: var(--sim-muted);
+    }
+    .font-mono-num {
+      font-family: 'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Range Sliders */
+    input[type="range"].google-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 8px;
+      border-radius: 999px;
+      outline: none;
+      cursor: pointer;
+    }
+    input[type="range"].google-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #4285F4;
+      border: 3px solid #ffffff;
+      box-shadow: 0 1px 5px rgba(0, 0, 0, 0.45);
+      cursor: pointer;
+      transition: transform 0.12s ease, background-color 0.12s ease;
+    }
+    input[type="range"].google-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.12);
+      background: #60a5fa;
+    }
+    input[type="range"].google-slider::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #4285F4;
+      border: 3px solid #ffffff;
+      box-shadow: 0 1px 5px rgba(0, 0, 0, 0.45);
+      cursor: pointer;
+    }
+
+    /* Readonly display label explicitly 6px larger than normal (14px base -> 20px) */
+    .readonly-plus-6px-label {
+      font-size: calc(0.875rem + 6px); /* 20px */
+      line-height: 1.35;
+    }
+    .readonly-plus-6px-value {
+      font-size: calc(1.5rem + 6px); /* 30px */
+      line-height: 1.15;
+    }
+
+    /* Google 4-color top accent stripe */
+    .google-brand-stripe {
+      height: 4px;
+      background: linear-gradient(90deg,
+        #4285F4 0%, #4285F4 25%,
+        #EA4335 25%, #EA4335 50%,
+        #FBBC04 50%, #FBBC04 75%,
+        #34A853 75%, #34A853 100%
+      );
+    }
+
+    /* Colored, bordered Tab Buttons for high readability */
+    .sim-tab-btn {
+      border: 1.5px solid var(--sim-border);
+      background-color: var(--sim-subcard);
+      color: var(--sim-muted);
+      transition: all 0.15s ease;
+    }
+    .sim-tab-btn:hover {
+      border-color: var(--sim-border-strong);
+      color: var(--sim-text);
+    }
+    .sim-tab-active-blue {
+      border: 2px solid #4285F4 !important;
+      background: rgba(66, 133, 244, 0.16) !important;
+      color: #60a5fa !important;
+      box-shadow: 0 2px 10px rgba(66, 133, 244, 0.22);
+    }
+    html.sim-light .sim-tab-active-blue {
+      color: #1d4ed8 !important;
+      background: rgba(66, 133, 244, 0.12) !important;
+    }
+    .sim-tab-active-green {
+      border: 2px solid #34A853 !important;
+      background: rgba(52, 168, 83, 0.16) !important;
+      color: #4ade80 !important;
+      box-shadow: 0 2px 10px rgba(52, 168, 83, 0.22);
+    }
+    html.sim-light .sim-tab-active-green {
+      color: #15803d !important;
+      background: rgba(52, 168, 83, 0.12) !important;
+    }
+    .sim-tab-active-yellow {
+      border: 2px solid #FBBC04 !important;
+      background: rgba(251, 188, 4, 0.16) !important;
+      color: #facc15 !important;
+      box-shadow: 0 2px 10px rgba(251, 188, 4, 0.20);
+    }
+    html.sim-light .sim-tab-active-yellow {
+      color: #b45309 !important;
+      background: rgba(251, 188, 4, 0.14) !important;
+    }
+    .sim-tab-active-red {
+      border: 2px solid #EA4335 !important;
+      background: rgba(234, 67, 53, 0.16) !important;
+      color: #f87171 !important;
+      box-shadow: 0 2px 10px rgba(234, 67, 53, 0.22);
+    }
+    html.sim-light .sim-tab-active-red {
+      color: #b91c1c !important;
+      background: rgba(234, 67, 53, 0.12) !important;
+    }
+
+    /* Floating Wizard & UI Nudge Animations */
+    @keyframes wizardPulse {
+      0%, 100% {
+        box-shadow: 0 0 0 0 rgba(52, 168, 83, 0.65), 0 8px 24px rgba(66, 133, 244, 0.45);
+        transform: translateY(0);
+      }
+      50% {
+        box-shadow: 0 0 0 8px rgba(52, 168, 83, 0), 0 10px 28px rgba(66, 133, 244, 0.65);
+        transform: translateY(-2px);
+      }
+    }
+    @keyframes nudgeSlideUp {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .wizard-next-nudge {
+      background: linear-gradient(135deg, #34A853 0%, #4285F4 100%) !important;
+      border-color: #4ade80 !important;
+      color: #ffffff !important;
+      animation: wizardPulse 1.8s infinite ease-in-out;
+    }
+    .wizard-nudge-banner {
+      animation: nudgeSlideUp 0.22s ease-out forwards;
+    }
+  </style>
+</head>
+<body class="h-screen overflow-hidden flex flex-col antialiased selection:bg-[#4285F4]/30">
+  <!-- Google 4-color top accent stripe -->
+  <div class="google-brand-stripe w-full shrink-0"></div>
+
+  <!-- Fixed Top Header Ribbon + Navigation Tabs -->
+  <header class="shrink-0 w-full sim-card border-t-0 border-x-0 rounded-none shadow-md z-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3">
+      <div class="flex items-center justify-between gap-4">
+        <div class="flex items-center gap-3.5">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 bg-[#4285F4]/15 border border-[#4285F4]/40">
+            <svg class="w-5 h-5 text-[#4285F4]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          </div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">
+            Antigravity in Gemini Enterprise — Usage Simulator
+          </h1>
+        </div>
+      </div>
+
+      <!-- 4-Tab Navigation Bar: Licensing -> User Distribution -> Models Usage -> Consumption Projection -->
+      <nav class="mt-3 pt-2.5 border-t border-[var(--sim-border)] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5" role="tablist" aria-label="Simulator Navigation">
+        <button
+          id="tabBtn-2"
+          type="button"
+          role="tab"
+          aria-selected="true"
+          onclick="switchTab(2)"
+          class="sim-tab-btn sim-tab-active-green flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-sm font-bold cursor-pointer"
+        >
+          <span class="w-2.5 h-2.5 rounded-full bg-[#34A853] shrink-0"></span>
+          <svg class="w-4 h-4 text-[#34A853] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+          </svg>
+          <span>Licensing</span>
+        </button>
+
+        <button
+          id="tabBtn-3"
+          type="button"
+          role="tab"
+          aria-selected="false"
+          onclick="switchTab(3)"
+          class="sim-tab-btn flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-sm font-bold cursor-pointer"
+        >
+          <span class="w-2.5 h-2.5 rounded-full bg-[#FBBC04] shrink-0"></span>
+          <svg class="w-4 h-4 text-[#FBBC04] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.283m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+          <span>User Distribution</span>
+        </button>
+
+        <button
+          id="tabBtn-4"
+          type="button"
+          role="tab"
+          aria-selected="false"
+          onclick="switchTab(4)"
+          class="sim-tab-btn flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-sm font-bold cursor-pointer"
+        >
+          <span class="w-2.5 h-2.5 rounded-full bg-[#EA4335] shrink-0"></span>
+          <svg class="w-4 h-4 text-[#EA4335] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+          </svg>
+          <span>Models Usage</span>
+        </button>
+
+        <button
+          id="tabBtn-1"
+          type="button"
+          role="tab"
+          aria-selected="false"
+          onclick="switchTab(1)"
+          class="sim-tab-btn flex items-center justify-between gap-2.5 px-4 py-2.5 rounded-xl text-sm sm:text-base font-extrabold cursor-pointer ring-1 ring-[#4285F4]/40"
+        >
+          <span class="flex items-center gap-2.5">
+            <span class="w-3 h-3 rounded-full bg-[#4285F4] shrink-0 shadow-[0_0_8px_#4285F4]"></span>
+            <svg class="w-4 h-4 text-[#4285F4] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18M7 14l4-4 4 4 5-6" />
+            </svg>
+            <span class="tracking-tight">Consumption Projection</span>
+          </span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Scrollable Tab Content Area -->
+  <main id="simMainScroll" class="flex-1 overflow-y-auto">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 pt-4 pb-24 space-y-4">
+
+      <!-- ===================================================================== -->
+      <!-- PANEL 1: CONSUMPTION PROJECTION (75:25 Vertical Split)                -->
+      <!-- ===================================================================== -->
+      <section id="tabPanel-1" class="hidden">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-4 items-stretch">
+
+          <!-- Left 75% Pane (3 of 4 cols): Prominent Chart First, Merged Header/Legend Box Below -->
+          <div class="lg:col-span-3 sim-card rounded-2xl p-4 sm:p-5 shadow-md space-y-3.5 flex flex-col justify-between">
+            <div class="space-y-3.5">
+              <!-- Interactive SVG Stacked Line Chart (Placed at Top for Immediate Visibility Without Scrolling) -->
+              <div class="relative w-full overflow-x-auto rounded-xl sim-subcard p-2.5">
+                <svg
+                  id="stackedLineSvg"
+                  viewBox="0 0 920 350"
+                  class="w-full h-auto max-h-[45vh] min-w-[600px] select-none"
+                  aria-label="Stacked Line Chart of Cumulative Token Usage across Monday to Friday"
+                ></svg>
+              </div>
+
+              <!-- Merged Header + Legend Box Placed Directly Below the Chart -->
+              <div class="p-3.5 sm:p-4 rounded-xl bg-gradient-to-r from-[#4285F4]/20 via-[#4285F4]/10 to-transparent border border-[#4285F4]/40 border-l-4 border-l-[#4285F4] space-y-2.5">
+                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-2.5">
+                  <div class="flex flex-wrap items-center gap-2.5">
+                    <h2 class="text-lg sm:text-xl font-extrabold tracking-tight">
+                      Workweek Token Consumption Projection
+                    </h2>
+                    <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#4285F4]/25 text-[#60a5fa] border border-[#4285F4]/45">
+                      Cumulative usage
+                    </span>
+                    <span id="chartStatusBadge" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#34A853]/20 text-[#4ade80] border border-[#34A853]/40">
+                      Within Weekly Quota
+                    </span>
+                  </div>
+
+                  <!-- Legend Items -->
+                  <div class="flex flex-wrap items-center gap-4 text-xs">
+                    <div class="flex items-center gap-1.5">
+                      <span class="w-5 h-0.5 border-t-2 border-dashed border-[#34A853] inline-block"></span>
+                      <span class="font-semibold text-[#4ade80]">Weekly Token Quota (Static Line)</span>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                      <span class="w-2.5 h-2.5 rounded-sm bg-[#EA4335] inline-block"></span>
+                      <span><strong>Heavy Users</strong></span>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                      <span class="w-2.5 h-2.5 rounded-sm bg-[#FBBC04] inline-block"></span>
+                      <span><strong>Moderate Users</strong></span>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                      <span class="w-2.5 h-2.5 rounded-sm bg-[#4285F4] inline-block"></span>
+                      <span><strong>Light Users</strong></span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 pt-2 border-t border-[var(--sim-border)] text-xs">
+                  <p class="sim-muted">
+                    Stacked cumulative usage across <strong class="text-[var(--sim-text)]">Light</strong>, <strong class="text-[var(--sim-text)]">Moderate</strong>, and <strong class="text-[var(--sim-text)]">Heavy</strong> user categories vs. the static <strong class="text-[#4ade80]">Weekly Token Quota</strong> line.
+                  </p>
+                  <span class="sim-muted font-mono-num shrink-0">
+                    Hover any weekday point to inspect stacked values
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Day-by-Day Breakdown Table -->
+            <div class="overflow-x-auto rounded-xl border border-[var(--sim-border)]">
+              <table class="w-full text-left border-collapse text-xs sm:text-sm">
+                <thead>
+                  <tr class="sim-subcard border-b border-[var(--sim-border)] sim-muted">
+                    <th class="py-2 px-3 font-semibold">Working Day</th>
+                    <th class="py-2 px-3 font-semibold text-right">Light (<span id="tblLightShare">30%</span>)</th>
+                    <th class="py-2 px-3 font-semibold text-right">Moderate (<span id="tblModShare">40%</span>)</th>
+                    <th class="py-2 px-3 font-semibold text-right">Heavy (<span id="tblHeavyShare">30%</span>)</th>
+                    <th class="py-2 px-3 font-semibold text-right">Cumulative Usage</th>
+                    <th class="py-2 px-3 font-semibold text-right">Weekly Token Quota</th>
+                    <th class="py-2 px-3 font-semibold text-right">Quota Utilization</th>
+                  </tr>
+                </thead>
+                <tbody id="dayBreakdownBody" class="divide-y divide-[var(--sim-border)] font-mono-num"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Right 25% Pane (1 of 4 cols): 4 Infographics (Call to Action & Token Pool Utilization at Top) -->
+          <div class="lg:col-span-1 flex flex-col gap-3 justify-between">
+
+            <!-- Infographic 1 (Top): Call to Action Infographic -->
+            <div id="t1CtaCard" class="sim-card rounded-2xl p-3.5 shadow-md border-t-4 border-t-[#EA4335] flex flex-col justify-between space-y-2.5">
+              <div class="space-y-1">
+                <div class="flex items-center justify-between gap-2">
+                  <span class="text-xs font-bold uppercase tracking-wider sim-muted">
+                    Call to Action
+                  </span>
+                  <span id="t1CtaStatusPill" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#EA4335]/20 text-[#f87171] border border-[#EA4335]/40">
+                    Action Needed
+                  </span>
+                </div>
+                <div id="t1CtaHeadline" class="text-lg font-extrabold tracking-tight text-[#f87171]">
+                  Additional Spend Required
+                </div>
+                <p id="t1CtaDesc" class="text-[11px] sim-muted leading-snug">
+                  Weekly usage exceeds available token capacity.
+                </p>
+              </div>
+
+              <!-- Indicative Monthly Budget Box (Visible when Availability < Usage) -->
+              <div id="t1CtaBudgetBox" class="p-2.5 rounded-xl sim-subcard border border-[#EA4335]/40 space-y-1">
+                <div class="text-[11px] font-semibold sim-muted">
+                  Indicative Budget Required / Month
+                </div>
+                <div id="t1CtaMonthlyBudget" class="text-xl font-extrabold font-mono-num text-[#f87171]">
+                  $2,052.00 / mo
+                </div>
+                <div id="t1CtaBudgetSub" class="text-[11px] sim-muted font-mono-num">
+                  Covers 173.31M/wk shortfall ($513.00/wk)
+                </div>
+              </div>
+            </div>
+
+            <!-- Infographic 2 (Top): Token Pool Utilization -->
+            <div class="sim-card rounded-2xl p-3.5 shadow-md border-t-4 border-t-[#FBBC04] flex flex-col justify-between space-y-2">
+              <div class="flex items-start justify-between gap-2">
+                <div>
+                  <span class="text-xs font-bold uppercase tracking-wider text-[#facc15]">
+                    Token Pool Utilization
+                  </span>
+                  <div class="text-[11px] sim-muted">
+                    Usage vs. available pool
+                  </div>
+                </div>
+                <span id="t1UtilStatusDot" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#34A853]/20 text-[#4ade80] border border-[#34A853]/40">
+                  Healthy
+                </span>
+              </div>
+
+              <!-- Radial Gauge + Variance Row -->
+              <div class="flex items-center gap-3 pt-1">
+                <svg viewBox="0 0 120 120" class="w-20 h-20 shrink-0">
+                  <circle
+                    cx="60"
+                    cy="60"
+                    r="46"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-opacity="0.12"
+                    stroke-width="10"
+                  />
+                  <circle
+                    id="t1UtilGaugeArc"
+                    cx="60"
+                    cy="60"
+                    r="46"
+                    fill="none"
+                    stroke="#34A853"
+                    stroke-width="10"
+                    stroke-linecap="round"
+                    stroke-dasharray="289.03"
+                    stroke-dashoffset="62.14"
+                    transform="rotate(-90 60 60)"
+                  />
+                  <text
+                    id="t1UtilPctText"
+                    x="60"
+                    y="64"
+                    text-anchor="middle"
+                    fill="currentColor"
+                    font-size="19"
+                    font-weight="800"
+                    class="font-mono-num"
+                  >236.8%</text>
+                </svg>
+
+                <div class="flex-1 space-y-1 text-xs">
+                  <div class="text-[11px] sim-muted">Pool Variance</div>
+                  <div id="t1VarianceValue" class="text-base font-bold font-mono-num text-[#f87171]">-173.31M</div>
+                  <div id="t1VarianceSub" class="text-[11px] sim-muted">
+                    Exceeds pool by 136.8%
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Infographic 3: Weekly Token Availability (GE licenses + Additional Monthly Spend) -->
+            <div class="sim-card rounded-2xl p-3.5 shadow-md border-t-4 border-t-[#34A853] flex flex-col justify-between space-y-2">
+              <div class="space-y-1">
+                <div class="flex items-start justify-between gap-2">
+                  <span class="text-xs font-bold uppercase tracking-wider text-[#4ade80]">
+                    Weekly Token Availability
+                  </span>
+                  <span class="w-7 h-7 rounded-xl bg-[#34A853]/15 border border-[#34A853]/40 text-[#4ade80] flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                    </svg>
+                  </span>
+                </div>
+                <div id="t1QuotaBasisLabel" class="text-[11px] sim-muted">
+                  Based on total GE licenses &amp; additional spend
+                </div>
+                <div id="t1QuotaTotal" class="text-2xl font-extrabold font-mono-num text-[#4ade80]">
+                  126.69M
+                </div>
+              </div>
+
+              <div class="space-y-1.5 pt-2 border-t border-[var(--sim-border)]">
+                <div class="w-full h-2 rounded-full bg-[#34A853]/20 overflow-hidden">
+                  <div class="h-full w-full bg-[#34A853] rounded-full"></div>
+                </div>
+                <div id="t1QuotaSub" class="text-xs sim-muted font-mono-num">
+                  100 GE Plus licenses · 1.27M/user
+                </div>
+              </div>
+            </div>
+
+            <!-- Infographic 4: Weekly Token Usage (based on total AGY users) -->
+            <div class="sim-card rounded-2xl p-3.5 shadow-md border-t-4 border-t-[#4285F4] flex flex-col justify-between space-y-2">
+              <div class="space-y-1">
+                <div class="flex items-start justify-between gap-2">
+                  <span class="text-xs font-bold uppercase tracking-wider text-[#60a5fa]">
+                    Weekly Token Usage
+                  </span>
+                  <span class="w-7 h-7 rounded-xl bg-[#4285F4]/15 border border-[#4285F4]/40 text-[#60a5fa] flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                    </svg>
+                  </span>
+                </div>
+                <div class="text-[11px] sim-muted">
+                  Based on total AGY users
+                </div>
+                <div id="t1BurnTotal" class="text-2xl font-extrabold font-mono-num text-[#60a5fa]">
+                  300.00M
+                </div>
+              </div>
+
+              <!-- Stacked Cohort Share Mini-Infographic -->
+              <div class="space-y-1.5 pt-2 border-t border-[var(--sim-border)]">
+                <div class="w-full h-2 rounded-full overflow-hidden flex sim-subcard">
+                  <div id="t1UsageBarHeavy" class="bg-[#EA4335] h-full transition-all" style="width: 50%"></div>
+                  <div id="t1UsageBarMod" class="bg-[#FBBC04] h-full transition-all" style="width: 40%"></div>
+                  <div id="t1UsageBarLight" class="bg-[#4285F4] h-full transition-all" style="width: 10%"></div>
+                </div>
+                <div id="t1BurnSub" class="text-xs sim-muted font-mono-num">
+                  100 AGY users · 60.00M/day
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================================== -->
+      <!-- PANEL 2: LICENSING (67:33 Split)                                      -->
+      <!-- ===================================================================== -->
+      <section id="tabPanel-2">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 items-stretch">
+
+          <!-- Licensing Configuration -->
+          <div class="lg:col-span-2 sim-card rounded-2xl p-5 sm:p-6 shadow-md space-y-6">
+            <div class="flex items-center gap-3 border-b border-[var(--sim-border)] pb-4">
+              <div class="w-9 h-9 rounded-xl bg-[#34A853]/15 border border-[#34A853]/40 text-[#4ade80] flex items-center justify-center">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                </svg>
+              </div>
+              <div>
+                <h2 class="text-base sm:text-lg font-bold">Gemini Enterprise Licensing</h2>
+                <p class="text-xs sim-muted">Configure subscription tier, procured Gemini Enterprise seats, and active Antigravity users</p>
+              </div>
+            </div>
+
+            <!-- GE Subscription Tier Radio Buttons (Moved to Top) -->
+            <div class="p-5 rounded-xl sim-subcard space-y-3.5">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h3 class="text-sm font-bold">GE Subscription Tier</h3>
+                  <p class="text-xs sim-muted">Select Standard or Plus to set the weekly pooled AI token entitlement per procured license</p>
+                </div>
+                <span id="weeklyCreditPerSeatLabel" class="text-xs font-mono-num font-bold px-2.5 py-1 rounded-lg bg-[#34A853]/15 text-[#4ade80] border border-[#34A853]/30">
+                  $3.75 / license / week
+                </span>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <label
+                  id="tierStandardCard"
+                  class="flex items-start gap-3 p-4 rounded-xl sim-card cursor-pointer transition-all"
+                >
+                  <input
+                    type="radio"
+                    name="geTierRadio"
+                    value="standard"
+                    onchange="handleTierChange('standard')"
+                    class="mt-1 accent-[#4285F4] cursor-pointer"
+                  />
+                  <div>
+                    <div class="text-sm font-bold">Standard</div>
+                    <div class="text-xs sim-muted font-mono-num mt-0.5">$10 / month · $2.50 / week per license</div>
+                  </div>
+                </label>
+
+                <label
+                  id="tierPlusCard"
+                  class="flex items-start gap-3 p-4 rounded-xl bg-[#4285F4]/15 border-2 border-[#4285F4] cursor-pointer transition-all"
+                >
+                  <input
+                    type="radio"
+                    name="geTierRadio"
+                    value="plus"
+                    checked
+                    onchange="handleTierChange('plus')"
+                    class="mt-1 accent-[#4285F4] cursor-pointer"
+                  />
+                  <div>
+                    <div class="text-sm font-bold text-[#60a5fa]">Plus</div>
+                    <div class="text-xs sim-muted font-mono-num mt-0.5">$15 / month · $3.75 / week per license</div>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <!-- License Count & Active AGY Users Grid (Placed Below Subscription Tier) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <!-- Total # of GE Licenses -->
+              <div class="p-4 rounded-xl sim-subcard space-y-2">
+                <label for="geLicensesInput" class="block text-xs font-bold">
+                  Total # of GE Licenses
+                </label>
+                <p class="text-xs sim-muted">
+                  No. of seats procured by the customer (determines total pooled quota)
+                </p>
+                <div class="relative pt-1">
+                  <input
+                    id="geLicensesInput"
+                    type="number"
+                    min="1"
+                    max="1000000"
+                    step="1"
+                    value="100"
+                    oninput="handleLicenseChange(this.value)"
+                    class="w-full px-3.5 py-2.5 rounded-xl sim-input text-base font-bold font-mono-num focus:outline-none focus:ring-2 focus:ring-[#4285F4]"
+                    placeholder="Enter total GE licenses"
+                  />
+                  <span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs sim-muted">licenses</span>
+                </div>
+              </div>
+
+              <!-- No. of AGY users -->
+              <div class="p-4 rounded-xl sim-subcard space-y-2">
+                <div class="flex items-center justify-between">
+                  <label for="agyUsersInput" class="block text-xs font-bold">
+                    No. of AGY users
+                  </label>
+                  <span id="agyUsersCapBadge" class="text-xs font-mono-num px-2 py-0.5 rounded bg-[#4285F4]/15 text-[#60a5fa] border border-[#4285F4]/30">
+                    Max: 100
+                  </span>
+                </div>
+                <p class="text-xs sim-muted">
+                  Effective number of users consuming AGY Quota (cannot exceed GE licenses)
+                </p>
+                <div class="relative pt-1">
+                  <input
+                    id="agyUsersInput"
+                    type="number"
+                    min="1"
+                    max="100"
+                    step="1"
+                    value="100"
+                    oninput="handleAgyUsersChange(this.value)"
+                    class="w-full px-3.5 py-2.5 rounded-xl sim-input text-base font-bold font-mono-num focus:outline-none focus:ring-2 focus:ring-[#34A853]"
+                    placeholder="Enter active AGY users"
+                  />
+                  <span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs sim-muted">users</span>
+                </div>
+                <p id="agyUsersWarning" class="text-xs text-[#f87171] font-semibold hidden">
+                  Capped at Total # of GE Licenses.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Weekly Token Entitlement -->
+          <div class="lg:col-span-1 sim-card rounded-2xl p-5 sm:p-6 shadow-md flex flex-col justify-between space-y-5">
+            <div class="space-y-5">
+              <div class="flex items-center gap-3 border-b border-[var(--sim-border)] pb-4">
+                <div class="w-9 h-9 rounded-xl bg-[#4285F4]/15 border border-[#4285F4]/40 text-[#60a5fa] flex items-center justify-center">
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                </div>
+                <div>
+                  <h2 class="text-base sm:text-lg font-bold">Weekly Token Capacity</h2>
+                  <p class="text-xs sim-muted">Available token quota based on licenses &amp; model mix</p>
+                </div>
+              </div>
+
+              <!-- Weekly Total Metric (+6px larger font size) -->
+              <div class="p-5 rounded-2xl bg-gradient-to-br from-[#4285F4]/15 via-[#4285F4]/5 to-transparent border-2 border-[#4285F4]/45 space-y-2">
+                <label class="block font-semibold readonly-plus-6px-label">
+                  Total Tokens available per week for consumption
+                </label>
+                <div
+                  id="readonlyWeeklyTotalTokens"
+                  aria-readonly="true"
+                  class="font-bold font-mono-num text-[#60a5fa] readonly-plus-6px-value pt-1"
+                >
+                  126.69M tokens
+                </div>
+                <div id="readonlyWeeklyTotalExact" class="text-xs font-mono-num sim-muted">
+                  126,689,189 tokens / week
+                </div>
+              </div>
+
+              <!-- Per-User Weekly Metric (+6px larger font size) -->
+              <div class="p-5 rounded-2xl bg-gradient-to-br from-[#34A853]/15 via-[#34A853]/5 to-transparent border-2 border-[#34A853]/45 space-y-2">
+                <label class="block font-semibold readonly-plus-6px-label">
+                  Total Tokens available per user per week for consumption
+                </label>
+                <div
+                  id="readonlyPerUserWeeklyTokens"
+                  aria-readonly="true"
+                  class="font-bold font-mono-num text-[#4ade80] readonly-plus-6px-value pt-1"
+                >
+                  1.27M tokens
+                </div>
+                <div id="readonlyPerUserWeeklyExact" class="text-xs font-mono-num sim-muted">
+                  1,266,892 tokens / AGY user / week (~253.4K / workday)
+                </div>
+              </div>
+            </div>
+
+          <!-- Supporting Summary Footer -->
+          <div class="p-4 rounded-xl sim-subcard space-y-2 text-xs">
+            <div class="flex justify-between">
+              <span class="sim-muted">Active AGY Users / GE Licenses:</span>
+              <span id="mathActiveRatio" class="font-mono-num font-semibold">100 / 100</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="sim-muted">Weekly Pool Credit:</span>
+              <span id="mathWeeklyPoolCredit" class="font-mono-num font-semibold">$375.00 / wk</span>
+            </div>
+            <div class="flex justify-between pt-1.5 border-t border-[var(--sim-border)]">
+              <span class="font-semibold">Effective Blended Token Rate:</span>
+              <span id="mathEffectiveFleetRate" class="font-mono-num font-bold text-[#60a5fa]">$2.96 / 1M</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- PANEL 3: USER DISTRIBUTION                                            -->
+    <!-- ===================================================================== -->
+    <section id="tabPanel-3" class="hidden space-y-5">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+
+        <!-- Left Card: User Category Distribution (%) -->
+        <div class="sim-card rounded-2xl p-5 sm:p-6 shadow-md space-y-5">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--sim-border)] pb-4">
+            <div>
+              <h2 class="text-base sm:text-lg font-bold">User Category Distribution (%)</h2>
+              <p class="text-xs sim-muted mt-0.5">
+                Percentage split of active AGY users across Heavy, Moderate, and Light categories
+              </p>
+            </div>
+            <div class="flex items-center gap-2">
+              <span id="distSumBadge" class="px-2.5 py-1 rounded-full text-xs font-bold bg-[#34A853]/15 text-[#4ade80] border border-[#34A853]/30 font-mono-num">
+                Total: 100%
+              </span>
+              <button
+                type="button"
+                onclick="resetUserDistribution()"
+                class="px-3 py-1 rounded-lg text-xs font-semibold sim-subcard hover:border-[#4285F4] cursor-pointer"
+              >
+                Reset 30-40-30
+              </button>
+            </div>
+          </div>
+
+          <!-- Stacked Distribution Bar Preview -->
+          <div class="space-y-2">
+            <div class="flex justify-between text-xs font-bold">
+              <span class="text-[#f87171]">Heavy: <span id="barLabelHeavy">30%</span></span>
+              <span class="text-[#facc15]">Moderate: <span id="barLabelMod">40%</span></span>
+              <span class="text-[#60a5fa]">Light: <span id="barLabelLight">30%</span></span>
+            </div>
+            <div class="w-full h-4 rounded-full overflow-hidden flex sim-subcard">
+              <div id="distBarHeavy" class="bg-[#EA4335] h-full transition-all duration-150" style="width: 30%;"></div>
+              <div id="distBarMod" class="bg-[#FBBC04] h-full transition-all duration-150" style="width: 40%;"></div>
+              <div id="distBarLight" class="bg-[#4285F4] h-full transition-all duration-150" style="width: 30%;"></div>
+            </div>
+          </div>
+
+          <!-- Heavy Category % Input -->
+          <div class="p-4 rounded-xl sim-subcard space-y-2">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-[#EA4335]"></span>
+                <span class="text-sm font-bold">Heavy Users</span>
+              </div>
+              <div class="flex items-center">
+                <input
+                  id="heavyPctInput"
+                  type="number"
+                  min="0"
+                  max="100"
+                  step="1"
+                  value="30"
+                  oninput="handleCohortPctChange('heavy', this.value)"
+                  class="w-16 px-2 py-1 rounded-lg sim-input text-right text-sm font-bold font-mono-num"
+                />
+                <span class="ml-1.5 text-xs font-bold">%</span>
+              </div>
+            </div>
+            <input
+              id="heavyPctSlider"
+              type="range"
+              min="0"
+              max="100"
+              step="1"
+              value="30"
+              oninput="handleCohortPctChange('heavy', this.value)"
+              class="google-slider"
+            />
+          </div>
+
+          <!-- Moderate Category % Input -->
+          <div class="p-4 rounded-xl sim-subcard space-y-2">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-[#FBBC04]"></span>
+                <span class="text-sm font-bold">Moderate Users</span>
+              </div>
+              <div class="flex items-center">
+                <input
+                  id="modPctInput"
+                  type="number"
+                  min="0"
+                  max="100"
+                  step="1"
+                  value="40"
+                  oninput="handleCohortPctChange('moderate', this.value)"
+                  class="w-16 px-2 py-1 rounded-lg sim-input text-right text-sm font-bold font-mono-num"
+                />
+                <span class="ml-1.5 text-xs font-bold">%</span>
+              </div>
+            </div>
+            <input
+              id="modPctSlider"
+              type="range"
+              min="0"
+              max="100"
+              step="1"
+              value="40"
+              oninput="handleCohortPctChange('moderate', this.value)"
+              class="google-slider"
+            />
+          </div>
+
+          <!-- Light Category % Input -->
+          <div class="p-4 rounded-xl sim-subcard space-y-2">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-[#4285F4]"></span>
+                <span class="text-sm font-bold">Light Users</span>
+              </div>
+              <div class="flex items-center">
+                <input
+                  id="lightPctInput"
+                  type="number"
+                  min="0"
+                  max="100"
+                  step="1"
+                  value="30"
+                  oninput="handleCohortPctChange('light', this.value)"
+                  class="w-16 px-2 py-1 rounded-lg sim-input text-right text-sm font-bold font-mono-num"
+                />
+                <span class="ml-1.5 text-xs font-bold">%</span>
+              </div>
+            </div>
+            <input
+              id="lightPctSlider"
+              type="range"
+              min="0"
+              max="100"
+              step="1"
+              value="30"
+              oninput="handleCohortPctChange('light', this.value)"
+              class="google-slider"
+            />
+          </div>
+        </div>
+
+        <!-- Right Card: Estimated Weekly Token Burn per User Category -->
+        <div class="sim-card rounded-2xl p-5 sm:p-6 shadow-md space-y-5">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--sim-border)] pb-4">
+            <div>
+              <h2 class="text-base sm:text-lg font-bold">Estimated Weekly Token Burn per Category</h2>
+              <p class="text-xs sim-muted mt-0.5">
+                Estimated weekly token burn (in Millions of tokens/user/week) across each user category
+              </p>
+            </div>
+            <button
+              type="button"
+              onclick="resetCohortBurnDefaults()"
+              class="px-3 py-1 rounded-lg text-xs font-semibold sim-subcard hover:border-[#4285F4] cursor-pointer"
+            >
+              Reset Default Burn
+            </button>
+          </div>
+
+          <!-- Heavy User Weekly Token Burn -->
+          <div class="p-4 rounded-xl sim-subcard space-y-2.5">
+            <div class="flex items-center justify-between">
+              <div>
+                <div class="text-sm font-bold text-[#f87171]">Heavy User — Weekly Token Burn</div>
+                <div id="heavyDailyEquiv" class="text-xs sim-muted font-mono-num">
+                  ~1.00M tokens/workday · Category total: 150.0M / wk
+                </div>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <input
+                  id="heavyBurnInput"
+                  type="number"
+                  min="0"
+                  max="50"
+                  step="0.25"
+                  value="5.00"
+                  oninput="handleCohortBurnChange('heavy', this.value)"
+                  class="w-24 px-2.5 py-1.5 rounded-lg sim-input text-right text-sm font-bold font-mono-num"
+                />
+                <span class="text-xs font-semibold sim-muted">M / wk</span>
+              </div>
+            </div>
+            <input
+              id="heavyBurnSlider"
+              type="range"
+              min="0.5"
+              max="15"
+              step="0.25"
+              value="5.00"
+              oninput="handleCohortBurnChange('heavy', this.value)"
+              class="google-slider"
+            />
+          </div>
+
+          <!-- Moderate User Weekly Token Burn -->
+          <div class="p-4 rounded-xl sim-subcard space-y-2.5">
+            <div class="flex items-center justify-between">
+              <div>
+                <div class="text-sm font-bold text-[#facc15]">Moderate User — Weekly Token Burn</div>
+                <div id="modDailyEquiv" class="text-xs sim-muted font-mono-num">
+                  ~0.60M tokens/workday · Category total: 120.0M / wk
+                </div>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <input
+                  id="modBurnInput"
+                  type="number"
+                  min="0"
+                  max="50"
+                  step="0.25"
+                  value="3.00"
+                  oninput="handleCohortBurnChange('moderate', this.value)"
+                  class="w-24 px-2.5 py-1.5 rounded-lg sim-input text-right text-sm font-bold font-mono-num"
+                />
+                <span class="text-xs font-semibold sim-muted">M / wk</span>
+              </div>
+            </div>
+            <input
+              id="modBurnSlider"
+              type="range"
+              min="0.25"
+              max="10"
+              step="0.25"
+              value="3.00"
+              oninput="handleCohortBurnChange('moderate', this.value)"
+              class="google-slider"
+            />
+          </div>
+
+          <!-- Light User Weekly Token Burn -->
+          <div class="p-4 rounded-xl sim-subcard space-y-2.5">
+            <div class="flex items-center justify-between">
+              <div>
+                <div class="text-sm font-bold text-[#60a5fa]">Light User — Weekly Token Burn</div>
+                <div id="lightDailyEquiv" class="text-xs sim-muted font-mono-num">
+                  ~0.20M tokens/workday · Category total: 30.0M / wk
+                </div>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <input
+                  id="lightBurnInput"
+                  type="number"
+                  min="0"
+                  max="50"
+                  step="0.10"
+                  value="1.00"
+                  oninput="handleCohortBurnChange('light', this.value)"
+                  class="w-24 px-2.5 py-1.5 rounded-lg sim-input text-right text-sm font-bold font-mono-num"
+                />
+                <span class="text-xs font-semibold sim-muted">M / wk</span>
+              </div>
+            </div>
+            <input
+              id="lightBurnSlider"
+              type="range"
+              min="0.10"
+              max="5"
+              step="0.10"
+              value="1.00"
+              oninput="handleCohortBurnChange('light', this.value)"
+              class="google-slider"
+            />
+          </div>
+
+          <!-- Weekly Burn Rollup Box -->
+          <div class="p-4 rounded-xl sim-subcard flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <div class="text-xs sim-muted">Weighted Average Burn / AGY User / Week</div>
+              <div id="weightedUserBurnLabel" class="text-base font-bold font-mono-num">3.000M tokens / user / wk</div>
+            </div>
+            <div class="text-right">
+              <div class="text-xs sim-muted">Total Weekly Token Demand</div>
+              <div id="totalFleetWeeklyDemandLabel" class="text-base font-bold font-mono-num text-[#60a5fa]">300.00M tokens / wk</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- PANEL 4: MODELS USAGE (Model Mix + I/O Split + Model Pricing)         -->
+    <!-- ===================================================================== -->
+    <section id="tabPanel-4" class="hidden space-y-5">
+
+      <!-- Top Row: Model Usage Mix, Input:Output Tokens Mix & Additional Spend available per month -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+
+        <!-- Model Usage Mix (Thinking vs Workhorse models) -->
+        <div class="sim-card rounded-2xl p-5 sm:p-6 shadow-md space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--sim-border)] pb-3.5">
+            <div>
+              <h2 class="text-base font-bold flex items-center gap-2">
+                <svg class="w-4 h-4 text-[#34A853]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+                </svg>
+                Model Usage Mix (Thinking vs. Workhorse)
+              </h2>
+              <p class="text-xs sim-muted mt-0.5">
+                Split of <strong>Gemini Pro</strong> (Thinking) vs. <strong>Gemini Flash</strong> (Workhorse). Default: 80% Flash &amp; 20% Pro.
+              </p>
+            </div>
+            <button
+              type="button"
+              onclick="handleModelMixSlider(80)"
+              class="px-2.5 py-1 rounded-lg text-xs font-semibold sim-subcard hover:border-[#4285F4] cursor-pointer"
+            >
+              Reset 80/20
+            </button>
+          </div>
+
+          <div class="flex items-center justify-between text-xs font-bold">
+            <span class="px-3 py-1 rounded-lg bg-[#a855f7]/15 text-[#c084fc] border border-[#a855f7]/30 font-mono-num">
+              Gemini Pro: <span id="proMixPctLabel">20%</span>
+            </span>
+            <span class="px-3 py-1 rounded-lg bg-[#4285F4]/15 text-[#60a5fa] border border-[#4285F4]/30 font-mono-num">
+              Gemini Flash: <span id="flashMixPctLabel">80%</span>
+            </span>
+          </div>
+
+          <div class="space-y-2 pt-1">
+            <input
+              id="modelMixSlider"
+              type="range"
+              min="0"
+              max="100"
+              step="1"
+              value="80"
+              oninput="handleModelMixSlider(this.value)"
+              class="google-slider"
+              style="background: linear-gradient(90deg, #9334E6 0%, #9334E6 20%, #4285F4 20%, #4285F4 100%);"
+            />
+            <div class="flex justify-between text-xs sim-muted">
+              <span>◀ Pro (Thinking)</span>
+              <span>50% / 50%</span>
+              <span>Flash (Workhorse) ▶</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Input : Output Tokens Mix -->
+        <div class="sim-card rounded-2xl p-5 sm:p-6 shadow-md space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--sim-border)] pb-3.5">
+            <div>
+              <h2 class="text-base font-bold flex items-center gap-2">
+                <svg class="w-4 h-4 text-[#FBBC04]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                </svg>
+                Input : Output Tokens Mix
+              </h2>
+              <p class="text-xs sim-muted mt-0.5">
+                Proportion of <strong>Input Tokens</strong> vs. <strong>Output Tokens</strong>. Default: 80% Input &amp; 20% Output.
+              </p>
+            </div>
+            <button
+              type="button"
+              onclick="handleIoMixSlider(80)"
+              class="px-2.5 py-1 rounded-lg text-xs font-semibold sim-subcard hover:border-[#4285F4] cursor-pointer"
+            >
+              Reset 80/20
+            </button>
+          </div>
+
+          <div class="flex items-center justify-between text-xs font-bold">
+            <span class="px-3 py-1 rounded-lg bg-[#34A853]/15 text-[#4ade80] border border-[#34A853]/30 font-mono-num">
+              Input Tokens: <span id="inputMixPctLabel">80%</span>
+            </span>
+            <span class="px-3 py-1 rounded-lg bg-[#EA4335]/15 text-[#f87171] border border-[#EA4335]/30 font-mono-num">
+              Output Tokens: <span id="outputMixPctLabel">20%</span>
+            </span>
+          </div>
+
+          <div class="space-y-2 pt-1">
+            <input
+              id="ioMixSlider"
+              type="range"
+              min="0"
+              max="100"
+              step="1"
+              value="80"
+              oninput="handleIoMixSlider(this.value)"
+              class="google-slider"
+              style="background: linear-gradient(90deg, #34A853 0%, #34A853 80%, #EA4335 80%, #EA4335 100%);"
+            />
+            <div class="flex justify-between text-xs sim-muted">
+              <span>◀ Input Tokens</span>
+              <span>50% / 50%</span>
+              <span>Output Tokens ▶</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Additional Spend available per month -->
+        <div class="sim-card rounded-2xl p-5 sm:p-6 shadow-md space-y-4 flex flex-col justify-between">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--sim-border)] pb-3.5">
+            <div>
+              <h2 class="text-base font-bold flex items-center gap-2">
+                <svg class="w-4 h-4 text-[#4285F4]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Additional Spend available per month
+              </h2>
+              <p class="text-xs sim-muted mt-0.5">
+                Monthly dollar budget added to compute Total Availability in Consumption Projection. Default: $0.
+              </p>
+            </div>
+            <button
+              type="button"
+              onclick="handleAdditionalSpendChange(0)"
+              class="px-2.5 py-1 rounded-lg text-xs font-semibold sim-subcard hover:border-[#4285F4] cursor-pointer"
+            >
+              Reset $0
+            </button>
+          </div>
+
+          <div class="space-y-2.5">
+            <div class="relative">
+              <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-base font-bold sim-muted">$</span>
+              <input
+                id="additionalSpendInput"
+                type="number"
+                min="0"
+                max="10000000"
+                step="50"
+                value="0"
+                oninput="handleAdditionalSpendChange(this.value)"
+                class="w-full pl-8 pr-20 py-2.5 rounded-xl sim-input text-base font-bold font-mono-num focus:outline-none focus:ring-2 focus:ring-[#4285F4]"
+              />
+              <span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs font-semibold sim-muted">USD / mo</span>
+            </div>
+
+            <div class="p-3 rounded-xl sim-subcard flex items-center justify-between text-xs">
+              <div>
+                <div class="sim-muted">Weekly Budget Added</div>
+                <div id="t4AddWeeklySpendLabel" class="font-bold font-mono-num text-[#60a5fa]">$0.00 / wk</div>
+              </div>
+              <div class="text-right">
+                <div class="sim-muted">Additional Tokens / Wk</div>
+                <div id="t4AddWeeklyTokensLabel" class="font-bold font-mono-num text-[#4ade80]">+0.00M / wk</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Bottom Row: Model Family Pricing ($ per 1M Tokens — Input & Output) + Separate Pro & Flash Discount Widgets -->
+      <div class="sim-card rounded-2xl p-5 sm:p-6 shadow-md space-y-5">
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 border-b border-[var(--sim-border)] pb-4">
+          <div>
+            <h2 class="text-base sm:text-lg font-bold">
+              Model Family Pricing ($ per 1M Tokens — Input &amp; Output) &amp; Discount Pricing
+            </h2>
+            <p class="text-xs sim-muted mt-0.5">
+              Prepopulated with publicly available Google Cloud / Vertex AI pricing for the latest Gemini Pro &amp; Gemini Flash models, with dedicated Discount Pricing (%) widgets for each model family.
+            </p>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onclick="applyPricingPreset('latest_public')"
+              class="px-3 py-1.5 rounded-xl text-xs font-semibold sim-subcard hover:border-[#4285F4] cursor-pointer transition-all"
+            >
+              Reset Default Pricing &amp; 0% Discounts (Pro $2.00/$12.00 · Flash $1.50/$7.50)
+            </button>
+          </div>
+        </div>
+
+        <!-- Two Model Family Pricing Cards (Each with its own Discount Pricing Widget) -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+
+          <!-- Gemini Pro Pricing Card -->
+          <div class="p-5 rounded-2xl sim-subcard space-y-4">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <span class="w-9 h-9 rounded-xl bg-[#a855f7]/15 border border-[#a855f7]/40 text-[#c084fc] flex items-center justify-center font-bold text-sm">Pro</span>
+                <div>
+                  <h3 class="text-sm sm:text-base font-bold">Gemini Pro (Thinking Model Family)</h3>
+                  <p id="t4ProNetPricesLabel" class="text-xs sim-muted font-mono-num">Effective Rate: $2.00 In / $12.00 Out per 1M</p>
+                </div>
+              </div>
+              <span id="proShareBadgeTab4" class="px-2.5 py-1 rounded-full text-xs font-semibold bg-[#a855f7]/15 text-[#c084fc] border border-[#a855f7]/30 font-mono-num">
+                Mix Weight: 20%
+              </span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label for="proInputPrice" class="block text-xs font-semibold mb-1.5">
+                  Input Token Price ($ / 1M tokens)
+                </label>
+                <div class="relative">
+                  <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-bold sim-muted">$</span>
+                  <input
+                    id="proInputPrice"
+                    type="number"
+                    min="0.01"
+                    max="100"
+                    step="0.05"
+                    value="2.00"
+                    oninput="handlePricingChange()"
+                    class="w-full pl-7 pr-12 py-2.5 rounded-xl sim-input text-sm font-bold font-mono-num focus:outline-none focus:ring-2 focus:ring-[#a855f7]"
+                  />
+                  <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs sim-muted">/ 1M</span>
+                </div>
+              </div>
+
+              <div>
+                <label for="proOutputPrice" class="block text-xs font-semibold mb-1.5">
+                  Output Token Price ($ / 1M tokens)
+                </label>
+                <div class="relative">
+                  <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-bold sim-muted">$</span>
+                  <input
+                    id="proOutputPrice"
+                    type="number"
+                    min="0.01"
+                    max="200"
+                    step="0.10"
+                    value="12.00"
+                    oninput="handlePricingChange()"
+                    class="w-full pl-7 pr-12 py-2.5 rounded-xl sim-input text-sm font-bold font-mono-num focus:outline-none focus:ring-2 focus:ring-[#a855f7]"
+                  />
+                  <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs sim-muted">/ 1M</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Gemini Pro Discount Pricing Widget -->
+            <div class="p-3.5 rounded-xl sim-card space-y-2.5 border border-[#a855f7]/30">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <div class="text-xs font-bold flex items-center gap-1.5 text-[#c084fc]">
+                  <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M17 17h.01M7 17L17 7M9.5 7a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0zm10 10a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+                  </svg>
+                  Gemini Pro Discount Pricing (%)
+                </div>
+                <div class="flex items-center gap-1.5">
+                  <input
+                    id="proDiscountInput"
+                    type="number"
+                    min="0"
+                    max="90"
+                    step="1"
+                    value="0"
+                    oninput="handleModelDiscountChange('pro', this.value)"
+                    class="w-16 px-2 py-1 rounded-lg sim-input text-right text-xs font-bold font-mono-num focus:outline-none focus:ring-2 focus:ring-[#a855f7]"
+                  />
+                  <span class="text-xs font-bold">% off</span>
+                  <button
+                    type="button"
+                    onclick="handleModelDiscountChange('pro', 0)"
+                    class="px-2 py-1 rounded-lg text-[11px] font-semibold sim-subcard hover:border-[#a855f7] cursor-pointer"
+                  >
+                    0%
+                  </button>
+                </div>
+              </div>
+              <input
+                id="proDiscountSlider"
+                type="range"
+                min="0"
+                max="90"
+                step="1"
+                value="0"
+                oninput="handleModelDiscountChange('pro', this.value)"
+                class="google-slider"
+              />
+              <div class="flex justify-between text-[11px] sim-muted font-mono-num">
+                <span>0% List</span>
+                <span>25%</span>
+                <span>50%</span>
+                <span>75%</span>
+                <span>90% Max</span>
+              </div>
+            </div>
+
+            <div class="p-3.5 rounded-xl sim-card flex items-center justify-between text-xs">
+              <span class="sim-muted">
+                Blended Gemini Pro Rate (<strong id="t4ProIoSplitLabel" class="text-[var(--sim-text)]">80% Input : 20% Output</strong>):
+              </span>
+              <span id="t4ProBlendedValue" class="text-sm font-bold font-mono-num text-[#c084fc]">$4.00 / 1M tokens</span>
+            </div>
+          </div>
+
+          <!-- Gemini Flash Pricing Card -->
+          <div class="p-5 rounded-2xl sim-subcard space-y-4">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <span class="w-9 h-9 rounded-xl bg-[#4285F4]/15 border border-[#4285F4]/40 text-[#60a5fa] flex items-center justify-center font-bold text-sm">Flash</span>
+                <div>
+                  <h3 class="text-sm sm:text-base font-bold">Gemini Flash (Workhorse Model Family)</h3>
+                  <p id="t4FlashNetPricesLabel" class="text-xs sim-muted font-mono-num">Effective Rate: $1.50 In / $7.50 Out per 1M</p>
+                </div>
+              </div>
+              <span id="flashShareBadgeTab4" class="px-2.5 py-1 rounded-full text-xs font-semibold bg-[#4285F4]/15 text-[#60a5fa] border border-[#4285F4]/30 font-mono-num">
+                Mix Weight: 80%
+              </span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label for="flashInputPrice" class="block text-xs font-semibold mb-1.5">
+                  Input Token Price ($ / 1M tokens)
+                </label>
+                <div class="relative">
+                  <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-bold sim-muted">$</span>
+                  <input
+                    id="flashInputPrice"
+                    type="number"
+                    min="0.01"
+                    max="100"
+                    step="0.05"
+                    value="1.50"
+                    oninput="handlePricingChange()"
+                    class="w-full pl-7 pr-12 py-2.5 rounded-xl sim-input text-sm font-bold font-mono-num focus:outline-none focus:ring-2 focus:ring-[#4285F4]"
+                  />
+                  <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs sim-muted">/ 1M</span>
+                </div>
+              </div>
+
+              <div>
+                <label for="flashOutputPrice" class="block text-xs font-semibold mb-1.5">
+                  Output Token Price ($ / 1M tokens)
+                </label>
+                <div class="relative">
+                  <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-bold sim-muted">$</span>
+                  <input
+                    id="flashOutputPrice"
+                    type="number"
+                    min="0.01"
+                    max="200"
+                    step="0.05"
+                    value="7.50"
+                    oninput="handlePricingChange()"
+                    class="w-full pl-7 pr-12 py-2.5 rounded-xl sim-input text-sm font-bold font-mono-num focus:outline-none focus:ring-2 focus:ring-[#4285F4]"
+                  />
+                  <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs sim-muted">/ 1M</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Gemini Flash Discount Pricing Widget -->
+            <div class="p-3.5 rounded-xl sim-card space-y-2.5 border border-[#4285F4]/30">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <div class="text-xs font-bold flex items-center gap-1.5 text-[#60a5fa]">
+                  <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M17 17h.01M7 17L17 7M9.5 7a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0zm10 10a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+                  </svg>
+                  Gemini Flash Discount Pricing (%)
+                </div>
+                <div class="flex items-center gap-1.5">
+                  <input
+                    id="flashDiscountInput"
+                    type="number"
+                    min="0"
+                    max="90"
+                    step="1"
+                    value="0"
+                    oninput="handleModelDiscountChange('flash', this.value)"
+                    class="w-16 px-2 py-1 rounded-lg sim-input text-right text-xs font-bold font-mono-num focus:outline-none focus:ring-2 focus:ring-[#4285F4]"
+                  />
+                  <span class="text-xs font-bold">% off</span>
+                  <button
+                    type="button"
+                    onclick="handleModelDiscountChange('flash', 0)"
+                    class="px-2 py-1 rounded-lg text-[11px] font-semibold sim-subcard hover:border-[#4285F4] cursor-pointer"
+                  >
+                    0%
+                  </button>
+                </div>
+              </div>
+              <input
+                id="flashDiscountSlider"
+                type="range"
+                min="0"
+                max="90"
+                step="1"
+                value="0"
+                oninput="handleModelDiscountChange('flash', this.value)"
+                class="google-slider"
+              />
+              <div class="flex justify-between text-[11px] sim-muted font-mono-num">
+                <span>0% List</span>
+                <span>25%</span>
+                <span>50%</span>
+                <span>75%</span>
+                <span>90% Max</span>
+              </div>
+            </div>
+
+            <div class="p-3.5 rounded-xl sim-card flex items-center justify-between text-xs">
+              <span class="sim-muted">
+                Blended Gemini Flash Rate (<strong id="t4FlashIoSplitLabel" class="text-[var(--sim-text)]">80% Input : 20% Output</strong>):
+              </span>
+              <span id="t4FlashBlendedValue" class="text-sm font-bold font-mono-num text-[#60a5fa]">$2.70 / 1M tokens</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Effective Cost Summary -->
+        <div class="p-4 rounded-xl sim-subcard flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div class="space-y-1">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="text-xs font-bold uppercase tracking-wider sim-muted">
+                Combined Effective Token Rate (Model Mix + I/O + Model Discounts)
+              </span>
+              <span id="t4DiscountActiveBadge" class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-[#34A853]/15 text-[#4ade80] border border-[#34A853]/30 font-mono-num">
+                Pro 0% off · Flash 0% off
+              </span>
+            </div>
+            <div class="text-xs sim-muted">
+              Formula: <code class="font-mono-num">Effective Rate = (Pro% × (1 − ProDiscount%) × Pro_Blended) + (Flash% × (1 − FlashDiscount%) × Flash_Blended)</code>
+            </div>
+          </div>
+          <div class="flex items-center gap-4">
+            <div class="text-right">
+              <div class="text-xs sim-muted">Effective Cost / 1M Tokens</div>
+              <div id="t4CombinedRate" class="text-xl font-bold font-mono-num text-[#4ade80]">$2.96 / 1M</div>
+            </div>
+            <div class="text-right pl-4 border-l border-[var(--sim-border)]">
+              <div class="text-xs sim-muted">Tokens per $1.00 Spend</div>
+              <div id="t4TokensPerDollar" class="text-xl font-bold font-mono-num text-[#60a5fa]">0.34M</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    </div>
+  </main>
+
+  <!-- Floating Wizard Controls (Back & Next Buttons + Field-Update UI Nudge) -->
+  <div id="wizardFloatingDock" class="fixed bottom-5 right-6 z-40 flex flex-col items-end gap-2.5">
+    <!-- UI Nudge Banner (Appears when user updates fields in the active tab) -->
+    <button
+      id="wizardNudgeBanner"
+      type="button"
+      onclick="wizardStep(1)"
+      class="hidden wizard-nudge-banner px-4 py-2 rounded-xl bg-[#0f172a]/95 border-2 border-[#34A853] shadow-xl flex items-center gap-2.5 text-xs sm:text-sm font-bold text-[#4ade80] hover:bg-[#1e293b] cursor-pointer transition-all"
+    >
+      <span class="relative flex h-2.5 w-2.5 shrink-0">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#4ade80] opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#34A853]"></span>
+      </span>
+      <span id="wizardNudgeText">Fields updated — Click Next to continue to User Distribution</span>
+      <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+      </svg>
+    </button>
+
+    <!-- Two Floating Wizard Buttons: Back & Next -->
+    <div class="sim-card rounded-2xl p-1.5 shadow-2xl border-2 border-[var(--sim-border-strong)] flex items-center gap-2 backdrop-blur-md">
+      <button
+        id="wizardBackBtn"
+        type="button"
+        onclick="wizardStep(-1)"
+        class="px-4 py-2.5 rounded-xl sim-subcard hover:border-[#4285F4] flex items-center gap-2 text-xs sm:text-sm font-bold cursor-pointer transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+      >
+        <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M11 17l-5-5m0 0l5-5m-5 5h12" />
+        </svg>
+        <span>Back</span>
+      </button>
+
+      <span
+        id="wizardStepCounter"
+        class="px-2.5 py-1 text-xs font-bold font-mono-num sim-muted select-none"
+      >
+        1 / 4
+      </span>
+
+      <button
+        id="wizardNextBtn"
+        type="button"
+        onclick="wizardStep(1)"
+        class="px-4 py-2.5 rounded-xl bg-[#4285F4] hover:bg-[#3b78e7] text-white border border-[#60a5fa]/40 flex items-center gap-2 text-xs sm:text-sm font-bold cursor-pointer transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+      >
+        <span id="wizardNextLabel">Next</span>
+        <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // =========================================================================
+    // SIMULATOR STATE
+    // =========================================================================
+    const state = {
+      activeTab: 2,
+      darkMode: true,
+      hoveredDayIndex: null,
+      nudgeActive: false,
+
+      // Licensing
+      licenses: 100,
+      agyUsers: 100, // Effective number of users consuming AGY Quota (<= licenses)
+      tier: 'plus',  // 'standard' ($2.50/wk) | 'plus' ($3.75/wk)
+
+      // Models Usage (Model Mix & I/O Split + Pricing + Separate Model Discounts + Additional Monthly Spend)
+      flashPct: 80, // Default 80% Flash & 20% Pro
+      proPct: 20,
+      inputPct: 80, // Default 80% Input & 20% Output
+      outputPct: 20,
+      proDiscountPct: 0,   // Discount (%) for Gemini Pro (0% - 90%)
+      flashDiscountPct: 0, // Discount (%) for Gemini Flash (0% - 90%)
+      additionalMonthlySpend: 0, // Additional Spend available per month ($ USD, default 0)
+
+      // User Distribution (Default 30-40-30) & Weekly Burn (Heavy 5M, Moderate 3M, Light 1M)
+      cohorts: {
+        heavy: { pct: 30, weeklyBurnM: 5.00 },
+        moderate: { pct: 40, weeklyBurnM: 3.00 },
+        light: { pct: 30, weeklyBurnM: 1.00 }
+      },
+
+      // Publicly available pricing for latest Gemini Pro & Flash ($/1M tokens)
+      pricing: {
+        proInput: 2.00,
+        proOutput: 12.00,
+        flashInput: 1.50,
+        flashOutput: 7.50
+      }
+    };
+
+    const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+    const UNIFORM_WEIGHTS = [0.20, 0.20, 0.20, 0.20, 0.20];
+    const TAB_ACTIVE_CLASSES = {
+      1: 'sim-tab-active-blue',
+      2: 'sim-tab-active-green',
+      3: 'sim-tab-active-yellow',
+      4: 'sim-tab-active-red'
+    };
+
+    // Wizard Tab Order: 1. Licensing (2) -> 2. User Distribution (3) -> 3. Models Usage (4) -> 4. Consumption Projection (1)
+    const WIZARD_ORDER = [2, 3, 4, 1];
+    const TAB_TITLES = {
+      2: 'Licensing',
+      3: 'User Distribution',
+      4: 'Models Usage',
+      1: 'Consumption Projection'
+    };
+
+    function triggerWizardNudge() {
+      const idx = WIZARD_ORDER.indexOf(state.activeTab);
+      if (idx >= 0 && idx < WIZARD_ORDER.length - 1) {
+        state.nudgeActive = true;
+      }
+      updateWizardUI();
+    }
+
+    function wizardStep(delta) {
+      const idx = WIZARD_ORDER.indexOf(state.activeTab);
+      const nextIdx = idx + delta;
+      if (nextIdx >= 0 && nextIdx < WIZARD_ORDER.length) {
+        switchTab(WIZARD_ORDER[nextIdx]);
+      }
+    }
+
+    function updateWizardUI() {
+      const idx = WIZARD_ORDER.indexOf(state.activeTab);
+      const backBtn = document.getElementById('wizardBackBtn');
+      const nextBtn = document.getElementById('wizardNextBtn');
+      const stepCounter = document.getElementById('wizardStepCounter');
+      const nudgeBanner = document.getElementById('wizardNudgeBanner');
+      const nudgeText = document.getElementById('wizardNudgeText');
+
+      if (!backBtn || !nextBtn) return;
+
+      const isFirst = idx <= 0;
+      const isLast = idx >= WIZARD_ORDER.length - 1;
+
+      backBtn.disabled = isFirst;
+      nextBtn.disabled = isLast;
+      stepCounter.textContent = `${idx + 1} / ${WIZARD_ORDER.length}`;
+
+      if (!isLast && state.nudgeActive) {
+        const nextTabId = WIZARD_ORDER[idx + 1];
+        const nextTitle = TAB_TITLES[nextTabId];
+        nudgeText.textContent = `Updated — Click Next to go to ${nextTitle}`;
+        nudgeBanner.classList.remove('hidden');
+        nextBtn.classList.add('wizard-next-nudge');
+      } else {
+        nudgeBanner.classList.add('hidden');
+        nextBtn.classList.remove('wizard-next-nudge');
+      }
+    }
+
+    function getWeeklyCreditPerLicense() {
+      return state.tier === 'plus' ? 3.75 : 2.50;
+    }
+
+    function computeMetrics() {
+      const inWeight = state.inputPct / 100;
+      const outWeight = state.outputPct / 100;
+      const proDiscountFactor = Math.max(0.01, 1 - (state.proDiscountPct / 100));
+      const flashDiscountFactor = Math.max(0.01, 1 - (state.flashDiscountPct / 100));
+
+      const proInputNet = state.pricing.proInput * proDiscountFactor;
+      const proOutputNet = state.pricing.proOutput * proDiscountFactor;
+      const flashInputNet = state.pricing.flashInput * flashDiscountFactor;
+      const flashOutputNet = state.pricing.flashOutput * flashDiscountFactor;
+
+      const proBlended = (inWeight * proInputNet) + (outWeight * proOutputNet);
+      const flashBlended = (inWeight * flashInputNet) + (outWeight * flashOutputNet);
+
+      const proShare = state.proPct / 100;
+      const flashShare = state.flashPct / 100;
+
+      const effectiveRatePerM = Math.max(0.0001, (proShare * proBlended) + (flashShare * flashBlended));
+      const weeklyCreditPerLicense = getWeeklyCreditPerLicense();
+      const weeklyPoolDollars = state.licenses * weeklyCreditPerLicense;
+
+      // Base Weekly Token Quota from procured GE licenses (in Millions)
+      const baseWeeklyQuotaM = weeklyPoolDollars / effectiveRatePerM;
+      const basePerUserWeeklyQuotaM = state.agyUsers > 0 ? (baseWeeklyQuotaM / state.agyUsers) : 0;
+
+      // Additional Spend available per month converted to weekly budget (4 weeks / month)
+      const additionalWeeklyPoolDollars = state.additionalMonthlySpend / 4;
+      const additionalWeeklyQuotaM = additionalWeeklyPoolDollars / effectiveRatePerM;
+
+      // Total Weekly Token Availability (GE licenses + Additional Spend available per month)
+      const totalWeeklyPoolDollars = weeklyPoolDollars + additionalWeeklyPoolDollars;
+      const weeklyQuotaM = baseWeeklyQuotaM + additionalWeeklyQuotaM;
+
+      // Effective tokens available per active AGY user per week
+      const perUserWeeklyQuotaM = state.agyUsers > 0 ? (weeklyQuotaM / state.agyUsers) : 0;
+
+      // Category weekly token burn across active AGY users (in Millions)
+      const heavyUsers = state.agyUsers * (state.cohorts.heavy.pct / 100);
+      const modUsers = state.agyUsers * (state.cohorts.moderate.pct / 100);
+      const lightUsers = state.agyUsers * (state.cohorts.light.pct / 100);
+
+      const heavyWeeklyM = heavyUsers * state.cohorts.heavy.weeklyBurnM;
+      const modWeeklyM = modUsers * state.cohorts.moderate.weeklyBurnM;
+      const lightWeeklyM = lightUsers * state.cohorts.light.weeklyBurnM;
+      const totalWeeklyBurnM = heavyWeeklyM + modWeeklyM + lightWeeklyM;
+
+      // Shortfall & indicative monthly budget required when Availability < Usage
+      const shortfallWeeklyM = Math.max(0, totalWeeklyBurnM - weeklyQuotaM);
+      const shortfallWeeklyDollars = shortfallWeeklyM * effectiveRatePerM;
+      const indicativeMonthlyBudgetRequired = shortfallWeeklyDollars * 4;
+
+      let cumLight = 0;
+      let cumMod = 0;
+      let cumHeavy = 0;
+
+      // Cumulative usage (Monday -> Friday)
+      const dailySeries = DAYS.map((day, idx) => {
+        const w = UNIFORM_WEIGHTS[idx];
+        cumLight += lightWeeklyM * w;
+        cumMod += modWeeklyM * w;
+        cumHeavy += heavyWeeklyM * w;
+
+        const stack1 = cumLight;
+        const stack2 = cumLight + cumMod;
+        const stack3 = cumLight + cumMod + cumHeavy;
+
+        return {
+          day,
+          shortDay: day.slice(0, 3),
+          light: cumLight,
+          moderate: cumMod,
+          heavy: cumHeavy,
+          stack1,
+          stack2,
+          stack3,
+          cumTotal: stack3
+        };
+      });
+
+      return {
+        proInputNet,
+        proOutputNet,
+        flashInputNet,
+        flashOutputNet,
+        proBlended,
+        flashBlended,
+        effectiveRatePerM,
+        weeklyCreditPerLicense,
+        weeklyPoolDollars,
+        baseWeeklyQuotaM,
+        basePerUserWeeklyQuotaM,
+        additionalWeeklyPoolDollars,
+        additionalWeeklyQuotaM,
+        totalWeeklyPoolDollars,
+        weeklyQuotaM,
+        perUserWeeklyQuotaM,
+        heavyWeeklyM,
+        modWeeklyM,
+        lightWeeklyM,
+        totalWeeklyBurnM,
+        shortfallWeeklyM,
+        shortfallWeeklyDollars,
+        indicativeMonthlyBudgetRequired,
+        dailySeries
+      };
+    }
+
+    function fmtM(val, decimals = 2) {
+      return Number(val).toLocaleString('en-US', {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals
+      }) + 'M';
+    }
+
+    function fmtInt(val) {
+      return Math.round(val).toLocaleString('en-US');
+    }
+
+    function switchTab(tabNum) {
+      state.activeTab = tabNum;
+      state.nudgeActive = false;
+      for (let i = 1; i <= 4; i++) {
+        const panel = document.getElementById(`tabPanel-${i}`);
+        const btn = document.getElementById(`tabBtn-${i}`);
+        btn.classList.remove(
+          'sim-tab-active-blue',
+          'sim-tab-active-green',
+          'sim-tab-active-yellow',
+          'sim-tab-active-red'
+        );
+        if (i === tabNum) {
+          panel.classList.remove('hidden');
+          btn.classList.add(TAB_ACTIVE_CLASSES[i]);
+          btn.setAttribute('aria-selected', 'true');
+        } else {
+          panel.classList.add('hidden');
+          btn.setAttribute('aria-selected', 'false');
+        }
+      }
+      const mainScroll = document.getElementById('simMainScroll');
+      if (mainScroll) mainScroll.scrollTop = 0;
+      updateWizardUI();
+      renderAll();
+    }
+
+    function handleLicenseChange(rawVal) {
+      const parsed = parseInt(String(rawVal).replace(/[^0-9]/g, ''), 10);
+      state.licenses = (!isNaN(parsed) && parsed > 0) ? Math.min(parsed, 1000000) : 0;
+
+      const agyInput = document.getElementById('agyUsersInput');
+      const warningEl = document.getElementById('agyUsersWarning');
+      agyInput.max = state.licenses;
+
+      if (state.agyUsers > state.licenses) {
+        state.agyUsers = state.licenses;
+        agyInput.value = state.agyUsers;
+        warningEl.classList.remove('hidden');
+      } else {
+        warningEl.classList.add('hidden');
+      }
+      triggerWizardNudge();
+      renderAll();
+    }
+
+    function handleAgyUsersChange(rawVal) {
+      const parsed = parseInt(String(rawVal).replace(/[^0-9]/g, ''), 10);
+      const warningEl = document.getElementById('agyUsersWarning');
+      let val = (!isNaN(parsed) && parsed >= 0) ? parsed : 0;
+
+      if (val > state.licenses) {
+        val = state.licenses;
+        document.getElementById('agyUsersInput').value = val;
+        warningEl.classList.remove('hidden');
+      } else {
+        warningEl.classList.add('hidden');
+      }
+      state.agyUsers = val;
+      triggerWizardNudge();
+      renderAll();
+    }
+
+    function handleTierChange(tier) {
+      state.tier = tier;
+      const stdCard = document.getElementById('tierStandardCard');
+      const plusCard = document.getElementById('tierPlusCard');
+      if (tier === 'standard') {
+        stdCard.className = 'flex items-start gap-3 p-4 rounded-xl bg-[#4285F4]/15 border-2 border-[#4285F4] cursor-pointer transition-all';
+        plusCard.className = 'flex items-start gap-3 p-4 rounded-xl sim-card cursor-pointer transition-all';
+      } else {
+        plusCard.className = 'flex items-start gap-3 p-4 rounded-xl bg-[#4285F4]/15 border-2 border-[#4285F4] cursor-pointer transition-all';
+        stdCard.className = 'flex items-start gap-3 p-4 rounded-xl sim-card cursor-pointer transition-all';
+      }
+      triggerWizardNudge();
+      renderAll();
+    }
+
+    function handleModelMixSlider(val) {
+      const flashPct = Math.max(0, Math.min(100, parseInt(val, 10) || 0));
+      state.flashPct = flashPct;
+      state.proPct = 100 - flashPct;
+
+      const slider = document.getElementById('modelMixSlider');
+      slider.value = flashPct;
+      slider.style.background = `linear-gradient(90deg, #9334E6 0%, #9334E6 ${state.proPct}%, #4285F4 ${state.proPct}%, #4285F4 100%)`;
+      triggerWizardNudge();
+      renderAll();
+    }
+
+    function handleIoMixSlider(val) {
+      const inputPct = Math.max(0, Math.min(100, parseInt(val, 10) || 0));
+      state.inputPct = inputPct;
+      state.outputPct = 100 - inputPct;
+
+      const slider = document.getElementById('ioMixSlider');
+      slider.value = inputPct;
+      slider.style.background = `linear-gradient(90deg, #34A853 0%, #34A853 ${state.inputPct}%, #EA4335 ${state.inputPct}%, #EA4335 100%)`;
+      triggerWizardNudge();
+      renderAll();
+    }
+
+    function handleAdditionalSpendChange(rawVal) {
+      const val = Math.max(0, parseFloat(rawVal) || 0);
+      state.additionalMonthlySpend = val;
+      const inputEl = document.getElementById('additionalSpendInput');
+      if (inputEl && Number(inputEl.value) !== val) {
+        inputEl.value = val;
+      }
+      triggerWizardNudge();
+      renderAll();
+    }
+
+    function handleCohortPctChange(cohortKey, rawVal) {
+      let val = Math.max(0, Math.min(100, parseInt(rawVal, 10) || 0));
+      state.cohorts[cohortKey].pct = val;
+
+      const otherKeys = ['heavy', 'moderate', 'light'].filter(k => k !== cohortKey);
+      const remaining = 100 - val;
+      const otherSum = state.cohorts[otherKeys[0]].pct + state.cohorts[otherKeys[1]].pct;
+
+      if (otherSum === 0) {
+        state.cohorts[otherKeys[0]].pct = Math.round(remaining / 2);
+        state.cohorts[otherKeys[1]].pct = remaining - state.cohorts[otherKeys[0]].pct;
+      } else {
+        const firstNew = Math.round((state.cohorts[otherKeys[0]].pct / otherSum) * remaining);
+        state.cohorts[otherKeys[0]].pct = firstNew;
+        state.cohorts[otherKeys[1]].pct = remaining - firstNew;
+      }
+
+      syncTab3Inputs();
+      triggerWizardNudge();
+      renderAll();
+    }
+
+    function syncTab3Inputs() {
+      document.getElementById('heavyPctInput').value = state.cohorts.heavy.pct;
+      document.getElementById('heavyPctSlider').value = state.cohorts.heavy.pct;
+      document.getElementById('modPctInput').value = state.cohorts.moderate.pct;
+      document.getElementById('modPctSlider').value = state.cohorts.moderate.pct;
+      document.getElementById('lightPctInput').value = state.cohorts.light.pct;
+      document.getElementById('lightPctSlider').value = state.cohorts.light.pct;
+
+      document.getElementById('heavyBurnInput').value = state.cohorts.heavy.weeklyBurnM.toFixed(2);
+      document.getElementById('heavyBurnSlider').value = state.cohorts.heavy.weeklyBurnM;
+      document.getElementById('modBurnInput').value = state.cohorts.moderate.weeklyBurnM.toFixed(2);
+      document.getElementById('modBurnSlider').value = state.cohorts.moderate.weeklyBurnM;
+      document.getElementById('lightBurnInput').value = state.cohorts.light.weeklyBurnM.toFixed(2);
+      document.getElementById('lightBurnSlider').value = state.cohorts.light.weeklyBurnM;
+    }
+
+    function resetUserDistribution() {
+      state.cohorts.heavy.pct = 30;
+      state.cohorts.moderate.pct = 40;
+      state.cohorts.light.pct = 30;
+      syncTab3Inputs();
+      triggerWizardNudge();
+      renderAll();
+    }
+
+    function handleCohortBurnChange(cohortKey, rawVal) {
+      const val = Math.max(0, parseFloat(rawVal) || 0);
+      state.cohorts[cohortKey].weeklyBurnM = val;
+      if (cohortKey === 'heavy') {
+        document.getElementById('heavyBurnInput').value = val;
+        document.getElementById('heavyBurnSlider').value = Math.min(15, val);
+      } else if (cohortKey === 'moderate') {
+        document.getElementById('modBurnInput').value = val;
+        document.getElementById('modBurnSlider').value = Math.min(10, val);
+      } else {
+        document.getElementById('lightBurnInput').value = val;
+        document.getElementById('lightBurnSlider').value = Math.min(5, val);
+      }
+      triggerWizardNudge();
+      renderAll();
+    }
+
+    function resetCohortBurnDefaults() {
+      state.cohorts.heavy.weeklyBurnM = 5.00;
+      state.cohorts.moderate.weeklyBurnM = 3.00;
+      state.cohorts.light.weeklyBurnM = 1.00;
+      syncTab3Inputs();
+      triggerWizardNudge();
+      renderAll();
+    }
+
+    function handleModelDiscountChange(modelKey, rawVal) {
+      const val = Math.max(0, Math.min(90, parseFloat(rawVal) || 0));
+      if (modelKey === 'pro') {
+        state.proDiscountPct = val;
+        document.getElementById('proDiscountInput').value = val;
+        document.getElementById('proDiscountSlider').value = val;
+      } else {
+        state.flashDiscountPct = val;
+        document.getElementById('flashDiscountInput').value = val;
+        document.getElementById('flashDiscountSlider').value = val;
+      }
+      triggerWizardNudge();
+      renderAll();
+    }
+
+    function handlePricingChange() {
+      state.pricing.proInput = Math.max(0.01, parseFloat(document.getElementById('proInputPrice').value) || 0.01);
+      state.pricing.proOutput = Math.max(0.01, parseFloat(document.getElementById('proOutputPrice').value) || 0.01);
+      state.pricing.flashInput = Math.max(0.01, parseFloat(document.getElementById('flashInputPrice').value) || 0.01);
+      state.pricing.flashOutput = Math.max(0.01, parseFloat(document.getElementById('flashOutputPrice').value) || 0.01);
+      triggerWizardNudge();
+      renderAll();
+    }
+
+    function applyPricingPreset(preset) {
+      if (preset === 'latest_public') {
+        state.pricing = { proInput: 2.00, proOutput: 12.00, flashInput: 1.50, flashOutput: 7.50 };
+        state.proDiscountPct = 0;
+        state.flashDiscountPct = 0;
+        document.getElementById('proDiscountInput').value = 0;
+        document.getElementById('proDiscountSlider').value = 0;
+        document.getElementById('flashDiscountInput').value = 0;
+        document.getElementById('flashDiscountSlider').value = 0;
+      }
+      document.getElementById('proInputPrice').value = state.pricing.proInput.toFixed(2);
+      document.getElementById('proOutputPrice').value = state.pricing.proOutput.toFixed(2);
+      document.getElementById('flashInputPrice').value = state.pricing.flashInput.toFixed(2);
+      document.getElementById('flashOutputPrice').value = state.pricing.flashOutput.toFixed(2);
+      triggerWizardNudge();
+      renderAll();
+    }
+
+    function renderStackedLineChart(m) {
+      const svg = document.getElementById('stackedLineSvg');
+      if (!svg) return;
+
+      const W = 920;
+      const H = 350;
+      const padL = 78;
+      const padR = 46;
+      const padT = 28;
+      const padB = 50;
+      const plotW = W - padL - padR;
+      const plotH = H - padT - padB;
+
+      const maxStack = Math.max(...m.dailySeries.map(d => d.stack3), 1);
+      const yMax = Math.max(maxStack, m.weeklyQuotaM) * 1.16;
+
+      const xFor = (idx) => padL + (idx / (DAYS.length - 1)) * plotW;
+      const yFor = (val) => padT + plotH - (Math.min(val, yMax) / yMax) * plotH;
+
+      let gridHtml = '';
+      const steps = 5;
+      for (let i = 0; i <= steps; i++) {
+        const val = (yMax / steps) * i;
+        const y = yFor(val);
+        gridHtml += `
+          <line x1="${padL}" y1="${y}" x2="${W - padR}" y2="${y}" stroke="currentColor" stroke-opacity="0.16" stroke-width="1" />
+          <text x="${padL - 10}" y="${y + 4}" text-anchor="end" fill="currentColor" fill-opacity="0.75" font-size="12" class="font-mono-num">
+            ${val >= 100 ? Math.round(val).toLocaleString() : val.toFixed(1)}M
+          </text>
+        `;
+      }
+
+      const axisLabelsHtml = `
+        <text x="18" y="${padT + plotH / 2}" transform="rotate(-90, 18, ${padT + plotH / 2})" text-anchor="middle" fill="currentColor" fill-opacity="0.8" font-size="12" font-weight="600">
+          Tokens in Millions (M)
+        </text>
+        <text x="${padL + plotW / 2}" y="${H - 8}" text-anchor="middle" fill="currentColor" fill-opacity="0.8" font-size="12" font-weight="600">
+          Days of the Working Week (Monday – Friday)
+        </text>
+      `;
+
+      const ptsLight = m.dailySeries.map((d, i) => `${xFor(i)},${yFor(d.stack1)}`).join(' ');
+      const ptsMod   = m.dailySeries.map((d, i) => `${xFor(i)},${yFor(d.stack2)}`).join(' ');
+      const ptsHeavy = m.dailySeries.map((d, i) => `${xFor(i)},${yFor(d.stack3)}`).join(' ');
+
+      const baseRight = `${xFor(DAYS.length - 1)},${yFor(0)}`;
+      const baseLeft  = `${xFor(0)},${yFor(0)}`;
+
+      const revLight = [...m.dailySeries].reverse().map((d, revIdx) => {
+        const i = DAYS.length - 1 - revIdx;
+        return `${xFor(i)},${yFor(d.stack1)}`;
+      }).join(' ');
+
+      const revMod = [...m.dailySeries].reverse().map((d, revIdx) => {
+        const i = DAYS.length - 1 - revIdx;
+        return `${xFor(i)},${yFor(d.stack2)}`;
+      }).join(' ');
+
+      const areaLight = `${ptsLight} ${baseRight} ${baseLeft}`;
+      const areaMod   = `${ptsMod} ${revLight}`;
+      const areaHeavy = `${ptsHeavy} ${revMod}`;
+
+      const quotaY = yFor(m.weeklyQuotaM);
+
+      const quotaLineHtml = `
+        <g>
+          <line
+            x1="${padL}"
+            y1="${quotaY}"
+            x2="${W - padR}"
+            y2="${quotaY}"
+            stroke="#34A853"
+            stroke-width="2.75"
+            stroke-dasharray="8 5"
+          />
+          <rect
+            x="${W - padR - 252}"
+            y="${Math.max(padT + 2, quotaY - 26)}"
+            width="248"
+            height="22"
+            rx="6"
+            fill="#34A853"
+          />
+          <text
+            x="${W - padR - 128}"
+            y="${Math.max(padT + 17, quotaY - 11)}"
+            text-anchor="middle"
+            fill="#ffffff"
+            font-size="12"
+            font-weight="700"
+            class="font-mono-num"
+          >
+            Weekly Token Quota: ${fmtM(m.weeklyQuotaM, 1)}
+          </text>
+        </g>
+      `;
+
+      let nodesHtml = '';
+      m.dailySeries.forEach((d, i) => {
+        const x = xFor(i);
+        const y1 = yFor(d.stack1);
+        const y2 = yFor(d.stack2);
+        const y3 = yFor(d.stack3);
+        const isHovered = state.hoveredDayIndex === i;
+
+        nodesHtml += `
+          <line
+            x1="${x}" y1="${padT}" x2="${x}" y2="${padT + plotH}"
+            stroke="currentColor"
+            stroke-opacity="${isHovered ? '0.32' : '0.08'}"
+            stroke-width="${isHovered ? '2' : '1'}"
+          />
+          <text
+            x="${x}" y="${padT + plotH + 22}"
+            text-anchor="middle"
+            fill="currentColor"
+            font-size="13"
+            font-weight="600"
+          >${d.day}</text>
+
+          <circle cx="${x}" cy="${y1}" r="${isHovered ? 6 : 4.5}" fill="#4285F4" stroke="#ffffff" stroke-width="2" />
+          <circle cx="${x}" cy="${y2}" r="${isHovered ? 6 : 4.5}" fill="#FBBC04" stroke="#ffffff" stroke-width="2" />
+          <circle cx="${x}" cy="${y3}" r="${isHovered ? 7 : 5.5}" fill="#EA4335" stroke="#ffffff" stroke-width="2" />
+
+          <text
+            x="${x}"
+            y="${Math.max(padT + 12, y3 - 11)}"
+            text-anchor="middle"
+            fill="currentColor"
+            font-size="12"
+            font-weight="700"
+            class="font-mono-num"
+          >${fmtM(d.stack3, 1)}</text>
+
+          <rect
+            x="${x - plotW / 10}"
+            y="${padT}"
+            width="${plotW / 5}"
+            height="${plotH}"
+            fill="transparent"
+            class="cursor-pointer"
+            onmouseenter="setHoveredDay(${i})"
+            onmouseleave="setHoveredDay(null)"
+          />
+        `;
+      });
+
+      let tooltipHtml = '';
+      if (state.hoveredDayIndex !== null && m.dailySeries[state.hoveredDayIndex]) {
+        const idx = state.hoveredDayIndex;
+        const d = m.dailySeries[idx];
+        const x = xFor(idx);
+        const boxW = 244;
+        const boxH = 114;
+        const boxX = (x + 18 + boxW > W - padR) ? (x - boxW - 18) : (x + 18);
+        const boxY = padT + 12;
+        const pctOfQuota = m.weeklyQuotaM > 0 ? ((d.stack3 / m.weeklyQuotaM) * 100).toFixed(1) : '0.0';
+
+        tooltipHtml = `
+          <g>
+            <rect x="${boxX}" y="${boxY}" width="${boxW}" height="${boxH}" rx="10" fill="#0f172a" fill-opacity="0.96" stroke="#475569" stroke-width="1.5" />
+            <text x="${boxX + 12}" y="${boxY + 22}" fill="#ffffff" font-size="12" font-weight="700">
+              ${d.day} (Cumulative usage)
+            </text>
+            <text x="${boxX + 12}" y="${boxY + 42}" fill="#f87171" font-size="12" class="font-mono-num">
+              Heavy Users: ${fmtM(d.heavy, 2)}
+            </text>
+            <text x="${boxX + 12}" y="${boxY + 60}" fill="#facc15" font-size="12" class="font-mono-num">
+              Moderate Users: ${fmtM(d.moderate, 2)}
+            </text>
+            <text x="${boxX + 12}" y="${boxY + 78}" fill="#60a5fa" font-size="12" class="font-mono-num">
+              Light Users: ${fmtM(d.light, 2)}
+            </text>
+            <text x="${boxX + 12}" y="${boxY + 98}" fill="#4ade80" font-size="12" font-weight="700" class="font-mono-num">
+              Cumulative Usage: ${fmtM(d.stack3, 2)} (${pctOfQuota}%)
+            </text>
+          </g>
+        `;
+      }
+
+      svg.innerHTML = `
+        <defs>
+          <linearGradient id="gradLight" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#4285F4" stop-opacity="0.38" />
+            <stop offset="100%" stop-color="#4285F4" stop-opacity="0.10" />
+          </linearGradient>
+          <linearGradient id="gradMod" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#FBBC04" stop-opacity="0.38" />
+            <stop offset="100%" stop-color="#FBBC04" stop-opacity="0.10" />
+          </linearGradient>
+          <linearGradient id="gradHeavy" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#EA4335" stop-opacity="0.38" />
+            <stop offset="100%" stop-color="#EA4335" stop-opacity="0.10" />
+          </linearGradient>
+        </defs>
+
+        ${gridHtml}
+        ${axisLabelsHtml}
+
+        <polygon points="${areaLight}" fill="url(#gradLight)" />
+        <polygon points="${areaMod}" fill="url(#gradMod)" />
+        <polygon points="${areaHeavy}" fill="url(#gradHeavy)" />
+
+        <polyline fill="none" stroke="#4285F4" stroke-width="2.5" points="${ptsLight}" />
+        <polyline fill="none" stroke="#FBBC04" stroke-width="2.5" points="${ptsMod}" />
+        <polyline fill="none" stroke="#EA4335" stroke-width="3.2" points="${ptsHeavy}" />
+
+        ${quotaLineHtml}
+        ${nodesHtml}
+        ${tooltipHtml}
+      `;
+    }
+
+    function setHoveredDay(idx) {
+      state.hoveredDayIndex = idx;
+      renderStackedLineChart(computeMetrics());
+    }
+
+    function renderAll() {
+      const m = computeMetrics();
+      const utilPct = m.weeklyQuotaM > 0 ? (m.totalWeeklyBurnM / m.weeklyQuotaM) * 100 : 0;
+
+      // Panel 1 Right-Pane Infographics (25% pane)
+      const tierName = state.tier === 'plus' ? 'GE Plus' : 'GE Standard';
+      document.getElementById('t1QuotaTotal').textContent = fmtM(m.weeklyQuotaM, 2);
+      document.getElementById('t1QuotaSub').textContent = state.additionalMonthlySpend > 0
+        ? `${fmtInt(state.licenses)} ${tierName} + $${fmtInt(state.additionalMonthlySpend)}/mo · ${fmtM(m.perUserWeeklyQuotaM, 2)}/user`
+        : `${fmtInt(state.licenses)} ${tierName} licenses · ${fmtM(m.perUserWeeklyQuotaM, 2)}/user`;
+
+      document.getElementById('t1BurnTotal').textContent = fmtM(m.totalWeeklyBurnM, 2);
+      document.getElementById('t1BurnSub').textContent =
+        `${fmtInt(state.agyUsers)} AGY users · ${fmtM(m.totalWeeklyBurnM / 5, 2)}/day`;
+
+      // Stacked usage bar shares inside Infographic 2
+      const burnDenom = m.totalWeeklyBurnM > 0 ? m.totalWeeklyBurnM : 1;
+      document.getElementById('t1UsageBarHeavy').style.width = `${(m.heavyWeeklyM / burnDenom) * 100}%`;
+      document.getElementById('t1UsageBarMod').style.width = `${(m.modWeeklyM / burnDenom) * 100}%`;
+      document.getElementById('t1UsageBarLight').style.width = `${(m.lightWeeklyM / burnDenom) * 100}%`;
+
+      // Infographic 3: Radial Gauge & Utilization
+      const circumference = 2 * Math.PI * 46; // ~289.03
+      const clampedPct = Math.max(0, Math.min(100, utilPct));
+      const dashOffset = circumference * (1 - clampedPct / 100);
+      const gaugeArc = document.getElementById('t1UtilGaugeArc');
+      const pctText = document.getElementById('t1UtilPctText');
+      const statusDot = document.getElementById('t1UtilStatusDot');
+
+      gaugeArc.setAttribute('stroke-dashoffset', dashOffset.toFixed(2));
+      pctText.textContent = `${utilPct.toFixed(1)}%`;
+
+      const varianceM = m.weeklyQuotaM - m.totalWeeklyBurnM;
+      const varValueEl = document.getElementById('t1VarianceValue');
+      const varSubEl = document.getElementById('t1VarianceSub');
+      const chartStatusBadge = document.getElementById('chartStatusBadge');
+
+      if (varianceM >= 0) {
+        varValueEl.textContent = '+' + fmtM(varianceM, 2);
+        varValueEl.className = 'text-base font-bold font-mono-num text-[#4ade80]';
+        const bufferPct = m.weeklyQuotaM > 0 ? ((varianceM / m.weeklyQuotaM) * 100).toFixed(1) : '0.0';
+        varSubEl.textContent = `${bufferPct}% unconsumed headroom`;
+        chartStatusBadge.textContent = 'Within Weekly Quota';
+        chartStatusBadge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-[#34A853]/20 text-[#4ade80] border border-[#34A853]/40';
+
+        if (utilPct > 85) {
+          gaugeArc.setAttribute('stroke', '#FBBC04');
+          statusDot.textContent = 'Near Limit';
+          statusDot.className = 'px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#FBBC04]/20 text-[#facc15] border border-[#FBBC04]/40';
+        } else {
+          gaugeArc.setAttribute('stroke', '#34A853');
+          statusDot.textContent = 'Healthy';
+          statusDot.className = 'px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#34A853]/20 text-[#4ade80] border border-[#34A853]/40';
+        }
+      } else {
+        varValueEl.textContent = fmtM(varianceM, 2);
+        varValueEl.className = 'text-base font-bold font-mono-num text-[#f87171]';
+        const overPct = m.weeklyQuotaM > 0 ? ((Math.abs(varianceM) / m.weeklyQuotaM) * 100).toFixed(1) : '0.0';
+        varSubEl.textContent = `Exceeds pool by ${overPct}%`;
+        chartStatusBadge.textContent = 'Quota Exceeded';
+        chartStatusBadge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-[#EA4335]/20 text-[#f87171] border border-[#EA4335]/40';
+
+        gaugeArc.setAttribute('stroke', '#EA4335');
+        statusDot.textContent = 'Exceeded';
+        statusDot.className = 'px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#EA4335]/20 text-[#f87171] border border-[#EA4335]/40';
+      }
+
+      // Infographic 4: Call to Action Infographic
+      // Conditions:
+      // - If Availability is close to +/-5% usage: "Full Utilization"
+      // - If Availability is greater than usage: "Capacity Available"
+      // - If Availability is lesser than usage: "Additional Spend Required" + indicative budget required per month
+      const ctaCard = document.getElementById('t1CtaCard');
+      const ctaPill = document.getElementById('t1CtaStatusPill');
+      const ctaHeadline = document.getElementById('t1CtaHeadline');
+      const ctaDesc = document.getElementById('t1CtaDesc');
+      const ctaBudgetBox = document.getElementById('t1CtaBudgetBox');
+      const ctaMonthlyBudget = document.getElementById('t1CtaMonthlyBudget');
+      const ctaBudgetSub = document.getElementById('t1CtaBudgetSub');
+
+      const relDiff = m.totalWeeklyBurnM > 0
+        ? Math.abs(m.weeklyQuotaM - m.totalWeeklyBurnM) / m.totalWeeklyBurnM
+        : 1;
+      const isCloseToFivePct = m.totalWeeklyBurnM > 0 && relDiff <= 0.05;
+      const isLessThanUsage = m.weeklyQuotaM < m.totalWeeklyBurnM;
+
+      if (isCloseToFivePct) {
+        ctaCard.className = 'sim-card rounded-2xl p-3.5 shadow-md border-t-4 border-t-[#FBBC04] flex flex-col justify-between space-y-2.5';
+        ctaPill.textContent = 'Within ±5%';
+        ctaPill.className = 'px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#FBBC04]/20 text-[#facc15] border border-[#FBBC04]/40';
+        ctaHeadline.textContent = 'Full Utilization';
+        ctaHeadline.className = 'text-lg font-extrabold tracking-tight text-[#facc15]';
+        ctaDesc.textContent = 'Weekly token availability is within ±5% of projected weekly usage.';
+      } else if (m.weeklyQuotaM > m.totalWeeklyBurnM) {
+        ctaCard.className = 'sim-card rounded-2xl p-3.5 shadow-md border-t-4 border-t-[#34A853] flex flex-col justify-between space-y-2.5';
+        ctaPill.textContent = 'Surplus Pool';
+        ctaPill.className = 'px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#34A853]/20 text-[#4ade80] border border-[#34A853]/40';
+        ctaHeadline.textContent = 'Capacity Available';
+        ctaHeadline.className = 'text-lg font-extrabold tracking-tight text-[#4ade80]';
+        ctaDesc.textContent = `Weekly token availability exceeds projected usage by ${fmtM(varianceM, 2)}.`;
+      } else {
+        ctaCard.className = 'sim-card rounded-2xl p-3.5 shadow-md border-t-4 border-t-[#EA4335] flex flex-col justify-between space-y-2.5';
+        ctaPill.textContent = 'Action Needed';
+        ctaPill.className = 'px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#EA4335]/20 text-[#f87171] border border-[#EA4335]/40';
+        ctaHeadline.textContent = 'Additional Spend Required';
+        ctaHeadline.className = 'text-lg font-extrabold tracking-tight text-[#f87171]';
+        ctaDesc.textContent = `Weekly usage exceeds available token capacity by ${fmtM(m.shortfallWeeklyM, 2)}.`;
+      }
+
+      if (isLessThanUsage) {
+        ctaBudgetBox.classList.remove('hidden');
+        ctaMonthlyBudget.textContent =
+          `$${m.indicativeMonthlyBudgetRequired.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} / mo`;
+        ctaBudgetSub.textContent =
+          `Covers ${fmtM(m.shortfallWeeklyM, 2)}/wk shortfall ($${m.shortfallWeeklyDollars.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}/wk)`;
+      } else {
+        ctaBudgetBox.classList.add('hidden');
+      }
+
+      renderStackedLineChart(m);
+
+      document.getElementById('tblLightShare').textContent = state.cohorts.light.pct + '%';
+      document.getElementById('tblModShare').textContent = state.cohorts.moderate.pct + '%';
+      document.getElementById('tblHeavyShare').textContent = state.cohorts.heavy.pct + '%';
+
+      const tbody = document.getElementById('dayBreakdownBody');
+      tbody.innerHTML = m.dailySeries.map(d => {
+        const util = m.weeklyQuotaM > 0 ? (d.stack3 / m.weeklyQuotaM) * 100 : 0;
+        const badgeClass = util > 100
+          ? 'bg-[#EA4335]/20 text-[#f87171] border border-[#EA4335]/30'
+          : util > 85
+            ? 'bg-[#FBBC04]/20 text-[#facc15] border border-[#FBBC04]/30'
+            : 'bg-[#34A853]/20 text-[#4ade80] border border-[#34A853]/30';
+        return `
+          <tr class="hover:bg-[#4285F4]/5 transition-colors">
+            <td class="py-2.5 px-3.5 font-sans font-semibold">${d.day}</td>
+            <td class="py-2.5 px-3.5 text-right text-[#60a5fa]">${fmtM(d.light, 2)}</td>
+            <td class="py-2.5 px-3.5 text-right text-[#facc15]">${fmtM(d.moderate, 2)}</td>
+            <td class="py-2.5 px-3.5 text-right text-[#f87171]">${fmtM(d.heavy, 2)}</td>
+            <td class="py-2.5 px-3.5 text-right font-bold">${fmtM(d.stack3, 2)}</td>
+            <td class="py-2.5 px-3.5 text-right text-[#4ade80] font-semibold">${fmtM(m.weeklyQuotaM, 2)}</td>
+            <td class="py-2.5 px-3.5 text-right">
+              <span class="px-2 py-0.5 rounded-full text-xs font-bold ${badgeClass}">${util.toFixed(1)}%</span>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      // Panel 2: Licensing & Weekly Token Capacity
+      document.getElementById('agyUsersCapBadge').textContent = `Max: ${fmtInt(state.licenses)}`;
+      document.getElementById('weeklyCreditPerSeatLabel').textContent =
+        `$${m.weeklyCreditPerLicense.toFixed(2)} / license / week`;
+
+      document.getElementById('readonlyWeeklyTotalTokens').textContent = `${fmtM(m.baseWeeklyQuotaM, 2)} tokens`;
+      document.getElementById('readonlyWeeklyTotalExact').textContent =
+        `${fmtInt(m.baseWeeklyQuotaM * 1e6)} tokens / week`;
+
+      document.getElementById('readonlyPerUserWeeklyTokens').textContent = `${fmtM(m.basePerUserWeeklyQuotaM, 2)} tokens`;
+      document.getElementById('readonlyPerUserWeeklyExact').textContent =
+        `${fmtInt(m.basePerUserWeeklyQuotaM * 1e6)} tokens / AGY user / week (~${fmtInt((m.basePerUserWeeklyQuotaM * 1e6) / 5)} / workday)`;
+
+      document.getElementById('mathActiveRatio').textContent =
+        `${fmtInt(state.agyUsers)} / ${fmtInt(state.licenses)}`;
+      document.getElementById('mathWeeklyPoolCredit').textContent =
+        `$${m.weeklyPoolDollars.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} / wk`;
+      document.getElementById('mathEffectiveFleetRate').textContent = `$${m.effectiveRatePerM.toFixed(2)} / 1M`;
+
+      // Panel 3: User Distribution & Burn Updates
+      const sumPct = state.cohorts.heavy.pct + state.cohorts.moderate.pct + state.cohorts.light.pct;
+      document.getElementById('distSumBadge').textContent = `Total: ${sumPct}%`;
+
+      document.getElementById('barLabelHeavy').textContent = `${state.cohorts.heavy.pct}%`;
+      document.getElementById('barLabelMod').textContent = `${state.cohorts.moderate.pct}%`;
+      document.getElementById('barLabelLight').textContent = `${state.cohorts.light.pct}%`;
+
+      document.getElementById('distBarHeavy').style.width = `${state.cohorts.heavy.pct}%`;
+      document.getElementById('distBarMod').style.width = `${state.cohorts.moderate.pct}%`;
+      document.getElementById('distBarLight').style.width = `${state.cohorts.light.pct}%`;
+
+      document.getElementById('heavyDailyEquiv').textContent =
+        `~${(state.cohorts.heavy.weeklyBurnM / 5).toFixed(2)}M tokens/workday · Category total: ${fmtM(m.heavyWeeklyM, 1)} / wk`;
+      document.getElementById('modDailyEquiv').textContent =
+        `~${(state.cohorts.moderate.weeklyBurnM / 5).toFixed(2)}M tokens/workday · Category total: ${fmtM(m.modWeeklyM, 1)} / wk`;
+      document.getElementById('lightDailyEquiv').textContent =
+        `~${(state.cohorts.light.weeklyBurnM / 5).toFixed(2)}M tokens/workday · Category total: ${fmtM(m.lightWeeklyM, 1)} / wk`;
+
+      const weightedAvgUserBurn = state.agyUsers > 0 ? (m.totalWeeklyBurnM / state.agyUsers) : 0;
+      document.getElementById('weightedUserBurnLabel').textContent = `${weightedAvgUserBurn.toFixed(3)}M tokens / user / wk`;
+      document.getElementById('totalFleetWeeklyDemandLabel').textContent = `${fmtM(m.totalWeeklyBurnM, 2)} tokens / wk`;
+
+      // Panel 4: Models Usage Updates
+      document.getElementById('proMixPctLabel').textContent = `${state.proPct}%`;
+      document.getElementById('flashMixPctLabel').textContent = `${state.flashPct}%`;
+      document.getElementById('inputMixPctLabel').textContent = `${state.inputPct}%`;
+      document.getElementById('outputMixPctLabel').textContent = `${state.outputPct}%`;
+
+      document.getElementById('t4AddWeeklySpendLabel').textContent =
+        `$${m.additionalWeeklyPoolDollars.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} / wk`;
+      document.getElementById('t4AddWeeklyTokensLabel').textContent =
+        `+${fmtM(m.additionalWeeklyQuotaM, 2)} / wk`;
+
+      document.getElementById('proShareBadgeTab4').textContent = `Mix Weight: ${state.proPct}%`;
+      document.getElementById('flashShareBadgeTab4').textContent = `Mix Weight: ${state.flashPct}%`;
+      document.getElementById('t4ProNetPricesLabel').textContent = state.proDiscountPct > 0
+        ? `Discounted Rate (${state.proDiscountPct}% off): $${m.proInputNet.toFixed(2)} In / $${m.proOutputNet.toFixed(2)} Out per 1M`
+        : `Effective Rate: $${m.proInputNet.toFixed(2)} In / $${m.proOutputNet.toFixed(2)} Out per 1M`;
+      document.getElementById('t4FlashNetPricesLabel').textContent = state.flashDiscountPct > 0
+        ? `Discounted Rate (${state.flashDiscountPct}% off): $${m.flashInputNet.toFixed(2)} In / $${m.flashOutputNet.toFixed(2)} Out per 1M`
+        : `Effective Rate: $${m.flashInputNet.toFixed(2)} In / $${m.flashOutputNet.toFixed(2)} Out per 1M`;
+      document.getElementById('t4DiscountActiveBadge').textContent =
+        `Pro ${state.proDiscountPct}% off · Flash ${state.flashDiscountPct}% off`;
+      document.getElementById('t4ProIoSplitLabel').textContent = `${state.inputPct}% Input : ${state.outputPct}% Output`;
+      document.getElementById('t4FlashIoSplitLabel').textContent = `${state.inputPct}% Input : ${state.outputPct}% Output`;
+      document.getElementById('t4ProBlendedValue').textContent = `$${m.proBlended.toFixed(2)} / 1M tokens`;
+      document.getElementById('t4FlashBlendedValue').textContent = `$${m.flashBlended.toFixed(2)} / 1M tokens`;
+      document.getElementById('t4CombinedRate').textContent = `$${m.effectiveRatePerM.toFixed(2)} / 1M`;
+      document.getElementById('t4TokensPerDollar').textContent = `${(1 / m.effectiveRatePerM).toFixed(2)}M`;
+      updateWizardUI();
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      renderAll();
+    });
+  </script>
+</body>
+</html>
