@@ -333,7 +333,7 @@
         </div>
       </div>
 
-      <!-- 4-Tab Navigation Bar: Licensing -> User Distribution -> Models Usage -> Consumption Projection -->
+      <!-- 4-Tab Navigation Bar: 1. Plan & Seats -> 2. Team Usage Habits -> 3. AI Model & Budget Settings -> 4. Weekly Forecast & Budget -->
       <nav class="mt-3 pt-2.5 border-t border-[var(--sim-border)] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5" role="tablist" aria-label="Simulator Navigation">
         <button
           id="tabBtn-2"
@@ -347,7 +347,7 @@
           <svg class="w-4 h-4 text-[#34A853] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
           </svg>
-          <span>Licensing</span>
+          <span>1. Plan &amp; Seats</span>
         </button>
 
         <button
@@ -362,7 +362,7 @@
           <svg class="w-4 h-4 text-[#FBBC04] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.283m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
           </svg>
-          <span>User Distribution</span>
+          <span>2. Team Usage Habits</span>
         </button>
 
         <button
@@ -377,7 +377,7 @@
           <svg class="w-4 h-4 text-[#EA4335] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
           </svg>
-          <span>Models Usage</span>
+          <span>3. AI Model &amp; Budget Settings</span>
         </button>
 
         <button
@@ -393,7 +393,7 @@
             <svg class="w-4 h-4 text-[#4285F4] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18M7 14l4-4 4 4 5-6" />
             </svg>
-            <span class="tracking-tight">Consumption Projection</span>
+            <span class="tracking-tight">4. Weekly Forecast &amp; Budget</span>
           </span>
         </button>
       </nav>
@@ -405,7 +405,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 pt-4 pb-24 space-y-4">
 
       <!-- ===================================================================== -->
-      <!-- PANEL 1: CONSUMPTION PROJECTION (75:25 Vertical Split)                -->
+      <!-- PANEL 1: WEEKLY FORECAST & BUDGET (75:25 Vertical Split)              -->
       <!-- ===================================================================== -->
       <section id="tabPanel-1" class="hidden">
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-4 items-stretch">
@@ -419,7 +419,7 @@
                   id="stackedLineSvg"
                   viewBox="0 0 920 350"
                   class="w-full h-auto max-h-[45vh] min-w-[600px] select-none"
-                  aria-label="Stacked Line Chart of Cumulative Token Usage across Monday to Friday"
+                  aria-label="Stacked Line Chart of Running Weekly Team Usage across Monday to Friday"
                 ></svg>
               </div>
 
@@ -428,13 +428,13 @@
                 <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-2.5">
                   <div class="flex flex-wrap items-center gap-2.5">
                     <h2 class="text-lg sm:text-xl font-extrabold tracking-tight">
-                      Workweek Token Consumption Projection
+                      Weekly Team Usage vs. Available Capacity
                     </h2>
                     <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#4285F4]/25 text-[#60a5fa] border border-[#4285F4]/45">
-                      Cumulative usage
+                      Running Weekly Total
                     </span>
                     <span id="chartStatusBadge" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#34A853]/20 text-[#4ade80] border border-[#34A853]/40">
-                      Within Weekly Quota
+                      Within Weekly Limit
                     </span>
                   </div>
 
@@ -442,29 +442,29 @@
                   <div class="flex flex-wrap items-center gap-4 text-xs">
                     <div class="flex items-center gap-1.5">
                       <span class="w-5 h-0.5 border-t-2 border-dashed border-[#34A853] inline-block"></span>
-                      <span class="font-semibold text-[#4ade80]">Weekly Token Quota (Static Line)</span>
+                      <span class="font-semibold text-[#4ade80]">Weekly Capacity Limit</span>
                     </div>
                     <div class="flex items-center gap-1.5">
                       <span class="w-2.5 h-2.5 rounded-sm bg-[#EA4335] inline-block"></span>
-                      <span><strong>Heavy Users</strong></span>
+                      <span><strong>Power Users (Heavy)</strong></span>
                     </div>
                     <div class="flex items-center gap-1.5">
                       <span class="w-2.5 h-2.5 rounded-sm bg-[#FBBC04] inline-block"></span>
-                      <span><strong>Moderate Users</strong></span>
+                      <span><strong>Regular Users (Moderate)</strong></span>
                     </div>
                     <div class="flex items-center gap-1.5">
                       <span class="w-2.5 h-2.5 rounded-sm bg-[#4285F4] inline-block"></span>
-                      <span><strong>Light Users</strong></span>
+                      <span><strong>Occasional Users (Light)</strong></span>
                     </div>
                   </div>
                 </div>
 
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 pt-2 border-t border-[var(--sim-border)] text-xs">
                   <p class="sim-muted">
-                    Stacked cumulative usage across <strong class="text-[var(--sim-text)]">Light</strong>, <strong class="text-[var(--sim-text)]">Moderate</strong>, and <strong class="text-[var(--sim-text)]">Heavy</strong> user categories vs. the static <strong class="text-[#4ade80]">Weekly Token Quota</strong> line.
+                    Shows how your team's cumulative usage grows from Monday to Friday across <strong class="text-[var(--sim-text)]">Occasional</strong>, <strong class="text-[var(--sim-text)]">Regular</strong>, and <strong class="text-[var(--sim-text)]">Power</strong> users compared to your <strong class="text-[#4ade80]">Weekly Capacity Limit</strong>.
                   </p>
                   <span class="sim-muted font-mono-num shrink-0">
-                    Hover any weekday point to inspect stacked values
+                    Hover any weekday point to view details
                   </span>
                 </div>
               </div>
@@ -476,12 +476,12 @@
                 <thead>
                   <tr class="sim-subcard border-b border-[var(--sim-border)] sim-muted">
                     <th class="py-2 px-3 font-semibold">Working Day</th>
-                    <th class="py-2 px-3 font-semibold text-right">Light (<span id="tblLightShare">30%</span>)</th>
-                    <th class="py-2 px-3 font-semibold text-right">Moderate (<span id="tblModShare">40%</span>)</th>
-                    <th class="py-2 px-3 font-semibold text-right">Heavy (<span id="tblHeavyShare">30%</span>)</th>
-                    <th class="py-2 px-3 font-semibold text-right">Cumulative Usage</th>
-                    <th class="py-2 px-3 font-semibold text-right">Weekly Token Quota</th>
-                    <th class="py-2 px-3 font-semibold text-right">Quota Utilization</th>
+                    <th class="py-2 px-3 font-semibold text-right">Occasional (<span id="tblLightShare">30%</span>)</th>
+                    <th class="py-2 px-3 font-semibold text-right">Regular (<span id="tblModShare">40%</span>)</th>
+                    <th class="py-2 px-3 font-semibold text-right">Power (<span id="tblHeavyShare">30%</span>)</th>
+                    <th class="py-2 px-3 font-semibold text-right">Running Weekly Total</th>
+                    <th class="py-2 px-3 font-semibold text-right">Weekly Capacity Limit</th>
+                    <th class="py-2 px-3 font-semibold text-right">Capacity Used (%)</th>
                   </tr>
                 </thead>
                 <tbody id="dayBreakdownBody" class="divide-y divide-[var(--sim-border)] font-mono-num"></tbody>
@@ -489,51 +489,51 @@
             </div>
           </div>
 
-          <!-- Right 25% Pane (1 of 4 cols): 4 Infographics (Call to Action & Token Pool Utilization at Top) -->
+          <!-- Right 25% Pane (1 of 4 cols): 4 Infographics (Recommendation & Weekly Capacity Used at Top) -->
           <div class="lg:col-span-1 flex flex-col gap-3 justify-between">
 
-            <!-- Infographic 1 (Top): Call to Action Infographic -->
+            <!-- Infographic 1 (Top): Recommendation & Budget Status Infographic -->
             <div id="t1CtaCard" class="sim-card rounded-2xl p-3.5 shadow-md border-t-4 border-t-[#EA4335] flex flex-col justify-between space-y-2.5">
               <div class="space-y-1">
                 <div class="flex items-center justify-between gap-2">
                   <span class="text-xs font-bold uppercase tracking-wider sim-muted">
-                    Call to Action
+                    Recommendation &amp; Budget Status
                   </span>
                   <span id="t1CtaStatusPill" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#EA4335]/20 text-[#f87171] border border-[#EA4335]/40">
                     Action Needed
                   </span>
                 </div>
                 <div id="t1CtaHeadline" class="text-lg font-extrabold tracking-tight text-[#f87171]">
-                  Additional Spend Required
+                  Additional Budget Needed
                 </div>
                 <p id="t1CtaDesc" class="text-[11px] sim-muted leading-snug">
-                  Weekly usage exceeds available token capacity.
+                  Expected team usage exceeds your current weekly capacity.
                 </p>
               </div>
 
-              <!-- Indicative Monthly Budget Box (Visible when Availability < Usage) -->
+              <!-- Estimated Extra Monthly Budget Box (Visible when Availability < Usage) -->
               <div id="t1CtaBudgetBox" class="p-2.5 rounded-xl sim-subcard border border-[#EA4335]/40 space-y-1">
                 <div class="text-[11px] font-semibold sim-muted">
-                  Indicative Budget Required / Month
+                  Estimated Extra Monthly Budget Needed
                 </div>
                 <div id="t1CtaMonthlyBudget" class="text-xl font-extrabold font-mono-num text-[#f87171]">
                   $2,052.00 / mo
                 </div>
                 <div id="t1CtaBudgetSub" class="text-[11px] sim-muted font-mono-num">
-                  Covers 173.31M/wk shortfall ($513.00/wk)
+                  Covers 173.31M/wk gap ($513.00/wk)
                 </div>
               </div>
             </div>
 
-            <!-- Infographic 2 (Top): Token Pool Utilization -->
+            <!-- Infographic 2 (Top): Weekly Capacity Used (%) -->
             <div class="sim-card rounded-2xl p-3.5 shadow-md border-t-4 border-t-[#FBBC04] flex flex-col justify-between space-y-2">
               <div class="flex items-start justify-between gap-2">
                 <div>
                   <span class="text-xs font-bold uppercase tracking-wider text-[#facc15]">
-                    Token Pool Utilization
+                    Weekly Capacity Used (%)
                   </span>
                   <div class="text-[11px] sim-muted">
-                    Usage vs. available pool
+                    Share of available weekly tokens used by Friday
                   </div>
                 </div>
                 <span id="t1UtilStatusDot" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#34A853]/20 text-[#4ade80] border border-[#34A853]/40">
@@ -541,7 +541,7 @@
                 </span>
               </div>
 
-              <!-- Radial Gauge + Variance Row -->
+              <!-- Radial Gauge + Surplus/Shortfall Row -->
               <div class="flex items-center gap-3 pt-1">
                 <svg viewBox="0 0 120 120" class="w-20 h-20 shrink-0">
                   <circle
@@ -579,21 +579,21 @@
                 </svg>
 
                 <div class="flex-1 space-y-1 text-xs">
-                  <div class="text-[11px] sim-muted">Pool Variance</div>
+                  <div class="text-[11px] sim-muted">Weekly Surplus / Shortfall</div>
                   <div id="t1VarianceValue" class="text-base font-bold font-mono-num text-[#f87171]">-173.31M</div>
                   <div id="t1VarianceSub" class="text-[11px] sim-muted">
-                    Exceeds pool by 136.8%
+                    Over weekly limit by 136.8%
                   </div>
                 </div>
               </div>
             </div>
 
-            <!-- Infographic 3: Weekly Token Availability (GE licenses + Additional Monthly Spend) -->
+            <!-- Infographic 3: Total Weekly Capacity Available -->
             <div class="sim-card rounded-2xl p-3.5 shadow-md border-t-4 border-t-[#34A853] flex flex-col justify-between space-y-2">
               <div class="space-y-1">
                 <div class="flex items-start justify-between gap-2">
                   <span class="text-xs font-bold uppercase tracking-wider text-[#4ade80]">
-                    Weekly Token Availability
+                    Total Weekly Capacity Available
                   </span>
                   <span class="w-7 h-7 rounded-xl bg-[#34A853]/15 border border-[#34A853]/40 text-[#4ade80] flex items-center justify-center shrink-0">
                     <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -602,7 +602,7 @@
                   </span>
                 </div>
                 <div id="t1QuotaBasisLabel" class="text-[11px] sim-muted">
-                  Based on total GE licenses &amp; additional spend
+                  From purchased seats &amp; any extra monthly budget
                 </div>
                 <div id="t1QuotaTotal" class="text-2xl font-extrabold font-mono-num text-[#4ade80]">
                   126.69M
@@ -614,17 +614,17 @@
                   <div class="h-full w-full bg-[#34A853] rounded-full"></div>
                 </div>
                 <div id="t1QuotaSub" class="text-xs sim-muted font-mono-num">
-                  100 GE Plus licenses · 1.27M/user
+                  100 Plus seats · 1.27M/user
                 </div>
               </div>
             </div>
 
-            <!-- Infographic 4: Weekly Token Usage (based on total AGY users) -->
+            <!-- Infographic 4: Total Weekly Team Usage -->
             <div class="sim-card rounded-2xl p-3.5 shadow-md border-t-4 border-t-[#4285F4] flex flex-col justify-between space-y-2">
               <div class="space-y-1">
                 <div class="flex items-start justify-between gap-2">
                   <span class="text-xs font-bold uppercase tracking-wider text-[#60a5fa]">
-                    Weekly Token Usage
+                    Total Weekly Team Usage
                   </span>
                   <span class="w-7 h-7 rounded-xl bg-[#4285F4]/15 border border-[#4285F4]/40 text-[#60a5fa] flex items-center justify-center shrink-0">
                     <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -633,7 +633,7 @@
                   </span>
                 </div>
                 <div class="text-[11px] sim-muted">
-                  Based on total AGY users
+                  Based on active Antigravity users &amp; activity mix
                 </div>
                 <div id="t1BurnTotal" class="text-2xl font-extrabold font-mono-num text-[#60a5fa]">
                   300.00M
@@ -648,7 +648,7 @@
                   <div id="t1UsageBarLight" class="bg-[#4285F4] h-full transition-all" style="width: 10%"></div>
                 </div>
                 <div id="t1BurnSub" class="text-xs sim-muted font-mono-num">
-                  100 AGY users · 60.00M/day
+                  100 active users · 60.00M/day
                 </div>
               </div>
             </div>
@@ -658,12 +658,12 @@
       </section>
 
       <!-- ===================================================================== -->
-      <!-- PANEL 2: LICENSING (67:33 Split)                                      -->
+      <!-- PANEL 2: PLAN & SEATS (67:33 Split)                                   -->
       <!-- ===================================================================== -->
       <section id="tabPanel-2">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 items-stretch">
 
-          <!-- Licensing Configuration -->
+          <!-- Plan & Seats Configuration -->
           <div class="lg:col-span-2 sim-card rounded-2xl p-5 sm:p-6 shadow-md space-y-6">
             <div class="flex items-center gap-3 border-b border-[var(--sim-border)] pb-4">
               <div class="w-9 h-9 rounded-xl bg-[#34A853]/15 border border-[#34A853]/40 text-[#4ade80] flex items-center justify-center">
@@ -672,20 +672,20 @@
                 </svg>
               </div>
               <div>
-                <h2 class="text-base sm:text-lg font-bold">Gemini Enterprise Licensing</h2>
-                <p class="text-xs sim-muted">Configure subscription tier, procured Gemini Enterprise seats, and active Antigravity users</p>
+                <h2 class="text-base sm:text-lg font-bold">Plan &amp; Seats</h2>
+                <p class="text-xs sim-muted">Choose your Gemini Enterprise plan, total purchased seats, and active Antigravity users</p>
               </div>
             </div>
 
-            <!-- GE Subscription Tier Radio Buttons (Moved to Top) -->
+            <!-- Gemini Enterprise Plan Radio Buttons (Placed at Top) -->
             <div class="p-5 rounded-xl sim-subcard space-y-3.5">
               <div class="flex items-center justify-between">
                 <div>
-                  <h3 class="text-sm font-bold">GE Subscription Tier</h3>
-                  <p class="text-xs sim-muted">Select Standard or Plus to set the weekly pooled AI token entitlement per procured license</p>
+                  <h3 class="text-sm font-bold">Gemini Enterprise Plan</h3>
+                  <p class="text-xs sim-muted">Choose your subscription plan. Each seat adds weekly AI credit to a shared team pool.</p>
                 </div>
                 <span id="weeklyCreditPerSeatLabel" class="text-xs font-mono-num font-bold px-2.5 py-1 rounded-lg bg-[#34A853]/15 text-[#4ade80] border border-[#34A853]/30">
-                  $3.75 / license / week
+                  $3.75 / seat / week
                 </span>
               </div>
 
@@ -703,7 +703,7 @@
                   />
                   <div>
                     <div id="tierStandardTitle" class="text-sm font-bold">Standard</div>
-                    <div class="text-xs sim-muted font-mono-num mt-0.5">$10 / month · $2.50 / week per license</div>
+                    <div class="text-xs sim-muted font-mono-num mt-0.5">$10 / month · $2.50 / week per seat</div>
                   </div>
                 </label>
 
@@ -721,21 +721,21 @@
                   />
                   <div>
                     <div id="tierPlusTitle" class="text-sm font-bold text-[#60a5fa]">Plus</div>
-                    <div class="text-xs sim-muted font-mono-num mt-0.5">$15 / month · $3.75 / week per license</div>
+                    <div class="text-xs sim-muted font-mono-num mt-0.5">$15 / month · $3.75 / week per seat</div>
                   </div>
                 </label>
               </div>
             </div>
 
-            <!-- License Count & Active AGY Users Grid (Placed Below Subscription Tier) -->
+            <!-- Purchased Seats & Active Users Grid (Placed Below Subscription Plan) -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-              <!-- Total # of GE Licenses -->
+              <!-- Total Purchased Seats -->
               <div class="p-4 rounded-xl sim-subcard space-y-2">
                 <label for="geLicensesInput" class="block text-xs font-bold">
-                  Total # of GE Licenses
+                  Total Purchased Seats
                 </label>
                 <p class="text-xs sim-muted">
-                  No. of seats procured by the customer (determines total pooled quota)
+                  Total Gemini Enterprise licenses bought by your organization (sets your shared weekly pool size)
                 </p>
                 <div class="relative pt-1">
                   <input
@@ -747,24 +747,24 @@
                     value="100"
                     oninput="handleLicenseChange(this.value)"
                     class="w-full px-3.5 py-2.5 rounded-xl sim-input text-base font-bold font-mono-num focus:outline-none focus:ring-2 focus:ring-[#4285F4]"
-                    placeholder="Enter total GE licenses"
+                    placeholder="Enter total purchased seats"
                   />
-                  <span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs sim-muted">licenses</span>
+                  <span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs sim-muted">seats</span>
                 </div>
               </div>
 
-              <!-- No. of AGY users -->
+              <!-- Active Antigravity Users -->
               <div class="p-4 rounded-xl sim-subcard space-y-2">
                 <div class="flex items-center justify-between">
                   <label for="agyUsersInput" class="block text-xs font-bold">
-                    No. of AGY users
+                    Active Antigravity Users
                   </label>
                   <span id="agyUsersCapBadge" class="text-xs font-mono-num px-2 py-0.5 rounded bg-[#4285F4]/15 text-[#60a5fa] border border-[#4285F4]/30">
                     Max: 100
                   </span>
                 </div>
                 <p class="text-xs sim-muted">
-                  Effective number of users consuming AGY Quota (cannot exceed GE licenses)
+                  Number of team members actively using Antigravity (cannot exceed total purchased seats)
                 </p>
                 <div class="relative pt-1">
                   <input
@@ -776,18 +776,18 @@
                     value="100"
                     oninput="handleAgyUsersChange(this.value)"
                     class="w-full px-3.5 py-2.5 rounded-xl sim-input text-base font-bold font-mono-num focus:outline-none focus:ring-2 focus:ring-[#34A853]"
-                    placeholder="Enter active AGY users"
+                    placeholder="Enter active users"
                   />
                   <span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs sim-muted">users</span>
                 </div>
                 <p id="agyUsersWarning" class="text-xs text-[#f87171] font-semibold hidden">
-                  Capped at Total # of GE Licenses.
+                  Capped at Total Purchased Seats.
                 </p>
               </div>
             </div>
           </div>
 
-          <!-- Weekly Token Entitlement -->
+          <!-- Available Weekly Capacity -->
           <div class="lg:col-span-1 sim-card rounded-2xl p-5 sm:p-6 shadow-md flex flex-col justify-between space-y-5">
             <div class="space-y-5">
               <div class="flex items-center gap-3 border-b border-[var(--sim-border)] pb-4">
@@ -797,15 +797,15 @@
                   </svg>
                 </div>
                 <div>
-                  <h2 class="text-base sm:text-lg font-bold">Weekly Token Capacity</h2>
-                  <p class="text-xs sim-muted">Available token quota based on licenses &amp; model mix</p>
+                  <h2 class="text-base sm:text-lg font-bold">Available Weekly Capacity</h2>
+                  <p class="text-xs sim-muted">Total AI tokens your team can use each week from your purchased seats</p>
                 </div>
               </div>
 
               <!-- Weekly Total Metric (+6px larger font size) -->
               <div class="p-5 rounded-2xl bg-gradient-to-br from-[#4285F4]/15 via-[#4285F4]/5 to-transparent border-2 border-[#4285F4]/45 space-y-2">
                 <label class="block font-semibold readonly-plus-6px-label">
-                  Total Tokens available per week for consumption
+                  Total Weekly Team Capacity
                 </label>
                 <div
                   id="readonlyWeeklyTotalTokens"
@@ -822,7 +822,7 @@
               <!-- Per-User Weekly Metric (+6px larger font size) -->
               <div class="p-5 rounded-2xl bg-gradient-to-br from-[#34A853]/15 via-[#34A853]/5 to-transparent border-2 border-[#34A853]/45 space-y-2">
                 <label class="block font-semibold readonly-plus-6px-label">
-                  Total Tokens available per user per week for consumption
+                  Average Weekly Capacity per Active User
                 </label>
                 <div
                   id="readonlyPerUserWeeklyTokens"
@@ -832,7 +832,7 @@
                   1.27M tokens
                 </div>
                 <div id="readonlyPerUserWeeklyExact" class="text-xs font-mono-num sim-muted">
-                  1,266,892 tokens / AGY user / week (~253.4K / workday)
+                  1,266,892 tokens / active user / week (~253.4K / workday)
                 </div>
               </div>
             </div>
@@ -840,15 +840,15 @@
           <!-- Supporting Summary Footer -->
           <div class="p-4 rounded-xl sim-subcard space-y-2 text-xs">
             <div class="flex justify-between">
-              <span class="sim-muted">Active AGY Users / GE Licenses:</span>
+              <span class="sim-muted">Active Users / Purchased Seats:</span>
               <span id="mathActiveRatio" class="font-mono-num font-semibold">100 / 100</span>
             </div>
             <div class="flex justify-between">
-              <span class="sim-muted">Weekly Pool Credit:</span>
+              <span class="sim-muted">Weekly Included Plan Credit:</span>
               <span id="mathWeeklyPoolCredit" class="font-mono-num font-semibold">$375.00 / wk</span>
             </div>
             <div class="flex justify-between pt-1.5 border-t border-[var(--sim-border)]">
-              <span class="font-semibold">Effective Blended Token Rate:</span>
+              <span class="font-semibold">Average Cost per 1M Tokens:</span>
               <span id="mathEffectiveFleetRate" class="font-mono-num font-bold text-[#60a5fa]">$2.96 / 1M</span>
             </div>
           </div>
@@ -858,18 +858,18 @@
     </section>
 
     <!-- ===================================================================== -->
-    <!-- PANEL 3: USER DISTRIBUTION                                            -->
+    <!-- PANEL 3: TEAM USAGE HABITS                                            -->
     <!-- ===================================================================== -->
     <section id="tabPanel-3" class="hidden space-y-5">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
 
-        <!-- Left Card: User Category Distribution (%) -->
+        <!-- Left Card: Team Activity Breakdown (%) -->
         <div class="sim-card rounded-2xl p-5 sm:p-6 shadow-md space-y-5">
           <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--sim-border)] pb-4">
             <div>
-              <h2 class="text-base sm:text-lg font-bold">User Category Distribution (%)</h2>
+              <h2 class="text-base sm:text-lg font-bold">Team Activity Breakdown (%)</h2>
               <p class="text-xs sim-muted mt-0.5">
-                Percentage split of active AGY users across Heavy, Moderate, and Light categories
+                Estimate what percentage of your team are Power, Regular, or Occasional users
               </p>
             </div>
             <div class="flex items-center gap-2">
@@ -889,9 +889,9 @@
           <!-- Stacked Distribution Bar Preview -->
           <div class="space-y-2">
             <div class="flex justify-between text-xs font-bold">
-              <span class="text-[#f87171]">Heavy: <span id="barLabelHeavy">30%</span></span>
-              <span class="text-[#facc15]">Moderate: <span id="barLabelMod">40%</span></span>
-              <span class="text-[#60a5fa]">Light: <span id="barLabelLight">30%</span></span>
+              <span class="text-[#f87171]">Power (Heavy): <span id="barLabelHeavy">30%</span></span>
+              <span class="text-[#facc15]">Regular (Moderate): <span id="barLabelMod">40%</span></span>
+              <span class="text-[#60a5fa]">Occasional (Light): <span id="barLabelLight">30%</span></span>
             </div>
             <div class="w-full h-4 rounded-full overflow-hidden flex sim-subcard">
               <div id="distBarHeavy" class="bg-[#EA4335] h-full transition-all duration-150" style="width: 30%;"></div>
@@ -900,12 +900,12 @@
             </div>
           </div>
 
-          <!-- Heavy Category % Input -->
+          <!-- Power Users % Input -->
           <div class="p-4 rounded-xl sim-subcard space-y-2">
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-2">
                 <span class="w-3 h-3 rounded-full bg-[#EA4335]"></span>
-                <span class="text-sm font-bold">Heavy Users</span>
+                <span class="text-sm font-bold">Power Users (Heavy)</span>
               </div>
               <div class="flex items-center">
                 <input
@@ -933,12 +933,12 @@
             />
           </div>
 
-          <!-- Moderate Category % Input -->
+          <!-- Regular Users % Input -->
           <div class="p-4 rounded-xl sim-subcard space-y-2">
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-2">
                 <span class="w-3 h-3 rounded-full bg-[#FBBC04]"></span>
-                <span class="text-sm font-bold">Moderate Users</span>
+                <span class="text-sm font-bold">Regular Users (Moderate)</span>
               </div>
               <div class="flex items-center">
                 <input
@@ -966,12 +966,12 @@
             />
           </div>
 
-          <!-- Light Category % Input -->
+          <!-- Occasional Users % Input -->
           <div class="p-4 rounded-xl sim-subcard space-y-2">
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-2">
                 <span class="w-3 h-3 rounded-full bg-[#4285F4]"></span>
-                <span class="text-sm font-bold">Light Users</span>
+                <span class="text-sm font-bold">Occasional Users (Light)</span>
               </div>
               <div class="flex items-center">
                 <input
@@ -1000,13 +1000,13 @@
           </div>
         </div>
 
-        <!-- Right Card: Estimated Weekly Token Burn per User Category -->
+        <!-- Right Card: Estimated Weekly Usage per Person -->
         <div class="sim-card rounded-2xl p-5 sm:p-6 shadow-md space-y-5">
           <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--sim-border)] pb-4">
             <div>
-              <h2 class="text-base sm:text-lg font-bold">Estimated Weekly Token Burn per Category</h2>
+              <h2 class="text-base sm:text-lg font-bold">Estimated Weekly Usage per Person</h2>
               <p class="text-xs sim-muted mt-0.5">
-                Estimated weekly token burn (in Millions of tokens/user/week) across each user category
+                Average tokens one person in each group uses per week (in millions)
               </p>
             </div>
             <button
@@ -1014,17 +1014,17 @@
               onclick="resetCohortBurnDefaults()"
               class="px-3 py-1 rounded-lg text-xs font-semibold sim-subcard hover:border-[#4285F4] cursor-pointer"
             >
-              Reset Default Burn
+              Reset Default Usage
             </button>
           </div>
 
-          <!-- Heavy User Weekly Token Burn -->
+          <!-- Power User Weekly Usage -->
           <div class="p-4 rounded-xl sim-subcard space-y-2.5">
             <div class="flex items-center justify-between">
               <div>
-                <div class="text-sm font-bold text-[#f87171]">Heavy User — Weekly Token Burn</div>
+                <div class="text-sm font-bold text-[#f87171]">Power User — Weekly Usage</div>
                 <div id="heavyDailyEquiv" class="text-xs sim-muted font-mono-num">
-                  ~1.00M tokens/workday · Category total: 150.0M / wk
+                  ~1.00M tokens/workday · Group total: 150.0M / wk
                 </div>
               </div>
               <div class="flex items-center gap-1.5">
@@ -1053,13 +1053,13 @@
             />
           </div>
 
-          <!-- Moderate User Weekly Token Burn -->
+          <!-- Regular User Weekly Usage -->
           <div class="p-4 rounded-xl sim-subcard space-y-2.5">
             <div class="flex items-center justify-between">
               <div>
-                <div class="text-sm font-bold text-[#facc15]">Moderate User — Weekly Token Burn</div>
+                <div class="text-sm font-bold text-[#facc15]">Regular User — Weekly Usage</div>
                 <div id="modDailyEquiv" class="text-xs sim-muted font-mono-num">
-                  ~0.60M tokens/workday · Category total: 120.0M / wk
+                  ~0.60M tokens/workday · Group total: 120.0M / wk
                 </div>
               </div>
               <div class="flex items-center gap-1.5">
@@ -1088,13 +1088,13 @@
             />
           </div>
 
-          <!-- Light User Weekly Token Burn -->
+          <!-- Occasional User Weekly Usage -->
           <div class="p-4 rounded-xl sim-subcard space-y-2.5">
             <div class="flex items-center justify-between">
               <div>
-                <div class="text-sm font-bold text-[#60a5fa]">Light User — Weekly Token Burn</div>
+                <div class="text-sm font-bold text-[#60a5fa]">Occasional User — Weekly Usage</div>
                 <div id="lightDailyEquiv" class="text-xs sim-muted font-mono-num">
-                  ~0.20M tokens/workday · Category total: 30.0M / wk
+                  ~0.20M tokens/workday · Group total: 30.0M / wk
                 </div>
               </div>
               <div class="flex items-center gap-1.5">
@@ -1123,14 +1123,14 @@
             />
           </div>
 
-          <!-- Weekly Burn Rollup Box -->
+          <!-- Weekly Usage Rollup Box -->
           <div class="p-4 rounded-xl sim-subcard flex flex-wrap items-center justify-between gap-3">
             <div>
-              <div class="text-xs sim-muted">Weighted Average Burn / AGY User / Week</div>
+              <div class="text-xs sim-muted">Average Weekly Usage per Person</div>
               <div id="weightedUserBurnLabel" class="text-base font-bold font-mono-num">3.000M tokens / user / wk</div>
             </div>
             <div class="text-right">
-              <div class="text-xs sim-muted">Total Weekly Token Demand</div>
+              <div class="text-xs sim-muted">Total Estimated Team Usage / Week</div>
               <div id="totalFleetWeeklyDemandLabel" class="text-base font-bold font-mono-num text-[#60a5fa]">300.00M tokens / wk</div>
             </div>
           </div>
@@ -1140,14 +1140,14 @@
     </section>
 
     <!-- ===================================================================== -->
-    <!-- PANEL 4: MODELS USAGE (Model Mix + I/O Split + Model Pricing)         -->
+    <!-- PANEL 4: AI MODEL & BUDGET SETTINGS                                   -->
     <!-- ===================================================================== -->
     <section id="tabPanel-4" class="hidden space-y-5">
 
-      <!-- Top Row: Model Usage Mix, Input:Output Tokens Mix & Additional Spend available per month -->
+      <!-- Top Row: AI Model Split, Prompt vs. Response Ratio & Extra Monthly Budget -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
 
-        <!-- Model Usage Mix (Thinking vs Workhorse models) -->
+        <!-- AI Model Split (Complex Reasoning vs. Everyday Tasks) -->
         <div class="sim-card rounded-2xl p-5 sm:p-6 shadow-md space-y-4">
           <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--sim-border)] pb-3.5">
             <div>
@@ -1155,10 +1155,10 @@
                 <svg class="w-4 h-4 text-[#34A853]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
                 </svg>
-                Model Usage Mix (Thinking vs. Workhorse)
+                AI Model Split (Complex Reasoning vs. Everyday Tasks)
               </h2>
               <p class="text-xs sim-muted mt-0.5">
-                Split of <strong>Gemini Pro</strong> (Thinking) vs. <strong>Gemini Flash</strong> (Workhorse). Default: 80% Flash &amp; 20% Pro.
+                Balance between <strong>Gemini Pro</strong> (for complex problem-solving) and <strong>Gemini Flash</strong> (for fast, everyday tasks). Default: 80% Flash / 20% Pro.
               </p>
             </div>
             <button
@@ -1192,14 +1192,14 @@
               style="background: linear-gradient(90deg, #9334E6 0%, #9334E6 20%, #4285F4 20%, #4285F4 100%);"
             />
             <div class="flex justify-between text-xs sim-muted">
-              <span>◀ Pro (Thinking)</span>
+              <span>◀ Pro (Reasoning)</span>
               <span>50% / 50%</span>
-              <span>Flash (Workhorse) ▶</span>
+              <span>Flash (Everyday) ▶</span>
             </div>
           </div>
         </div>
 
-        <!-- Input : Output Tokens Mix -->
+        <!-- Prompt vs. Response Ratio (Input vs. Output) -->
         <div class="sim-card rounded-2xl p-5 sm:p-6 shadow-md space-y-4">
           <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--sim-border)] pb-3.5">
             <div>
@@ -1207,10 +1207,10 @@
                 <svg class="w-4 h-4 text-[#FBBC04]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
                 </svg>
-                Input : Output Tokens Mix
+                Prompt vs. Response Ratio (Input vs. Output)
               </h2>
               <p class="text-xs sim-muted mt-0.5">
-                Proportion of <strong>Input Tokens</strong> vs. <strong>Output Tokens</strong>. Default: 80% Input &amp; 20% Output.
+                <strong>Input (Prompts):</strong> what users send to the AI. <strong>Output (Responses):</strong> what the AI writes back. Default: 80% Input / 20% Output.
               </p>
             </div>
             <button
@@ -1224,10 +1224,10 @@
 
           <div class="flex items-center justify-between text-xs font-bold">
             <span class="px-3 py-1 rounded-lg bg-[#34A853]/15 text-[#4ade80] border border-[#34A853]/30 font-mono-num">
-              Input Tokens: <span id="inputMixPctLabel">80%</span>
+              Prompts (Input): <span id="inputMixPctLabel">80%</span>
             </span>
             <span class="px-3 py-1 rounded-lg bg-[#EA4335]/15 text-[#f87171] border border-[#EA4335]/30 font-mono-num">
-              Output Tokens: <span id="outputMixPctLabel">20%</span>
+              Responses (Output): <span id="outputMixPctLabel">20%</span>
             </span>
           </div>
 
@@ -1244,14 +1244,14 @@
               style="background: linear-gradient(90deg, #34A853 0%, #34A853 80%, #EA4335 80%, #EA4335 100%);"
             />
             <div class="flex justify-between text-xs sim-muted">
-              <span>◀ Input Tokens</span>
+              <span>◀ Prompts (Input)</span>
               <span>50% / 50%</span>
-              <span>Output Tokens ▶</span>
+              <span>Responses (Output) ▶</span>
             </div>
           </div>
         </div>
 
-        <!-- Additional Spend available per month -->
+        <!-- Extra Monthly Budget (Optional) -->
         <div class="sim-card rounded-2xl p-5 sm:p-6 shadow-md space-y-4 flex flex-col justify-between">
           <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--sim-border)] pb-3.5">
             <div>
@@ -1259,10 +1259,10 @@
                 <svg class="w-4 h-4 text-[#4285F4]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                Additional Spend available per month
+                Extra Monthly Budget (Optional)
               </h2>
               <p class="text-xs sim-muted mt-0.5">
-                Monthly dollar budget added to compute Total Availability in Consumption Projection. Default: $0.
+                Additional monthly budget ($ / month) on top of your included seat credits. Default: $0.
               </p>
             </div>
             <button
@@ -1292,11 +1292,11 @@
 
             <div class="p-3 rounded-xl sim-subcard flex items-center justify-between text-xs">
               <div>
-                <div class="sim-muted">Weekly Budget Added</div>
+                <div class="sim-muted">Extra Weekly Budget</div>
                 <div id="t4AddWeeklySpendLabel" class="font-bold font-mono-num text-[#60a5fa]">$0.00 / wk</div>
               </div>
               <div class="text-right">
-                <div class="sim-muted">Additional Tokens / Wk</div>
+                <div class="sim-muted">Extra Weekly Capacity Added</div>
                 <div id="t4AddWeeklyTokensLabel" class="font-bold font-mono-num text-[#4ade80]">+0.00M / wk</div>
               </div>
             </div>
@@ -1305,15 +1305,15 @@
 
       </div>
 
-      <!-- Bottom Row: Model Family Pricing ($ per 1M Tokens — Input & Output) + Separate Pro & Flash Discount Widgets -->
+      <!-- Bottom Row: Model Rates & Negotiated Discounts -->
       <div class="sim-card rounded-2xl p-5 sm:p-6 shadow-md space-y-5">
         <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 border-b border-[var(--sim-border)] pb-4">
           <div>
             <h2 class="text-base sm:text-lg font-bold">
-              Model Family Pricing ($ per 1M Tokens — Input &amp; Output) &amp; Discount Pricing
+              Model Rates &amp; Negotiated Discounts
             </h2>
             <p class="text-xs sim-muted mt-0.5">
-              Prepopulated with publicly available Google Cloud / Vertex AI pricing for the latest Gemini Pro &amp; Gemini Flash models, with dedicated Discount Pricing (%) widgets for each model family.
+              Standard Google Cloud rates per 1M tokens, plus any custom discount for your organization.
             </p>
           </div>
 
@@ -1323,12 +1323,12 @@
               onclick="applyPricingPreset('latest_public')"
               class="px-3 py-1.5 rounded-xl text-xs font-semibold sim-subcard hover:border-[#4285F4] cursor-pointer transition-all"
             >
-              Reset Default Pricing &amp; 0% Discounts (Pro $2.00/$12.00 · Flash $1.50/$7.50)
+              Reset Default Rates &amp; 0% Discounts (Pro $2.00/$12.00 · Flash $1.50/$7.50)
             </button>
           </div>
         </div>
 
-        <!-- Two Model Family Pricing Cards (Each with its own Discount Pricing Widget) -->
+        <!-- Two Model Family Pricing Cards (Each with its own Discount Widget) -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
 
           <!-- Gemini Pro Pricing Card -->
@@ -1337,19 +1337,19 @@
               <div class="flex items-center gap-2.5">
                 <span class="w-9 h-9 rounded-xl bg-[#a855f7]/15 border border-[#a855f7]/40 text-[#c084fc] flex items-center justify-center font-bold text-sm">Pro</span>
                 <div>
-                  <h3 class="text-sm sm:text-base font-bold">Gemini Pro (Thinking Model Family)</h3>
+                  <h3 class="text-sm sm:text-base font-bold">Gemini Pro (Advanced Reasoning)</h3>
                   <p id="t4ProNetPricesLabel" class="text-xs sim-muted font-mono-num">Effective Rate: $2.00 In / $12.00 Out per 1M</p>
                 </div>
               </div>
               <span id="proShareBadgeTab4" class="px-2.5 py-1 rounded-full text-xs font-semibold bg-[#a855f7]/15 text-[#c084fc] border border-[#a855f7]/30 font-mono-num">
-                Mix Weight: 20%
+                Usage Share: 20%
               </span>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label for="proInputPrice" class="block text-xs font-semibold mb-1.5">
-                  Input Token Price ($ / 1M tokens)
+                  Input Rate — Prompts &amp; Context ($ / 1M)
                 </label>
                 <div class="relative">
                   <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-bold sim-muted">$</span>
@@ -1369,7 +1369,7 @@
 
               <div>
                 <label for="proOutputPrice" class="block text-xs font-semibold mb-1.5">
-                  Output Token Price ($ / 1M tokens)
+                  Output Rate — AI Responses ($ / 1M)
                 </label>
                 <div class="relative">
                   <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-bold sim-muted">$</span>
@@ -1388,14 +1388,14 @@
               </div>
             </div>
 
-            <!-- Gemini Pro Discount Pricing Widget -->
+            <!-- Gemini Pro Discount Widget -->
             <div class="p-3.5 rounded-xl sim-card space-y-2.5 border border-[#a855f7]/30">
               <div class="flex flex-wrap items-center justify-between gap-2">
                 <div class="text-xs font-bold flex items-center gap-1.5 text-[#c084fc]">
                   <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M17 17h.01M7 17L17 7M9.5 7a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0zm10 10a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
                   </svg>
-                  Gemini Pro Discount Pricing (%)
+                  Gemini Pro Discount (%)
                 </div>
                 <div class="flex items-center gap-1.5">
                   <input
@@ -1439,7 +1439,7 @@
 
             <div class="p-3.5 rounded-xl sim-card flex items-center justify-between text-xs">
               <span class="sim-muted">
-                Blended Gemini Pro Rate (<strong id="t4ProIoSplitLabel" class="text-[var(--sim-text)]">80% Input : 20% Output</strong>):
+                Average Gemini Pro Cost (<strong id="t4ProIoSplitLabel" class="text-[var(--sim-text)]">80% Input : 20% Output</strong>):
               </span>
               <span id="t4ProBlendedValue" class="text-sm font-bold font-mono-num text-[#c084fc]">$4.00 / 1M tokens</span>
             </div>
@@ -1451,19 +1451,19 @@
               <div class="flex items-center gap-2.5">
                 <span class="w-9 h-9 rounded-xl bg-[#4285F4]/15 border border-[#4285F4]/40 text-[#60a5fa] flex items-center justify-center font-bold text-sm">Flash</span>
                 <div>
-                  <h3 class="text-sm sm:text-base font-bold">Gemini Flash (Workhorse Model Family)</h3>
+                  <h3 class="text-sm sm:text-base font-bold">Gemini Flash (Fast Everyday Tasks)</h3>
                   <p id="t4FlashNetPricesLabel" class="text-xs sim-muted font-mono-num">Effective Rate: $1.50 In / $7.50 Out per 1M</p>
                 </div>
               </div>
               <span id="flashShareBadgeTab4" class="px-2.5 py-1 rounded-full text-xs font-semibold bg-[#4285F4]/15 text-[#60a5fa] border border-[#4285F4]/30 font-mono-num">
-                Mix Weight: 80%
+                Usage Share: 80%
               </span>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label for="flashInputPrice" class="block text-xs font-semibold mb-1.5">
-                  Input Token Price ($ / 1M tokens)
+                  Input Rate — Prompts &amp; Context ($ / 1M)
                 </label>
                 <div class="relative">
                   <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-bold sim-muted">$</span>
@@ -1483,7 +1483,7 @@
 
               <div>
                 <label for="flashOutputPrice" class="block text-xs font-semibold mb-1.5">
-                  Output Token Price ($ / 1M tokens)
+                  Output Rate — AI Responses ($ / 1M)
                 </label>
                 <div class="relative">
                   <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-bold sim-muted">$</span>
@@ -1502,14 +1502,14 @@
               </div>
             </div>
 
-            <!-- Gemini Flash Discount Pricing Widget -->
+            <!-- Gemini Flash Discount Widget -->
             <div class="p-3.5 rounded-xl sim-card space-y-2.5 border border-[#4285F4]/30">
               <div class="flex flex-wrap items-center justify-between gap-2">
                 <div class="text-xs font-bold flex items-center gap-1.5 text-[#60a5fa]">
                   <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M17 17h.01M7 17L17 7M9.5 7a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0zm10 10a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
                   </svg>
-                  Gemini Flash Discount Pricing (%)
+                  Gemini Flash Discount (%)
                 </div>
                 <div class="flex items-center gap-1.5">
                   <input
@@ -1553,7 +1553,7 @@
 
             <div class="p-3.5 rounded-xl sim-card flex items-center justify-between text-xs">
               <span class="sim-muted">
-                Blended Gemini Flash Rate (<strong id="t4FlashIoSplitLabel" class="text-[var(--sim-text)]">80% Input : 20% Output</strong>):
+                Average Gemini Flash Cost (<strong id="t4FlashIoSplitLabel" class="text-[var(--sim-text)]">80% Input : 20% Output</strong>):
               </span>
               <span id="t4FlashBlendedValue" class="text-sm font-bold font-mono-num text-[#60a5fa]">$2.70 / 1M tokens</span>
             </div>
@@ -1566,23 +1566,23 @@
           <div class="space-y-1">
             <div class="flex flex-wrap items-center gap-2">
               <span class="text-xs font-bold uppercase tracking-wider sim-muted">
-                Combined Effective Token Rate (Model Mix + I/O + Model Discounts)
+                Overall Average Cost per 1M Tokens
               </span>
               <span id="t4DiscountActiveBadge" class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-[#34A853]/15 text-[#4ade80] border border-[#34A853]/30 font-mono-num">
                 Pro 0% off · Flash 0% off
               </span>
             </div>
             <div class="text-xs sim-muted">
-              Formula: <code class="font-mono-num">Effective Rate = (Pro% × (1 − ProDiscount%) × Pro_Blended) + (Flash% × (1 − FlashDiscount%) × Flash_Blended)</code>
+              Combined price after applying your AI model split, prompt/response ratio, and discounts.
             </div>
           </div>
           <div class="flex items-center gap-4">
             <div class="text-right">
-              <div class="text-xs sim-muted">Effective Cost / 1M Tokens</div>
+              <div class="text-xs sim-muted">Average Cost / 1M Tokens</div>
               <div id="t4CombinedRate" class="text-xl font-bold font-mono-num text-[#4ade80]">$2.96 / 1M</div>
             </div>
             <div class="text-right pl-4 border-l border-[var(--sim-border)]">
-              <div class="text-xs sim-muted">Tokens per $1.00 Spend</div>
+              <div class="text-xs sim-muted">Tokens You Get per $1.00</div>
               <div id="t4TokensPerDollar" class="text-xl font-bold font-mono-num text-[#60a5fa]">0.34M</div>
             </div>
           </div>
@@ -1606,7 +1606,7 @@
         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#34A853] opacity-75"></span>
         <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#34A853]"></span>
       </span>
-      <span id="wizardNudgeText">Fields updated — Click Next to continue to User Distribution</span>
+      <span id="wizardNudgeText">Updated — Click Next to go to Team Usage Habits</span>
       <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
         <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
       </svg>
@@ -1696,13 +1696,13 @@
       4: 'sim-tab-active-red'
     };
 
-    // Wizard Tab Order: 1. Licensing (2) -> 2. User Distribution (3) -> 3. Models Usage (4) -> 4. Consumption Projection (1)
+    // Wizard Tab Order: 1. Plan & Seats (2) -> 2. Team Usage Habits (3) -> 3. AI Model & Budget Settings (4) -> 4. Weekly Forecast & Budget (1)
     const WIZARD_ORDER = [2, 3, 4, 1];
     const TAB_TITLES = {
-      2: 'Licensing',
-      3: 'User Distribution',
-      4: 'Models Usage',
-      1: 'Consumption Projection'
+      2: 'Plan & Seats',
+      3: 'Team Usage Habits',
+      4: 'AI Model & Budget Settings',
+      1: 'Weekly Forecast & Budget'
     };
 
     function setThemeMode(mode) {
@@ -2214,15 +2214,15 @@
             stroke-dasharray="8 5"
           />
           <rect
-            x="${W - padR - 252}"
+            x="${W - padR - 256}"
             y="${Math.max(padT + 2, quotaY - 26)}"
-            width="248"
+            width="252"
             height="22"
             rx="6"
             fill="#34A853"
           />
           <text
-            x="${W - padR - 128}"
+            x="${W - padR - 130}"
             y="${Math.max(padT + 17, quotaY - 11)}"
             text-anchor="middle"
             fill="#ffffff"
@@ -2230,7 +2230,7 @@
             font-weight="700"
             class="font-mono-num"
           >
-            Weekly Token Quota: ${fmtM(m.weeklyQuotaM, 1)}
+            Weekly Capacity Limit: ${fmtM(m.weeklyQuotaM, 1)}
           </text>
         </g>
       `;
@@ -2290,7 +2290,7 @@
         const idx = state.hoveredDayIndex;
         const d = m.dailySeries[idx];
         const x = xFor(idx);
-        const boxW = 244;
+        const boxW = 258;
         const boxH = 114;
         const boxX = (x + 18 + boxW > W - padR) ? (x - boxW - 18) : (x + 18);
         const boxY = padT + 12;
@@ -2308,19 +2308,19 @@
           <g>
             <rect x="${boxX}" y="${boxY}" width="${boxW}" height="${boxH}" rx="10" fill="${tipBg}" fill-opacity="0.97" stroke="${tipBorder}" stroke-width="1.5" />
             <text x="${boxX + 12}" y="${boxY + 22}" fill="${tipTitle}" font-size="12" font-weight="700">
-              ${d.day} (Cumulative usage)
+              ${d.day} (Running Weekly Total)
             </text>
             <text x="${boxX + 12}" y="${boxY + 42}" fill="${tipHeavy}" font-size="12" font-weight="600" class="font-mono-num">
-              Heavy Users: ${fmtM(d.heavy, 2)}
+              Power Users: ${fmtM(d.heavy, 2)}
             </text>
             <text x="${boxX + 12}" y="${boxY + 60}" fill="${tipMod}" font-size="12" font-weight="600" class="font-mono-num">
-              Moderate Users: ${fmtM(d.moderate, 2)}
+              Regular Users: ${fmtM(d.moderate, 2)}
             </text>
             <text x="${boxX + 12}" y="${boxY + 78}" fill="${tipLight}" font-size="12" font-weight="600" class="font-mono-num">
-              Light Users: ${fmtM(d.light, 2)}
+              Occasional Users: ${fmtM(d.light, 2)}
             </text>
             <text x="${boxX + 12}" y="${boxY + 98}" fill="${tipCum}" font-size="12" font-weight="700" class="font-mono-num">
-              Cumulative Usage: ${fmtM(d.stack3, 2)} (${pctOfQuota}%)
+              Running Total: ${fmtM(d.stack3, 2)} (${pctOfQuota}%)
             </text>
           </g>
         `;
@@ -2389,23 +2389,23 @@
       const utilPct = m.weeklyQuotaM > 0 ? (m.totalWeeklyBurnM / m.weeklyQuotaM) * 100 : 0;
 
       // Panel 1 Right-Pane Infographics (25% pane)
-      const tierName = state.tier === 'plus' ? 'GE Plus' : 'GE Standard';
+      const tierName = state.tier === 'plus' ? 'Plus' : 'Standard';
       document.getElementById('t1QuotaTotal').textContent = fmtM(m.weeklyQuotaM, 2);
       document.getElementById('t1QuotaSub').textContent = state.additionalMonthlySpend > 0
-        ? `${fmtInt(state.licenses)} ${tierName} + $${fmtInt(state.additionalMonthlySpend)}/mo · ${fmtM(m.perUserWeeklyQuotaM, 2)}/user`
-        : `${fmtInt(state.licenses)} ${tierName} licenses · ${fmtM(m.perUserWeeklyQuotaM, 2)}/user`;
+        ? `${fmtInt(state.licenses)} ${tierName} seats + $${fmtInt(state.additionalMonthlySpend)}/mo · ${fmtM(m.perUserWeeklyQuotaM, 2)}/user`
+        : `${fmtInt(state.licenses)} ${tierName} seats · ${fmtM(m.perUserWeeklyQuotaM, 2)}/user`;
 
       document.getElementById('t1BurnTotal').textContent = fmtM(m.totalWeeklyBurnM, 2);
       document.getElementById('t1BurnSub').textContent =
-        `${fmtInt(state.agyUsers)} AGY users · ${fmtM(m.totalWeeklyBurnM / 5, 2)}/day`;
+        `${fmtInt(state.agyUsers)} active users · ${fmtM(m.totalWeeklyBurnM / 5, 2)}/day`;
 
-      // Stacked usage bar shares inside Infographic 2
+      // Stacked usage bar shares inside Infographic 4
       const burnDenom = m.totalWeeklyBurnM > 0 ? m.totalWeeklyBurnM : 1;
       document.getElementById('t1UsageBarHeavy').style.width = `${(m.heavyWeeklyM / burnDenom) * 100}%`;
       document.getElementById('t1UsageBarMod').style.width = `${(m.modWeeklyM / burnDenom) * 100}%`;
       document.getElementById('t1UsageBarLight').style.width = `${(m.lightWeeklyM / burnDenom) * 100}%`;
 
-      // Infographic 3: Radial Gauge & Utilization
+      // Infographic 2: Radial Gauge & Weekly Capacity Used (%)
       const circumference = 2 * Math.PI * 46; // ~289.03
       const clampedPct = Math.max(0, Math.min(100, utilPct));
       const dashOffset = circumference * (1 - clampedPct / 100);
@@ -2425,8 +2425,8 @@
         varValueEl.textContent = '+' + fmtM(varianceM, 2);
         varValueEl.className = 'text-base font-bold font-mono-num text-[#4ade80]';
         const bufferPct = m.weeklyQuotaM > 0 ? ((varianceM / m.weeklyQuotaM) * 100).toFixed(1) : '0.0';
-        varSubEl.textContent = `${bufferPct}% unconsumed headroom`;
-        chartStatusBadge.textContent = 'Within Weekly Quota';
+        varSubEl.textContent = `${bufferPct}% unused capacity remaining`;
+        chartStatusBadge.textContent = 'Within Weekly Limit';
         chartStatusBadge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-[#34A853]/20 text-[#4ade80] border border-[#34A853]/40';
 
         if (utilPct > 85) {
@@ -2442,20 +2442,20 @@
         varValueEl.textContent = fmtM(varianceM, 2);
         varValueEl.className = 'text-base font-bold font-mono-num text-[#f87171]';
         const overPct = m.weeklyQuotaM > 0 ? ((Math.abs(varianceM) / m.weeklyQuotaM) * 100).toFixed(1) : '0.0';
-        varSubEl.textContent = `Exceeds pool by ${overPct}%`;
-        chartStatusBadge.textContent = 'Quota Exceeded';
+        varSubEl.textContent = `Over weekly limit by ${overPct}%`;
+        chartStatusBadge.textContent = 'Over Weekly Limit';
         chartStatusBadge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-[#EA4335]/20 text-[#f87171] border border-[#EA4335]/40';
 
         gaugeArc.setAttribute('stroke', '#EA4335');
-        statusDot.textContent = 'Exceeded';
+        statusDot.textContent = 'Over Limit';
         statusDot.className = 'px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#EA4335]/20 text-[#f87171] border border-[#EA4335]/40';
       }
 
-      // Infographic 4: Call to Action Infographic
+      // Infographic 1: Recommendation & Budget Status Infographic
       // Conditions:
-      // - If Availability is close to +/-5% usage: "Full Utilization"
-      // - If Availability is greater than usage: "Capacity Available"
-      // - If Availability is lesser than usage: "Additional Spend Required" + indicative budget required per month
+      // - If Availability is close to +/-5% usage: "Optimal Capacity Match (Within ±5%)"
+      // - If Availability is greater than usage: "Sufficient Capacity Available"
+      // - If Availability is lesser than usage: "Additional Budget Needed" + Estimated Extra Monthly Budget Needed
       const ctaCard = document.getElementById('t1CtaCard');
       const ctaPill = document.getElementById('t1CtaStatusPill');
       const ctaHeadline = document.getElementById('t1CtaHeadline');
@@ -2474,23 +2474,23 @@
         ctaCard.className = 'sim-card rounded-2xl p-3.5 shadow-md border-t-4 border-t-[#FBBC04] flex flex-col justify-between space-y-2.5';
         ctaPill.textContent = 'Within ±5%';
         ctaPill.className = 'px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#FBBC04]/20 text-[#facc15] border border-[#FBBC04]/40';
-        ctaHeadline.textContent = 'Full Utilization';
+        ctaHeadline.textContent = 'Optimal Capacity Match';
         ctaHeadline.className = 'text-lg font-extrabold tracking-tight text-[#facc15]';
-        ctaDesc.textContent = 'Weekly token availability is within ±5% of projected weekly usage.';
+        ctaDesc.textContent = 'Your team’s expected usage closely matches your available weekly capacity (within ±5%).';
       } else if (m.weeklyQuotaM > m.totalWeeklyBurnM) {
         ctaCard.className = 'sim-card rounded-2xl p-3.5 shadow-md border-t-4 border-t-[#34A853] flex flex-col justify-between space-y-2.5';
-        ctaPill.textContent = 'Surplus Pool';
+        ctaPill.textContent = 'Surplus Capacity';
         ctaPill.className = 'px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#34A853]/20 text-[#4ade80] border border-[#34A853]/40';
-        ctaHeadline.textContent = 'Capacity Available';
+        ctaHeadline.textContent = 'Sufficient Capacity Available';
         ctaHeadline.className = 'text-lg font-extrabold tracking-tight text-[#4ade80]';
-        ctaDesc.textContent = `Weekly token availability exceeds projected usage by ${fmtM(varianceM, 2)}.`;
+        ctaDesc.textContent = `Your available weekly capacity covers expected team usage with ${fmtM(varianceM, 2)} to spare.`;
       } else {
         ctaCard.className = 'sim-card rounded-2xl p-3.5 shadow-md border-t-4 border-t-[#EA4335] flex flex-col justify-between space-y-2.5';
         ctaPill.textContent = 'Action Needed';
         ctaPill.className = 'px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#EA4335]/20 text-[#f87171] border border-[#EA4335]/40';
-        ctaHeadline.textContent = 'Additional Spend Required';
+        ctaHeadline.textContent = 'Additional Budget Needed';
         ctaHeadline.className = 'text-lg font-extrabold tracking-tight text-[#f87171]';
-        ctaDesc.textContent = `Weekly usage exceeds available token capacity by ${fmtM(m.shortfallWeeklyM, 2)}.`;
+        ctaDesc.textContent = `Expected team usage exceeds your available weekly capacity by ${fmtM(m.shortfallWeeklyM, 2)}.`;
       }
 
       if (isLessThanUsage) {
@@ -2498,7 +2498,7 @@
         ctaMonthlyBudget.textContent =
           `$${m.indicativeMonthlyBudgetRequired.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} / mo`;
         ctaBudgetSub.textContent =
-          `Covers ${fmtM(m.shortfallWeeklyM, 2)}/wk shortfall ($${m.shortfallWeeklyDollars.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}/wk)`;
+          `Covers ${fmtM(m.shortfallWeeklyM, 2)}/wk gap ($${m.shortfallWeeklyDollars.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}/wk)`;
       } else {
         ctaBudgetBox.classList.add('hidden');
       }
@@ -2532,10 +2532,10 @@
         `;
       }).join('');
 
-      // Panel 2: Licensing & Weekly Token Capacity
+      // Panel 2: Plan & Seats + Available Weekly Capacity
       document.getElementById('agyUsersCapBadge').textContent = `Max: ${fmtInt(state.licenses)}`;
       document.getElementById('weeklyCreditPerSeatLabel').textContent =
-        `$${m.weeklyCreditPerLicense.toFixed(2)} / license / week`;
+        `$${m.weeklyCreditPerLicense.toFixed(2)} / seat / week`;
 
       document.getElementById('readonlyWeeklyTotalTokens').textContent = `${fmtM(m.baseWeeklyQuotaM, 2)} tokens`;
       document.getElementById('readonlyWeeklyTotalExact').textContent =
@@ -2543,7 +2543,7 @@
 
       document.getElementById('readonlyPerUserWeeklyTokens').textContent = `${fmtM(m.basePerUserWeeklyQuotaM, 2)} tokens`;
       document.getElementById('readonlyPerUserWeeklyExact').textContent =
-        `${fmtInt(m.basePerUserWeeklyQuotaM * 1e6)} tokens / AGY user / week (~${fmtInt((m.basePerUserWeeklyQuotaM * 1e6) / 5)} / workday)`;
+        `${fmtInt(m.basePerUserWeeklyQuotaM * 1e6)} tokens / active user / week (~${fmtInt((m.basePerUserWeeklyQuotaM * 1e6) / 5)} / workday)`;
 
       document.getElementById('mathActiveRatio').textContent =
         `${fmtInt(state.agyUsers)} / ${fmtInt(state.licenses)}`;
@@ -2551,7 +2551,7 @@
         `$${m.weeklyPoolDollars.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} / wk`;
       document.getElementById('mathEffectiveFleetRate').textContent = `$${m.effectiveRatePerM.toFixed(2)} / 1M`;
 
-      // Panel 3: User Distribution & Burn Updates
+      // Panel 3: Team Usage Habits Updates
       const sumPct = state.cohorts.heavy.pct + state.cohorts.moderate.pct + state.cohorts.light.pct;
       document.getElementById('distSumBadge').textContent = `Total: ${sumPct}%`;
 
@@ -2564,17 +2564,17 @@
       document.getElementById('distBarLight').style.width = `${state.cohorts.light.pct}%`;
 
       document.getElementById('heavyDailyEquiv').textContent =
-        `~${(state.cohorts.heavy.weeklyBurnM / 5).toFixed(2)}M tokens/workday · Category total: ${fmtM(m.heavyWeeklyM, 1)} / wk`;
+        `~${(state.cohorts.heavy.weeklyBurnM / 5).toFixed(2)}M tokens/workday · Group total: ${fmtM(m.heavyWeeklyM, 1)} / wk`;
       document.getElementById('modDailyEquiv').textContent =
-        `~${(state.cohorts.moderate.weeklyBurnM / 5).toFixed(2)}M tokens/workday · Category total: ${fmtM(m.modWeeklyM, 1)} / wk`;
+        `~${(state.cohorts.moderate.weeklyBurnM / 5).toFixed(2)}M tokens/workday · Group total: ${fmtM(m.modWeeklyM, 1)} / wk`;
       document.getElementById('lightDailyEquiv').textContent =
-        `~${(state.cohorts.light.weeklyBurnM / 5).toFixed(2)}M tokens/workday · Category total: ${fmtM(m.lightWeeklyM, 1)} / wk`;
+        `~${(state.cohorts.light.weeklyBurnM / 5).toFixed(2)}M tokens/workday · Group total: ${fmtM(m.lightWeeklyM, 1)} / wk`;
 
       const weightedAvgUserBurn = state.agyUsers > 0 ? (m.totalWeeklyBurnM / state.agyUsers) : 0;
       document.getElementById('weightedUserBurnLabel').textContent = `${weightedAvgUserBurn.toFixed(3)}M tokens / user / wk`;
       document.getElementById('totalFleetWeeklyDemandLabel').textContent = `${fmtM(m.totalWeeklyBurnM, 2)} tokens / wk`;
 
-      // Panel 4: Models Usage Updates
+      // Panel 4: AI Model & Budget Settings Updates
       document.getElementById('proMixPctLabel').textContent = `${state.proPct}%`;
       document.getElementById('flashMixPctLabel').textContent = `${state.flashPct}%`;
       document.getElementById('inputMixPctLabel').textContent = `${state.inputPct}%`;
@@ -2585,8 +2585,8 @@
       document.getElementById('t4AddWeeklyTokensLabel').textContent =
         `+${fmtM(m.additionalWeeklyQuotaM, 2)} / wk`;
 
-      document.getElementById('proShareBadgeTab4').textContent = `Mix Weight: ${state.proPct}%`;
-      document.getElementById('flashShareBadgeTab4').textContent = `Mix Weight: ${state.flashPct}%`;
+      document.getElementById('proShareBadgeTab4').textContent = `Usage Share: ${state.proPct}%`;
+      document.getElementById('flashShareBadgeTab4').textContent = `Usage Share: ${state.flashPct}%`;
       document.getElementById('t4ProNetPricesLabel').textContent = state.proDiscountPct > 0
         ? `Discounted Rate (${state.proDiscountPct}% off): $${m.proInputNet.toFixed(2)} In / $${m.proOutputNet.toFixed(2)} Out per 1M`
         : `Effective Rate: $${m.proInputNet.toFixed(2)} In / $${m.proOutputNet.toFixed(2)} Out per 1M`;

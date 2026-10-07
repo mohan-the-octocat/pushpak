@@ -14,50 +14,51 @@ When organizations procure **Gemini Enterprise Standard** (\$10/user/month AI cr
 
 **Pushpak** helps Customer Engineers, Solution Architects, FinOps leads, and Enterprise IT Administrators answer four questions through a **4-step guided wizard** (with floating **Back** / **Next** navigation, automatic next-step nudges, and a header **Dark / Light Mode Toggle** defaulting to Dark Mode):
 
-1. **Licensing:** Given the subscription tier (`Standard` or `Plus`), total procured Gemini Enterprise licenses, and the effective **No. of AGY users** consuming quota ($\le$ total GE licenses), how many **Total Tokens per Week** and **Tokens per User per Week** are available?
-2. **User Distribution:** How does splitting active Antigravity users across **Heavy**, **Moderate**, and **Light** cohorts (default `30% / 40% / 30%`) with configurable weekly token burn per cohort (default `5M / 3M / 1M` tokens/user/week) drive total weekly token demand?
-3. **Models Usage:** How do the **Thinking vs. Workhorse** model mix (`Gemini Pro` vs. `Gemini Flash`, default `20% Pro / 80% Flash`), **Input : Output Tokens Mix** (default `80% Input / 20% Output`), **Additional Spend available per month** (default `\$0`), model list prices (\$/1M tokens), and **separate Pro & Flash Discount Pricing (%)** widgets affect the effective blended token rate and weekly token capacity?
-4. **Consumption Projection:** In a `75:25` vertical split, how does cumulative working-week usage (`Monday`–`Friday`) stack up against the organization's static **Weekly Token Quota** line, and what **Call to Action** is triggered?
+1. **1. Plan & Seats:** Given the **Gemini Enterprise Plan** (`Standard` or `Plus`), **Total Purchased Seats**, and **Active Antigravity Users** ($\le$ Total Purchased Seats), what are the **Total Weekly Team Capacity** and **Average Weekly Capacity per Active User**?
+2. **2. Team Usage Habits:** How does splitting active Antigravity users across **Power Users (Heavy)**, **Regular Users (Moderate)**, and **Occasional Users (Light)** (default `30% / 40% / 30%`) with configurable **Estimated Weekly Usage per Person** (default `5M / 3M / 1M` tokens/user/week) drive **Total Estimated Team Usage / Week**?
+3. **3. AI Model & Budget Settings:** How do the **AI Model Split (Complex Reasoning vs. Everyday Tasks)** (`Gemini Pro` vs. `Gemini Flash`, default `20% Pro / 80% Flash`), **Prompt vs. Response Ratio (Input vs. Output)** (default `80% Prompts / 20% Responses`), **Extra Monthly Budget (Optional)** (default `\$0`), model rates (\$/1M tokens), and **separate Gemini Pro & Gemini Flash Discount (%)** widgets affect the **Overall Average Cost per 1M Tokens** and weekly capacity?
+4. **4. Weekly Forecast & Budget:** In a `75:25` vertical split, how does the **Running Weekly Total** of team usage (`Monday`–`Friday`) compare against the organization's **Weekly Capacity Limit**, and what **Recommendation & Budget Status** is triggered?
 
 ---
 
 ## Key Features
 
-### Step 1 — Licensing (`67:33` Vertical Split)
+### Step 1 — Plan & Seats (`67:33` Vertical Split)
 - **Left `2/3` Pane:**
-  - **GE Subscription Tier:** Radio selection between **Gemini Enterprise Standard** (`\$2.50 / license / week`) and **Gemini Enterprise Plus** (`\$3.75 / license / week`).
-  - **Total # of GE Licenses:** Total seats procured by the organization.
-  - **No. of AGY users:** Effective number of users consuming Antigravity quota (automatically capped at `Total # of GE Licenses`).
-- **Right `1/3` Pane:**
-  - Readonly capacity displays (`+6px` enlarged typography) for **Total Tokens available per week for consumption** and **Total Tokens available per user per week for consumption**.
+  - **Gemini Enterprise Plan:** Radio selection between **Standard** (`\$10 / month · \$2.50 / week per seat`) and **Plus** (`\$15 / month · \$3.75 / week per seat`).
+  - **Total Purchased Seats:** Total Gemini Enterprise licenses bought by the organization.
+  - **Active Antigravity Users:** Number of team members actively using Antigravity (automatically capped at `Total Purchased Seats`).
+- **Right `1/3` Pane (`Available Weekly Capacity`):**
+  - Readonly capacity displays (`+6px` enlarged typography) for **Total Weekly Team Capacity** and **Average Weekly Capacity per Active User**, plus summary rows for **Active Users / Purchased Seats**, **Weekly Included Plan Credit**, and **Average Cost per 1M Tokens**.
 
-### Step 2 — User Distribution
-- **User Category Split (%):** Interactive sliders and numeric inputs for **Heavy**, **Moderate**, and **Light** users (defaults to `30-40-30`, auto-normalized to `100%`).
-- **Estimated Weekly Token Burn:** Configurable weekly token burn (`M tokens / user / week`) across each user category:
-  - **Heavy Users:** Default `5.00M` tokens/week (`1.00M` tokens/workday)
-  - **Moderate Users:** Default `3.00M` tokens/week (`0.60M` tokens/workday)
-  - **Light Users:** Default `1.00M` tokens/week (`0.20M` tokens/workday)
+### Step 2 — Team Usage Habits
+- **Team Activity Breakdown (%):** Interactive sliders and numeric inputs for **Power Users (Heavy)**, **Regular Users (Moderate)**, and **Occasional Users (Light)** (defaults to `30-40-30`, auto-normalized to `100%`).
+- **Estimated Weekly Usage per Person:** Configurable weekly token usage (`M tokens / user / week`) across each group:
+  - **Power User — Weekly Usage:** Default `5.00M` tokens/week (`1.00M` tokens/workday)
+  - **Regular User — Weekly Usage:** Default `3.00M` tokens/week (`0.60M` tokens/workday)
+  - **Occasional User — Weekly Usage:** Default `1.00M` tokens/week (`0.20M` tokens/workday)
+- **Rollup Metrics:** Displays **Average Weekly Usage per Person** and **Total Estimated Team Usage / Week**.
 
-### Step 3 — Models Usage
-- **Model Usage Mix Slider:** Split between **Gemini Pro** (Thinking) and **Gemini Flash** (Workhorse), defaulting to `80% Flash & 20% Pro`.
-- **Input : Output Tokens Mix Slider:** Split between Input and Output tokens, defaulting to `80% Input & 20% Output`.
-- **Additional Spend available per month:** Optional monthly dollar budget (`USD / mo`, default `\$0`) converted into weekly token availability in **Consumption Projection**.
-- **Model Family Pricing & Separate Discounts:**
-  - Prepopulated with public Vertex AI pricing for **Gemini Pro** (`\$2.00` Input / `\$12.00` Output per 1M tokens) and **Gemini Flash** (`\$1.50` Input / `\$7.50` Output per 1M tokens).
-  - Dedicated **Gemini Pro Discount Pricing (%)** and **Gemini Flash Discount Pricing (%)** widgets (`0%–90%` off list price, default `0%`).
+### Step 3 — AI Model & Budget Settings
+- **AI Model Split (Complex Reasoning vs. Everyday Tasks):** Balance between **Gemini Pro** (for complex problem-solving) and **Gemini Flash** (for fast, everyday tasks), defaulting to `80% Flash / 20% Pro`.
+- **Prompt vs. Response Ratio (Input vs. Output):** Proportion of **Prompts (Input)** vs. **Responses (Output)**, defaulting to `80% Input / 20% Output`.
+- **Extra Monthly Budget (Optional):** Additional monthly budget (`USD / mo`, default `\$0`) on top of included seat credits, showing **Extra Weekly Budget** and **Extra Weekly Capacity Added**.
+- **Model Rates & Negotiated Discounts:**
+  - Prepopulated with Google Cloud rates for **Gemini Pro (Advanced Reasoning)** (`\$2.00` Input / `\$12.00` Output per 1M tokens) and **Gemini Flash (Fast Everyday Tasks)** (`\$1.50` Input / `\$7.50` Output per 1M tokens).
+  - Dedicated **Gemini Pro Discount (%)** and **Gemini Flash Discount (%)** widgets (`0%–90%` off list price, default `0%`), plus **Overall Average Cost per 1M Tokens** and **Tokens You Get per \$1.00**.
 
-### Step 4 — Consumption Projection (`75:25` Vertical Split)
+### Step 4 — Weekly Forecast & Budget (`75:25` Vertical Split)
 - **Left `75%` Pane:**
-  - Prominent **Cumulative usage** stacked line chart (`X-axis`: `Monday`–`Friday`, `Y-axis`: `Tokens in Millions (M)`) with interactive hover tooltips and a static horizontal **Weekly Token Quota** line.
-  - Merged title, status badge, and legend banner directly below the chart, followed by a day-by-day breakdown table.
+  - Prominent **Weekly Team Usage vs. Available Capacity** (**Running Weekly Total**) stacked line chart (`X-axis`: `Monday`–`Friday`, `Y-axis`: `Tokens in Millions (M)`) with interactive hover tooltips and a static horizontal **Weekly Capacity Limit** line.
+  - Merged title, status badge (`Within Weekly Limit` / `Over Weekly Limit`), and legend banner directly below the chart, followed by a day-by-day breakdown table.
 - **Right `25%` Pane (Ordered Top to Bottom):**
-  1. **Call to Action Infographic:** Evaluates **Weekly Token Availability** ($A$) vs. **Weekly Token Usage** ($U$):
-     - **`Full Utilization`** when Availability is within $\pm 5\%$ of Usage ($|A - U| / U \le 0.05$)
-     - **`Capacity Available`** when Availability $>$ Usage (outside $\pm 5\%$)
-     - **`Additional Spend Required`** when Availability $<$ Usage (outside $\pm 5\%$), automatically computing the **Indicative Budget Required / Month** to cover the shortfall
-  2. **Token Pool Utilization:** Radial utilization gauge and pool variance (`M tokens`).
-  3. **Weekly Token Availability:** Total weekly token capacity from GE licenses plus any additional monthly spend.
-  4. **Weekly Token Usage:** Total weekly token consumption across active AGY users with a stacked cohort share bar.
+  1. **Recommendation & Budget Status:** Evaluates **Total Weekly Capacity Available** ($A$) vs. **Total Weekly Team Usage** ($U$):
+     - **`Optimal Capacity Match`** when available capacity is within $\pm 5\%$ of usage ($|A - U| / U \le 0.05$)
+     - **`Sufficient Capacity Available`** when available capacity $>$ usage (outside $\pm 5\%$)
+     - **`Additional Budget Needed`** when available capacity $<$ usage (outside $\pm 5\%$), automatically computing the **Estimated Extra Monthly Budget Needed** to cover the weekly gap
+  2. **Weekly Capacity Used (%):** Radial gauge and **Weekly Surplus / Shortfall** (`M tokens`).
+  3. **Total Weekly Capacity Available:** Total weekly tokens from purchased seats plus any extra monthly budget.
+  4. **Total Weekly Team Usage:** Total weekly usage across active Antigravity users with a stacked activity group bar.
 
 ---
 
