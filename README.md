@@ -12,7 +12,7 @@ Named after the **Pushpaka Vimana**—the celestial flying craft crafted by Vish
 
 When organizations procure **Gemini Enterprise Standard** (\$10/user/month AI credit allocation) or **Gemini Enterprise Plus** (\$15/user/month AI credit allocation), Antigravity IDE and CLI usage draws from a shared project-level token quota pool that refreshes weekly.
 
-**Pushpak** helps Customer Engineers, Solution Architects, FinOps leads, and Enterprise IT Administrators answer four questions through a **4-step guided wizard** (with floating **Back** / **Next** navigation and automatic next-step nudges):
+**Pushpak** helps Customer Engineers, Solution Architects, FinOps leads, and Enterprise IT Administrators answer four questions through a **4-step guided wizard** (with floating **Back** / **Next** navigation, automatic next-step nudges, and a header **Dark / Light Mode Toggle** defaulting to Dark Mode):
 
 1. **Licensing:** Given the subscription tier (`Standard` or `Plus`), total procured Gemini Enterprise licenses, and the effective **No. of AGY users** consuming quota ($\le$ total GE licenses), how many **Total Tokens per Week** and **Tokens per User per Week** are available?
 2. **User Distribution:** How does splitting active Antigravity users across **Heavy**, **Moderate**, and **Light** cohorts (default `30% / 40% / 30%`) with configurable weekly token burn per cohort (default `5M / 3M / 1M` tokens/user/week) drive total weekly token demand?

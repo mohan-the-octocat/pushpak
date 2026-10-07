@@ -73,6 +73,8 @@
       width: 100%;
       height: 8px;
       border-radius: 999px;
+      background-color: var(--sim-input);
+      border: 1px solid var(--sim-border);
       outline: none;
       cursor: pointer;
     }
@@ -84,13 +86,13 @@
       border-radius: 50%;
       background: #4285F4;
       border: 3px solid #ffffff;
-      box-shadow: 0 1px 5px rgba(0, 0, 0, 0.45);
+      box-shadow: 0 1px 5px rgba(15, 23, 42, 0.45);
       cursor: pointer;
       transition: transform 0.12s ease, background-color 0.12s ease;
     }
     input[type="range"].google-slider::-webkit-slider-thumb:hover {
       transform: scale(1.12);
-      background: #60a5fa;
+      background: #2563eb;
     }
     input[type="range"].google-slider::-moz-range-thumb {
       width: 20px;
@@ -98,8 +100,54 @@
       border-radius: 50%;
       background: #4285F4;
       border: 3px solid #ffffff;
-      box-shadow: 0 1px 5px rgba(0, 0, 0, 0.45);
+      box-shadow: 0 1px 5px rgba(15, 23, 42, 0.45);
       cursor: pointer;
+    }
+
+    /* Theme-adaptive semantic widget colors for Light Mode */
+    html.sim-light .text-\[\#4ade80\],
+    html.sim-light .text-\[\#34A853\] {
+      color: #15803d !important;
+    }
+    html.sim-light .text-\[\#60a5fa\],
+    html.sim-light .text-\[\#4285F4\] {
+      color: #1d4ed8 !important;
+    }
+    html.sim-light .text-\[\#facc15\],
+    html.sim-light .text-\[\#FBBC04\] {
+      color: #b45309 !important;
+    }
+    html.sim-light .text-\[\#f87171\],
+    html.sim-light .text-\[\#EA4335\] {
+      color: #b91c1c !important;
+    }
+    html.sim-light .text-\[\#c084fc\],
+    html.sim-light .text-\[\#a855f7\] {
+      color: #7e22ce !important;
+    }
+    html.sim-light .bg-\[\#34A853\]\/15,
+    html.sim-light .bg-\[\#34A853\]\/20 {
+      background-color: rgba(22, 163, 74, 0.13) !important;
+      border-color: rgba(21, 128, 61, 0.35) !important;
+    }
+    html.sim-light .bg-\[\#4285F4\]\/15,
+    html.sim-light .bg-\[\#4285F4\]\/20,
+    html.sim-light .bg-\[\#4285F4\]\/25 {
+      background-color: rgba(37, 99, 235, 0.11) !important;
+      border-color: rgba(29, 78, 216, 0.35) !important;
+    }
+    html.sim-light .bg-\[\#FBBC04\]\/20 {
+      background-color: rgba(245, 158, 11, 0.16) !important;
+      border-color: rgba(180, 83, 9, 0.38) !important;
+    }
+    html.sim-light .bg-\[\#EA4335\]\/15,
+    html.sim-light .bg-\[\#EA4335\]\/20 {
+      background-color: rgba(220, 38, 38, 0.11) !important;
+      border-color: rgba(185, 28, 28, 0.35) !important;
+    }
+    html.sim-light .bg-\[\#a855f7\]\/15 {
+      background-color: rgba(147, 51, 234, 0.11) !important;
+      border-color: rgba(126, 34, 206, 0.35) !important;
     }
 
     /* Readonly display label explicitly 6px larger than normal (14px base -> 20px) */
@@ -204,6 +252,34 @@
     }
     .wizard-nudge-banner {
       animation: nudgeSlideUp 0.22s ease-out forwards;
+      background-color: rgba(15, 23, 42, 0.96);
+      border: 2px solid #34A853;
+      color: #4ade80;
+    }
+    .wizard-nudge-banner:hover {
+      background-color: #1e293b;
+    }
+    html.sim-light .wizard-nudge-banner {
+      background-color: #ecfdf5;
+      border: 2px solid #16a34a;
+      color: #15803d;
+    }
+    html.sim-light .wizard-nudge-banner:hover {
+      background-color: #d1fae5;
+    }
+
+    /* Theme Toggle Segmented Control */
+    .theme-seg-active {
+      background-color: #4285F4;
+      color: #ffffff;
+      box-shadow: 0 1px 4px rgba(66, 133, 244, 0.35);
+    }
+    .theme-seg-inactive {
+      background-color: transparent;
+      color: var(--sim-muted);
+    }
+    .theme-seg-inactive:hover {
+      color: var(--sim-text);
     }
   </style>
 </head>
@@ -224,6 +300,36 @@
           <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">
             Antigravity in Gemini Enterprise — Usage Simulator
           </h1>
+        </div>
+
+        <!-- Light & Dark Mode Segmented Toggle Widget -->
+        <div class="shrink-0 flex items-center p-1 rounded-xl sim-subcard" role="group" aria-label="Color Theme Toggle">
+          <button
+            id="themeBtnDark"
+            type="button"
+            onclick="setThemeMode('dark')"
+            aria-pressed="true"
+            class="theme-seg-active px-3 py-1.5 rounded-lg flex items-center gap-1.5 text-xs font-bold cursor-pointer transition-all"
+            title="Switch to Dark Mode"
+          >
+            <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+            </svg>
+            <span>Dark</span>
+          </button>
+          <button
+            id="themeBtnLight"
+            type="button"
+            onclick="setThemeMode('light')"
+            aria-pressed="false"
+            class="theme-seg-inactive px-3 py-1.5 rounded-lg flex items-center gap-1.5 text-xs font-bold cursor-pointer transition-all"
+            title="Switch to Light Mode"
+          >
+            <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+            <span>Light</span>
+          </button>
         </div>
       </div>
 
@@ -596,7 +702,7 @@
                     class="mt-1 accent-[#4285F4] cursor-pointer"
                   />
                   <div>
-                    <div class="text-sm font-bold">Standard</div>
+                    <div id="tierStandardTitle" class="text-sm font-bold">Standard</div>
                     <div class="text-xs sim-muted font-mono-num mt-0.5">$10 / month · $2.50 / week per license</div>
                   </div>
                 </label>
@@ -614,7 +720,7 @@
                     class="mt-1 accent-[#4285F4] cursor-pointer"
                   />
                   <div>
-                    <div class="text-sm font-bold text-[#60a5fa]">Plus</div>
+                    <div id="tierPlusTitle" class="text-sm font-bold text-[#60a5fa]">Plus</div>
                     <div class="text-xs sim-muted font-mono-num mt-0.5">$15 / month · $3.75 / week per license</div>
                   </div>
                 </label>
@@ -1494,10 +1600,10 @@
       id="wizardNudgeBanner"
       type="button"
       onclick="wizardStep(1)"
-      class="hidden wizard-nudge-banner px-4 py-2 rounded-xl bg-[#0f172a]/95 border-2 border-[#34A853] shadow-xl flex items-center gap-2.5 text-xs sm:text-sm font-bold text-[#4ade80] hover:bg-[#1e293b] cursor-pointer transition-all"
+      class="hidden wizard-nudge-banner px-4 py-2 rounded-xl shadow-xl flex items-center gap-2.5 text-xs sm:text-sm font-bold cursor-pointer transition-all"
     >
       <span class="relative flex h-2.5 w-2.5 shrink-0">
-        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#4ade80] opacity-75"></span>
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#34A853] opacity-75"></span>
         <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#34A853]"></span>
       </span>
       <span id="wizardNudgeText">Fields updated — Click Next to continue to User Distribution</span>
@@ -1598,6 +1704,38 @@
       4: 'Models Usage',
       1: 'Consumption Projection'
     };
+
+    function setThemeMode(mode) {
+      state.darkMode = (mode === 'dark');
+      const root = document.documentElement;
+      const btnDark = document.getElementById('themeBtnDark');
+      const btnLight = document.getElementById('themeBtnLight');
+
+      if (state.darkMode) {
+        root.classList.remove('sim-light');
+        root.classList.add('dark');
+        if (btnDark && btnLight) {
+          btnDark.className = 'theme-seg-btn theme-seg-active';
+          btnLight.className = 'theme-seg-btn theme-seg-inactive';
+          btnDark.setAttribute('aria-pressed', 'true');
+          btnLight.setAttribute('aria-pressed', 'false');
+        }
+      } else {
+        root.classList.add('sim-light');
+        root.classList.remove('dark');
+        if (btnDark && btnLight) {
+          btnLight.className = 'theme-seg-btn theme-seg-active';
+          btnDark.className = 'theme-seg-btn theme-seg-inactive';
+          btnLight.setAttribute('aria-pressed', 'true');
+          btnDark.setAttribute('aria-pressed', 'false');
+        }
+      }
+      renderAll();
+    }
+
+    function toggleDarkMode() {
+      setThemeMode(state.darkMode ? 'light' : 'dark');
+    }
 
     function triggerWizardNudge() {
       const idx = WIZARD_ORDER.indexOf(state.activeTab);
@@ -1833,12 +1971,18 @@
       state.tier = tier;
       const stdCard = document.getElementById('tierStandardCard');
       const plusCard = document.getElementById('tierPlusCard');
+      const stdTitle = document.getElementById('tierStandardTitle');
+      const plusTitle = document.getElementById('tierPlusTitle');
       if (tier === 'standard') {
         stdCard.className = 'flex items-start gap-3 p-4 rounded-xl bg-[#4285F4]/15 border-2 border-[#4285F4] cursor-pointer transition-all';
         plusCard.className = 'flex items-start gap-3 p-4 rounded-xl sim-card cursor-pointer transition-all';
+        if (stdTitle) stdTitle.className = 'text-sm font-bold text-[#60a5fa]';
+        if (plusTitle) plusTitle.className = 'text-sm font-bold';
       } else {
         plusCard.className = 'flex items-start gap-3 p-4 rounded-xl bg-[#4285F4]/15 border-2 border-[#4285F4] cursor-pointer transition-all';
         stdCard.className = 'flex items-start gap-3 p-4 rounded-xl sim-card cursor-pointer transition-all';
+        if (plusTitle) plusTitle.className = 'text-sm font-bold text-[#60a5fa]';
+        if (stdTitle) stdTitle.className = 'text-sm font-bold';
       }
       triggerWizardNudge();
       renderAll();
@@ -2152,22 +2296,30 @@
         const boxY = padT + 12;
         const pctOfQuota = m.weeklyQuotaM > 0 ? ((d.stack3 / m.weeklyQuotaM) * 100).toFixed(1) : '0.0';
 
+        const tipBg = state.darkMode ? '#0f172a' : '#ffffff';
+        const tipBorder = state.darkMode ? '#475569' : '#94a3b8';
+        const tipTitle = state.darkMode ? '#ffffff' : '#0f172a';
+        const tipHeavy = state.darkMode ? '#f87171' : '#b91c1c';
+        const tipMod = state.darkMode ? '#facc15' : '#b45309';
+        const tipLight = state.darkMode ? '#60a5fa' : '#1d4ed8';
+        const tipCum = state.darkMode ? '#4ade80' : '#15803d';
+
         tooltipHtml = `
           <g>
-            <rect x="${boxX}" y="${boxY}" width="${boxW}" height="${boxH}" rx="10" fill="#0f172a" fill-opacity="0.96" stroke="#475569" stroke-width="1.5" />
-            <text x="${boxX + 12}" y="${boxY + 22}" fill="#ffffff" font-size="12" font-weight="700">
+            <rect x="${boxX}" y="${boxY}" width="${boxW}" height="${boxH}" rx="10" fill="${tipBg}" fill-opacity="0.97" stroke="${tipBorder}" stroke-width="1.5" />
+            <text x="${boxX + 12}" y="${boxY + 22}" fill="${tipTitle}" font-size="12" font-weight="700">
               ${d.day} (Cumulative usage)
             </text>
-            <text x="${boxX + 12}" y="${boxY + 42}" fill="#f87171" font-size="12" class="font-mono-num">
+            <text x="${boxX + 12}" y="${boxY + 42}" fill="${tipHeavy}" font-size="12" font-weight="600" class="font-mono-num">
               Heavy Users: ${fmtM(d.heavy, 2)}
             </text>
-            <text x="${boxX + 12}" y="${boxY + 60}" fill="#facc15" font-size="12" class="font-mono-num">
+            <text x="${boxX + 12}" y="${boxY + 60}" fill="${tipMod}" font-size="12" font-weight="600" class="font-mono-num">
               Moderate Users: ${fmtM(d.moderate, 2)}
             </text>
-            <text x="${boxX + 12}" y="${boxY + 78}" fill="#60a5fa" font-size="12" class="font-mono-num">
+            <text x="${boxX + 12}" y="${boxY + 78}" fill="${tipLight}" font-size="12" font-weight="600" class="font-mono-num">
               Light Users: ${fmtM(d.light, 2)}
             </text>
-            <text x="${boxX + 12}" y="${boxY + 98}" fill="#4ade80" font-size="12" font-weight="700" class="font-mono-num">
+            <text x="${boxX + 12}" y="${boxY + 98}" fill="${tipCum}" font-size="12" font-weight="700" class="font-mono-num">
               Cumulative Usage: ${fmtM(d.stack3, 2)} (${pctOfQuota}%)
             </text>
           </g>
@@ -2177,16 +2329,16 @@
       svg.innerHTML = `
         <defs>
           <linearGradient id="gradLight" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#4285F4" stop-opacity="0.38" />
-            <stop offset="100%" stop-color="#4285F4" stop-opacity="0.10" />
+            <stop offset="0%" stop-color="#4285F4" stop-opacity="${state.darkMode ? '0.38' : '0.30'}" />
+            <stop offset="100%" stop-color="#4285F4" stop-opacity="0.08" />
           </linearGradient>
           <linearGradient id="gradMod" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#FBBC04" stop-opacity="0.38" />
-            <stop offset="100%" stop-color="#FBBC04" stop-opacity="0.10" />
+            <stop offset="0%" stop-color="#FBBC04" stop-opacity="${state.darkMode ? '0.38' : '0.32'}" />
+            <stop offset="100%" stop-color="#FBBC04" stop-opacity="0.08" />
           </linearGradient>
           <linearGradient id="gradHeavy" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#EA4335" stop-opacity="0.38" />
-            <stop offset="100%" stop-color="#EA4335" stop-opacity="0.10" />
+            <stop offset="0%" stop-color="#EA4335" stop-opacity="${state.darkMode ? '0.38' : '0.30'}" />
+            <stop offset="100%" stop-color="#EA4335" stop-opacity="0.08" />
           </linearGradient>
         </defs>
 
@@ -2210,6 +2362,26 @@
     function setHoveredDay(idx) {
       state.hoveredDayIndex = idx;
       renderStackedLineChart(computeMetrics());
+    }
+
+    function updateRangeSliderFills() {
+      const trackBg = state.darkMode ? '#0f172a' : '#e2e8f0';
+      const sliders = [
+        { id: 'heavyPctSlider', val: state.cohorts.heavy.pct, max: 100, color: '#EA4335' },
+        { id: 'modPctSlider', val: state.cohorts.moderate.pct, max: 100, color: '#FBBC04' },
+        { id: 'lightPctSlider', val: state.cohorts.light.pct, max: 100, color: '#4285F4' },
+        { id: 'heavyBurnSlider', val: Math.min(15, state.cohorts.heavy.weeklyBurnM), max: 15, color: '#EA4335' },
+        { id: 'modBurnSlider', val: Math.min(10, state.cohorts.moderate.weeklyBurnM), max: 10, color: '#FBBC04' },
+        { id: 'lightBurnSlider', val: Math.min(5, state.cohorts.light.weeklyBurnM), max: 5, color: '#4285F4' },
+        { id: 'proDiscountSlider', val: state.proDiscountPct, max: 90, color: '#9334E6' },
+        { id: 'flashDiscountSlider', val: state.flashDiscountPct, max: 90, color: '#4285F4' }
+      ];
+      sliders.forEach(s => {
+        const el = document.getElementById(s.id);
+        if (!el) return;
+        const pct = Math.max(0, Math.min(100, (s.val / s.max) * 100));
+        el.style.background = `linear-gradient(90deg, ${s.color} 0%, ${s.color} ${pct}%, ${trackBg} ${pct}%, ${trackBg} 100%)`;
+      });
     }
 
     function renderAll() {
@@ -2429,6 +2601,7 @@
       document.getElementById('t4FlashBlendedValue').textContent = `$${m.flashBlended.toFixed(2)} / 1M tokens`;
       document.getElementById('t4CombinedRate').textContent = `$${m.effectiveRatePerM.toFixed(2)} / 1M`;
       document.getElementById('t4TokensPerDollar').textContent = `${(1 / m.effectiveRatePerM).toFixed(2)}M`;
+      updateRangeSliderFills();
       updateWizardUI();
     }
 
