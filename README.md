@@ -45,7 +45,7 @@ When organizations procure **Gemini Enterprise Standard** (\$10/user/month AI cr
 - **Extra Monthly Budget (Optional):** Additional monthly budget (`USD / mo`, default `\$0`) on top of included seat credits, showing **Extra Weekly Budget** and **Extra Weekly Capacity Added**.
 - **Model Rates & Negotiated Discounts:**
   - Prepopulated with Google Cloud rates for **Gemini Pro (Advanced Reasoning)** (`\$2.00` Input / `\$12.00` Output per 1M tokens) and **Gemini Flash (Fast Everyday Tasks)** (`\$1.50` Input / `\$7.50` Output per 1M tokens).
-  - Dedicated **Gemini Pro Discount (%)** and **Gemini Flash Discount (%)** widgets (`0%–90%` off list price, default `0%`), plus **Overall Average Cost per 1M Tokens** and **Tokens You Get per \$1.00**.
+  - Dedicated **Gemini Pro Discount (%)** (default `0%`) and **Gemini Flash Discount (%)** (default `50%`) widgets (`0%–90%` off list price), plus **Overall Average Cost per 1M Tokens** and **Tokens You Get per \$1.00**.
 
 ### Step 4 — Weekly Forecast & Budget (`75:25` Vertical Split)
 - **Left `75%` Pane:**

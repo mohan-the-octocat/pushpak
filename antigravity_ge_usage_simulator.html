@@ -517,10 +517,10 @@
                   Estimated Extra Monthly Budget Needed
                 </div>
                 <div id="t1CtaMonthlyBudget" class="text-xl font-extrabold font-mono-num text-[#f87171]">
-                  $2,052.00 / mo
+                  $756.00 / mo
                 </div>
                 <div id="t1CtaBudgetSub" class="text-[11px] sim-muted font-mono-num">
-                  Covers 173.31M/wk gap ($513.00/wk)
+                  Covers 100.53M/wk gap ($189.00/wk)
                 </div>
               </div>
             </div>
@@ -575,14 +575,14 @@
                     font-size="19"
                     font-weight="800"
                     class="font-mono-num"
-                  >236.8%</text>
+                  >150.4%</text>
                 </svg>
 
                 <div class="flex-1 space-y-1 text-xs">
                   <div class="text-[11px] sim-muted">Weekly Surplus / Shortfall</div>
-                  <div id="t1VarianceValue" class="text-base font-bold font-mono-num text-[#f87171]">-173.31M</div>
+                  <div id="t1VarianceValue" class="text-base font-bold font-mono-num text-[#f87171]">-100.53M</div>
                   <div id="t1VarianceSub" class="text-[11px] sim-muted">
-                    Over weekly limit by 136.8%
+                    Over weekly limit by 50.4%
                   </div>
                 </div>
               </div>
@@ -605,7 +605,7 @@
                   From purchased seats &amp; any extra monthly budget
                 </div>
                 <div id="t1QuotaTotal" class="text-2xl font-extrabold font-mono-num text-[#4ade80]">
-                  126.69M
+                  199.47M
                 </div>
               </div>
 
@@ -614,7 +614,7 @@
                   <div class="h-full w-full bg-[#34A853] rounded-full"></div>
                 </div>
                 <div id="t1QuotaSub" class="text-xs sim-muted font-mono-num">
-                  100 Plus seats · 1.27M/user
+                  100 Plus seats · 1.99M/user
                 </div>
               </div>
             </div>
@@ -812,10 +812,10 @@
                   aria-readonly="true"
                   class="font-bold font-mono-num text-[#60a5fa] readonly-plus-6px-value pt-1"
                 >
-                  126.69M tokens
+                  199.47M tokens
                 </div>
                 <div id="readonlyWeeklyTotalExact" class="text-xs font-mono-num sim-muted">
-                  126,689,189 tokens / week
+                  199,468,085 tokens / week
                 </div>
               </div>
 
@@ -829,10 +829,10 @@
                   aria-readonly="true"
                   class="font-bold font-mono-num text-[#4ade80] readonly-plus-6px-value pt-1"
                 >
-                  1.27M tokens
+                  1.99M tokens
                 </div>
                 <div id="readonlyPerUserWeeklyExact" class="text-xs font-mono-num sim-muted">
-                  1,266,892 tokens / active user / week (~253.4K / workday)
+                  1,994,681 tokens / active user / week (~398,936 / workday)
                 </div>
               </div>
             </div>
@@ -849,7 +849,7 @@
             </div>
             <div class="flex justify-between pt-1.5 border-t border-[var(--sim-border)]">
               <span class="font-semibold">Average Cost per 1M Tokens:</span>
-              <span id="mathEffectiveFleetRate" class="font-mono-num font-bold text-[#60a5fa]">$2.96 / 1M</span>
+              <span id="mathEffectiveFleetRate" class="font-mono-num font-bold text-[#60a5fa]">$1.88 / 1M</span>
             </div>
           </div>
         </div>
@@ -1323,7 +1323,7 @@
               onclick="applyPricingPreset('latest_public')"
               class="px-3 py-1.5 rounded-xl text-xs font-semibold sim-subcard hover:border-[#4285F4] cursor-pointer transition-all"
             >
-              Reset Default Rates &amp; 0% Discounts (Pro $2.00/$12.00 · Flash $1.50/$7.50)
+              Reset Default Rates &amp; Discounts (Pro $2.00/$12.00 @ 0% · Flash $1.50/$7.50 @ 50%)
             </button>
           </div>
         </div>
@@ -1452,7 +1452,7 @@
                 <span class="w-9 h-9 rounded-xl bg-[#4285F4]/15 border border-[#4285F4]/40 text-[#60a5fa] flex items-center justify-center font-bold text-sm">Flash</span>
                 <div>
                   <h3 class="text-sm sm:text-base font-bold">Gemini Flash (Fast Everyday Tasks)</h3>
-                  <p id="t4FlashNetPricesLabel" class="text-xs sim-muted font-mono-num">Effective Rate: $1.50 In / $7.50 Out per 1M</p>
+                  <p id="t4FlashNetPricesLabel" class="text-xs sim-muted font-mono-num">Discounted Rate (50% off): $0.75 In / $3.75 Out per 1M</p>
                 </div>
               </div>
               <span id="flashShareBadgeTab4" class="px-2.5 py-1 rounded-full text-xs font-semibold bg-[#4285F4]/15 text-[#60a5fa] border border-[#4285F4]/30 font-mono-num">
@@ -1518,17 +1518,17 @@
                     min="0"
                     max="90"
                     step="1"
-                    value="0"
+                    value="50"
                     oninput="handleModelDiscountChange('flash', this.value)"
                     class="w-16 px-2 py-1 rounded-lg sim-input text-right text-xs font-bold font-mono-num focus:outline-none focus:ring-2 focus:ring-[#4285F4]"
                   />
                   <span class="text-xs font-bold">% off</span>
                   <button
                     type="button"
-                    onclick="handleModelDiscountChange('flash', 0)"
+                    onclick="handleModelDiscountChange('flash', 50)"
                     class="px-2 py-1 rounded-lg text-[11px] font-semibold sim-subcard hover:border-[#4285F4] cursor-pointer"
                   >
-                    0%
+                    50%
                   </button>
                 </div>
               </div>
@@ -1538,7 +1538,7 @@
                 min="0"
                 max="90"
                 step="1"
-                value="0"
+                value="50"
                 oninput="handleModelDiscountChange('flash', this.value)"
                 class="google-slider"
               />
@@ -1555,7 +1555,7 @@
               <span class="sim-muted">
                 Average Gemini Flash Cost (<strong id="t4FlashIoSplitLabel" class="text-[var(--sim-text)]">80% Input : 20% Output</strong>):
               </span>
-              <span id="t4FlashBlendedValue" class="text-sm font-bold font-mono-num text-[#60a5fa]">$2.70 / 1M tokens</span>
+              <span id="t4FlashBlendedValue" class="text-sm font-bold font-mono-num text-[#60a5fa]">$1.35 / 1M tokens</span>
             </div>
           </div>
 
@@ -1569,7 +1569,7 @@
                 Overall Average Cost per 1M Tokens
               </span>
               <span id="t4DiscountActiveBadge" class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-[#34A853]/15 text-[#4ade80] border border-[#34A853]/30 font-mono-num">
-                Pro 0% off · Flash 0% off
+                Pro 0% off · Flash 50% off
               </span>
             </div>
             <div class="text-xs sim-muted">
@@ -1579,11 +1579,11 @@
           <div class="flex items-center gap-4">
             <div class="text-right">
               <div class="text-xs sim-muted">Average Cost / 1M Tokens</div>
-              <div id="t4CombinedRate" class="text-xl font-bold font-mono-num text-[#4ade80]">$2.96 / 1M</div>
+              <div id="t4CombinedRate" class="text-xl font-bold font-mono-num text-[#4ade80]">$1.88 / 1M</div>
             </div>
             <div class="text-right pl-4 border-l border-[var(--sim-border)]">
               <div class="text-xs sim-muted">Tokens You Get per $1.00</div>
-              <div id="t4TokensPerDollar" class="text-xl font-bold font-mono-num text-[#60a5fa]">0.34M</div>
+              <div id="t4TokensPerDollar" class="text-xl font-bold font-mono-num text-[#60a5fa]">0.53M</div>
             </div>
           </div>
         </div>
@@ -1667,8 +1667,8 @@
       proPct: 20,
       inputPct: 80, // Default 80% Input & 20% Output
       outputPct: 20,
-      proDiscountPct: 0,   // Discount (%) for Gemini Pro (0% - 90%)
-      flashDiscountPct: 0, // Discount (%) for Gemini Flash (0% - 90%)
+      proDiscountPct: 0,    // Discount (%) for Gemini Pro (0% - 90%, default 0%)
+      flashDiscountPct: 50, // Discount (%) for Gemini Flash (0% - 90%, default 50%)
       additionalMonthlySpend: 0, // Additional Spend available per month ($ USD, default 0)
 
       // User Distribution (Default 30-40-30) & Weekly Burn (Heavy 5M, Moderate 3M, Light 1M)
@@ -2124,11 +2124,11 @@
       if (preset === 'latest_public') {
         state.pricing = { proInput: 2.00, proOutput: 12.00, flashInput: 1.50, flashOutput: 7.50 };
         state.proDiscountPct = 0;
-        state.flashDiscountPct = 0;
+        state.flashDiscountPct = 50;
         document.getElementById('proDiscountInput').value = 0;
         document.getElementById('proDiscountSlider').value = 0;
-        document.getElementById('flashDiscountInput').value = 0;
-        document.getElementById('flashDiscountSlider').value = 0;
+        document.getElementById('flashDiscountInput').value = 50;
+        document.getElementById('flashDiscountSlider').value = 50;
       }
       document.getElementById('proInputPrice').value = state.pricing.proInput.toFixed(2);
       document.getElementById('proOutputPrice').value = state.pricing.proOutput.toFixed(2);
