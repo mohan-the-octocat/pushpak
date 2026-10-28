@@ -1299,7 +1299,7 @@
               </button>
             </div>
             <p class="text-xs sim-muted">
-              Share of prompt tokens served from cache (~88% in Antigravity). Cached tokens cost <strong>5%</strong> of input on Argon and <strong>10%</strong> on Flash/3.1 Pro.
+              Share of prompt tokens served from cache (~88% in Antigravity). Cached tokens cost <strong>5%</strong> of input on Argon and <strong>10%</strong> on Flash.
             </p>
           </div>
 
@@ -1428,24 +1428,13 @@
         <!-- Two Model Family Pricing Cards (Each with its own Discount Widget) -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
 
-          <!-- Complex Reasoning Model Pricing Card (Argon / 3.1 Pro) -->
+          <!-- Gemini 4 Argon Pricing Card -->
           <div class="p-5 rounded-2xl sim-subcard space-y-4">
             <div class="flex flex-wrap items-center justify-between gap-2">
               <div class="flex items-center gap-2.5">
-                <span id="reasoningBadgeIcon" class="w-9 h-9 rounded-xl bg-[#a855f7]/15 border border-[#a855f7]/40 text-[#c084fc] flex items-center justify-center font-bold text-xs">Argon</span>
+                <span class="w-9 h-9 rounded-xl bg-[#a855f7]/15 border border-[#a855f7]/40 text-[#c084fc] flex items-center justify-center font-bold text-xs">Argon</span>
                 <div>
-                  <div class="flex flex-wrap items-center gap-2">
-                    <h3 id="reasoningCardTitle" class="text-sm sm:text-base font-bold">Gemini 4 Argon (Complex Coding)</h3>
-                    <select
-                      id="reasoningModelSelect"
-                      onchange="handleReasoningModelChange(this.value)"
-                      aria-label="Select Complex Reasoning Model"
-                      class="px-2 py-0.5 rounded-lg sim-input text-xs font-bold cursor-pointer"
-                    >
-                      <option value="argon" selected>Gemini 4 Argon (5% Cache Wt)</option>
-                      <option value="pro31">Gemini 3.1 Pro ≤200K (10% Cache Wt)</option>
-                    </select>
-                  </div>
+                  <h3 class="text-sm sm:text-base font-bold">Gemini 4 Argon (Complex Coding · 5% Cache Wt)</h3>
                   <p id="t4ProNetPricesLabel" class="text-xs sim-muted font-mono-num">Net: $2.00 In / $0.10 Cache / $10.00 Out per 1M (1.00 / 0.05 / 5.00 WTU)</p>
                 </div>
               </div>
@@ -1788,9 +1777,8 @@
       regionalEndpoint: false,// false = Global (1.00x WTU), true = Regional (+10% = 1.10x WTU)
 
       // Models Usage (Model Mix, I/O Split, Context Cache Hit Rate, Pricing, Discounts, Extra Budget)
-      reasoningModel: 'argon',// 'argon' (Gemini 4 Argon, 5% cache weight) | 'pro31' (Gemini 3.1 Pro <=200K, 10% cache weight)
       activePreset: 'current_promo', // 'current_promo' | 'dec_2026' | 'jan_2027' | 'custom'
-      flashPct: 80,           // Default 80% Flash & 20% Complex Reasoning (Argon)
+      flashPct: 80,           // Default 80% Flash & 20% Gemini 4 Argon
       proPct: 20,
       inputPct: 98,           // Default 98% Input (Prompt) & 2% Output (incl. Thinking)
       outputPct: 2,
@@ -1806,7 +1794,7 @@
         light: { pct: 30, weeklyBurnM: 3.00 }
       },
 
-      // Standard list pricing for Complex Reasoning (Argon default) & Flash ($/1M tokens; 1M WTU = $2.00)
+      // Standard list pricing for Gemini 4 Argon & Gemini 3.8 Flash ($/1M tokens; 1M WTU = $2.00)
       pricing: {
         proInput: 4.00,
         proOutput: 20.00,
@@ -1929,8 +1917,8 @@
       const proDiscountFactor = Math.max(0.01, 1 - (state.proDiscountPct / 100));
       const flashDiscountFactor = Math.max(0.01, 1 - (state.flashDiscountPct / 100));
 
-      // Cache weight relative to uncached input: 5% on Gemini 4 Argon, 10% on Gemini 3.1 Pro & Gemini 3.8 Flash
-      const proCacheRatio = state.reasoningModel === 'argon' ? 0.05 : 0.10;
+      // Cache weight relative to uncached input: 5% on Gemini 4 Argon, 10% on Gemini 3.8 Flash
+      const proCacheRatio = 0.05;
       const flashCacheRatio = 0.10;
 
       const proInputNet = state.pricing.proInput * proDiscountFactor * regionalMultiplier;
@@ -2211,25 +2199,6 @@
       renderAll();
     }
 
-    function handleReasoningModelChange(modelKey) {
-      state.reasoningModel = modelKey === 'pro31' ? 'pro31' : 'argon';
-      if (state.reasoningModel === 'argon') {
-        state.pricing.proInput = 4.00;
-        state.pricing.proOutput = 20.00;
-        state.proDiscountPct = state.activePreset === 'current_promo' ? 50 : 0;
-      } else {
-        state.pricing.proInput = 2.00;
-        state.pricing.proOutput = 12.00;
-        state.proDiscountPct = 0;
-      }
-      document.getElementById('proInputPrice').value = state.pricing.proInput.toFixed(2);
-      document.getElementById('proOutputPrice').value = state.pricing.proOutput.toFixed(2);
-      document.getElementById('proDiscountInput').value = state.proDiscountPct;
-      document.getElementById('proDiscountSlider').value = state.proDiscountPct;
-      triggerWizardNudge();
-      renderAll();
-    }
-
     function handleAdditionalSpendChange(rawVal) {
       const val = Math.max(0, parseFloat(rawVal) || 0);
       state.additionalMonthlySpend = val;
@@ -2342,13 +2311,11 @@
 
     function applyPricingPreset(preset) {
       state.activePreset = preset;
-      const proStandardIn = state.reasoningModel === 'argon' ? 4.00 : 2.00;
-      const proStandardOut = state.reasoningModel === 'argon' ? 20.00 : 12.00;
-      state.pricing = { proInput: proStandardIn, proOutput: proStandardOut, flashInput: 1.50, flashOutput: 7.50 };
+      state.pricing = { proInput: 4.00, proOutput: 20.00, flashInput: 1.50, flashOutput: 7.50 };
 
       if (preset === 'current_promo' || preset === 'latest_public') {
         state.activePreset = 'current_promo';
-        state.proDiscountPct = state.reasoningModel === 'argon' ? 50 : 0;
+        state.proDiscountPct = 50;
         state.flashDiscountPct = 50;
       } else if (preset === 'dec_2026') {
         state.proDiscountPct = 0;
@@ -2620,8 +2587,6 @@
     function renderAll() {
       const m = computeMetrics();
       const utilPct = m.weeklyQuotaM > 0 ? (m.totalWeeklyBurnM / m.weeklyQuotaM) * 100 : 0;
-      const modelShortName = state.reasoningModel === 'argon' ? 'Argon' : '3.1 Pro';
-      const modelFullName = state.reasoningModel === 'argon' ? 'Gemini 4 Argon' : 'Gemini 3.1 Pro (≤200K)';
 
       // Panel 1 Right-Pane Infographics (25% pane)
       const tierName = state.tier === 'plus' ? 'Plus' : 'Standard';
@@ -2827,11 +2792,6 @@
         `${fmtM(m.totalWeeklyBurnM, 2)} tokens / wk (${fmtM(m.totalWeeklyBurnWtuM, 2)} WTU)`;
 
       // Panel 4: AI Model & Budget Settings Updates
-      const reasoningShortDesc = document.getElementById('reasoningModelShortDesc');
-      if (reasoningShortDesc) reasoningShortDesc.textContent = modelFullName;
-      const proMixModelNameLabel = document.getElementById('proMixModelNameLabel');
-      if (proMixModelNameLabel) proMixModelNameLabel.textContent = modelShortName;
-
       document.getElementById('proMixPctLabel').textContent = `${state.proPct}%`;
       document.getElementById('flashMixPctLabel').textContent = `${state.flashPct}%`;
       document.getElementById('inputMixPctLabel').textContent = `${state.inputPct}%`;
@@ -2867,17 +2827,6 @@
         }
       });
 
-      const reasoningBadgeIcon = document.getElementById('reasoningBadgeIcon');
-      const reasoningCardTitle = document.getElementById('reasoningCardTitle');
-      const proDiscountTitleLabel = document.getElementById('proDiscountTitleLabel');
-      if (reasoningBadgeIcon) reasoningBadgeIcon.textContent = state.reasoningModel === 'argon' ? 'Argon' : 'Pro';
-      if (reasoningCardTitle) reasoningCardTitle.textContent = `${modelFullName} (Complex Coding)`;
-      if (proDiscountTitleLabel) {
-        proDiscountTitleLabel.textContent = state.reasoningModel === 'argon'
-          ? 'Gemini 4 Argon Discount (%) — 50% Launch Promo to Nov 30'
-          : 'Gemini 3.1 Pro Discount (%) — Standard Rate (0% Promo)';
-      }
-
       document.getElementById('proShareBadgeTab4').textContent = `Usage Share: ${state.proPct}%`;
       document.getElementById('flashShareBadgeTab4').textContent = `Usage Share: ${state.flashPct}%`;
 
@@ -2895,7 +2844,7 @@
 
       const regSuffix = state.regionalEndpoint ? ' · Regional +10%' : '';
       document.getElementById('t4DiscountActiveBadge').textContent =
-        `${modelShortName} ${state.proDiscountPct}% off · Flash ${state.flashDiscountPct}% off · ${state.cacheHitPct}% Cached${regSuffix}`;
+        `Argon ${state.proDiscountPct}% off · Flash ${state.flashDiscountPct}% off · ${state.cacheHitPct}% Cached${regSuffix}`;
 
       const ioCacheSplitText = `${state.inputPct}% In [${state.cacheHitPct}% Cached] : ${state.outputPct}% Out`;
       document.getElementById('t4ProIoSplitLabel').textContent = ioCacheSplitText;
