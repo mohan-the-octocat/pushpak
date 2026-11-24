@@ -20,7 +20,7 @@ $$\text{WTU} = (\text{prompt} - \text{cached}) \cdot w_{\text{in}} + \text{cache
 
 1. **1. Plan & Seats:** Given the **Gemini Enterprise Plan** (`Standard` or `Plus`), **Endpoint Location** (`Global` vs. `Regional +10% WTU`), **Total Purchased Seats** (all seats pool together, including unassigned licenses), and **Active Antigravity Users** ($\le$ Total Purchased Seats), what are the **Total Weekly Team Capacity** (in tokens and WTUs) and **Average Weekly Capacity per Active User**?
 2. **2. Team Usage Habits:** How does splitting active Antigravity users across **Power Users (Heavy)**, **Regular Users (Moderate)**, and **Occasional Users (Light)** (default `30% / 40% / 30%`) with configurable cache-inclusive **Estimated Weekly Usage per Person** (default `25M / 10M / 3M` tokens/user/week) drive **Total Estimated Team Usage / Week**, and does any Power User exceed the unpooled **10× single-seat per-user weekly cap** (`18.75M WTU` = \$37.50/wk on `Plus`; `12.50M WTU` = \$25.00/wk on `Standard`)?
-3. **3. AI Model & Budget Settings:** How do the **AI Model Split** (`Gemini 4 Argon` vs. `Gemini 3.8 Flash`, default `20% / 80%`), **Prompt vs. Response Ratio (Input vs. Output + Thinking)** (default `98% Input / 2% Output`), **Context Cache Hit Rate (%)** (default `88%`, where cached tokens cost `5%` of input on `Gemini 4 Argon` and `10%` on `Gemini 3.8 Flash`), **Extra Monthly Budget (Optional)** (default `\$0`), **Rate Period Presets** (`Current Promo` to Nov 30, 2026; `Dec 2026`; `Jan 2027+`), and model **Discount (%)** widgets affect the **Overall Blended Cost & WTU Weight** (`$/1M tokens` and `WTU / 1K tokens`)?
+3. **3. AI Model & Budget Settings:** How do the 4-way **AI Model Mix** (`Gemini 4 Hydrogen`, `Gemini 4 Neon`, `Gemini 4 Carbon`, and `Gemini 4 Argon`, default `50% / 30% / 10% / 10%`), **Prompt vs. Response Ratio (Input vs. Output + Thinking)** (default `98% Input / 2% Output`), **Context Cache Hit Rate (%)** (default `88%`, where cached tokens cost `5%` of uncached input across all Gemini 4 models), **Extra Monthly Budget (Optional)** (default `\$0`), **Rate Period Presets** (`Current Promo` to Nov 30, 2026; `Dec 1, 2026+ Standard GA Rates`), and per-model **Discount (%)** widgets affect the **Overall Blended Cost & WTU Weight** (`$/1M tokens` and `WTU / 1K tokens`)?
 4. **4. Weekly Forecast & Budget:** In a `75:25` vertical split, how does the **Running Weekly Total** of team usage (`Monday`–`Friday`) compare against the organization's **Weekly Capacity Limit**, when does it cross the official **80% admin alert threshold**, and what **Recommendation & Budget Status** is triggered?
 
 ---
@@ -34,26 +34,25 @@ $$\text{WTU} = (\text{prompt} - \text{cached}) \cdot w_{\text{in}} + \text{cache
   - **Total Purchased Seats:** Total Gemini Enterprise licenses on the GCP project (all seats pool together, including unassigned seats).
   - **Active Antigravity Users:** Number of team members actively using Antigravity (automatically capped at `Total Purchased Seats`; inactive seats leave extra buffer in the shared pool).
 - **Right `1/3` Pane (`Available Weekly Capacity`):**
-  - Readonly capacity displays (`+6px` enlarged typography) for **Total Weekly Team Capacity** (tokens and WTU pool) and **Average Weekly Capacity per Active User**, plus summary rows for **Active Users / Purchased Seats**, **Weekly Included Pool (WTU / USD)**, and **Effective Cost per 1M Tokens (w/ Cache)** (`$0.29 / 1M · 143 WTU/1K` at defaults).
+  - Readonly capacity displays (`+6px` enlarged typography) for **Total Weekly Team Capacity** (tokens and WTU pool) and **Average Weekly Capacity per Active User**, plus summary rows for **Active Users / Purchased Seats**, **Weekly Included Pool (WTU / USD)**, and **Effective Cost per 1M Tokens (w/ Cache)** (`$0.53 / 1M · 267 WTU/1K` at defaults).
 
 ### Step 2 — Team Usage Habits
 - **Team Activity Breakdown (%):** Interactive sliders and numeric inputs for **Power Users (Heavy)**, **Regular Users (Moderate)**, and **Occasional Users (Light)** (defaults to `30-40-30`, auto-normalized to `100%`).
 - **Estimated Weekly Usage per Person (Cache-Inclusive):** Configurable weekly token usage (`M tokens / user / week`, including cached context) across each group:
-  - **Power User — Weekly Usage:** Default `25.00M` tokens/week (`~5.00M` tokens/workday), with an inline **10× single-seat per-user limit** check (`18.75M WTU` = `130.85M tokens/wk` on `Plus` at default mix) and warning if exceeded
+  - **Power User — Weekly Usage:** Default `25.00M` tokens/week (`~5.00M` tokens/workday), with an inline **10× single-seat per-user limit** check (`18.75M WTU` = `70.16M tokens/wk` on `Plus` at default mix) and warning if exceeded
   - **Regular User — Weekly Usage:** Default `10.00M` tokens/week (`~2.00M` tokens/workday)
   - **Occasional User — Weekly Usage:** Default `3.00M` tokens/week (`~0.60M` tokens/workday)
 - **Rollup Metrics:** Displays **Average Weekly Usage per Person** and **Total Estimated Team Usage / Week** (in both tokens and WTUs).
 
 ### Step 3 — AI Model & Budget Settings
-- **AI Model Split:** Balance between **Gemini 4 Argon** for complex coding and **Gemini 3.8 Flash** for everyday coding, defaulting to `80% Flash / 20% Argon`.
+- **AI Model Mix (Gemini 4 Fleet):** Auto-normalizing 4-way mix across **Gemini 4 Hydrogen** (everyday coding & fast agents, default `50%`), **Gemini 4 Neon** (high-velocity frontier coding, default `30%`), **Gemini 4 Carbon** (hardest long-horizon projects, default `10%`), and **Gemini 4 Argon** (12-month Long GA & strict data controls, default `10%`), plus one-click mix presets (`Balanced 50/30/10/10`, `Hydrogen + Neon 60/40`, `Long GA 80H/20Ar`).
 - **Prompt vs. Response Ratio (Input vs. Output + Thinking):** Proportion of **Prompts (Input)** vs. **Output + Thinking**, defaulting to `98% Input / 2% Output`.
-- **Context Cache Hit Rate (%):** Share of prompt tokens served from context cache, defaulting to `88%` (`11.8% uncached · 86.2% cached · 2.0% out`). Cached tokens carry **5%** of uncached input weight on `Gemini 4 Argon` and **10%** on `Gemini 3.8 Flash`.
+- **Context Cache Hit Rate (%):** Share of prompt tokens served from context cache, defaulting to `88%` (`11.8% uncached · 86.2% cached · 2.0% out`). Cached tokens carry **5%** of uncached input weight (95% discount) across all four Gemini 4 models.
 - **Extra Monthly Budget (Optional):** Optional opt-in PAYG overage budget (`USD / mo`, default `\$0`) on top of the weekly seat pool.
 - **Model Rates, WTU Weights & Rate Period Presets:**
-  - Three one-click **Rate Period Presets**:
-    - **Current Promo (to Nov 30, 2026):** `Gemini 4 Argon` 50% off (`$2.00 In / $0.10 Cache / $10.00 Out`), `Gemini 3.8 Flash` 50% off (`$0.75 In / $0.075 Cache / $3.75 Out`)
-    - **Dec 2026:** `Gemini 4 Argon` Standard (`0% off`: `$4.00 In / $0.20 Cache / $20.00 Out`), `Gemini 3.8 Flash` 50% off (promo runs through Dec 31, 2026)
-    - **Jan 2027+ (Standard Rates):** Both `Gemini 4 Argon` and `Gemini 3.8 Flash` at Standard (`0% promo`) rates
+  - Two one-click **Rate Period Presets**:
+    - **Current Promo (to Nov 30, 2026):** `Carbon` & `Argon` 50% off (`$2.00 In / $0.10 Cache / $10.00 Out` = `1.00 / 0.05 / 5.00 WTU`); `Neon` Standard GA (`$3.00 / $0.15 / $15.00` = `1.50 / 0.075 / 7.50 WTU`); `Hydrogen` Standard GA (`$1.50 / $0.075 / $7.50` = `0.75 / 0.0375 / 3.75 WTU`)
+    - **Dec 1, 2026+ (Standard GA Rates):** All four Gemini 4 models at Standard (`0% promo`) rates (`Carbon` & `Argon` at `$4.00 / $0.20 / $20.00` = `2.00 / 0.10 / 10.00 WTU`)
 
 ### Step 4 — Weekly Forecast & Budget (`75:25` Vertical Split)
 - **Left `75%` Pane:**

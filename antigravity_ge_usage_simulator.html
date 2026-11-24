@@ -1169,64 +1169,216 @@
     <!-- ===================================================================== -->
     <section id="tabPanel-4" class="hidden space-y-5">
 
-      <!-- Top Row: AI Model Split, Prompt vs. Response Ratio, Context Cache Hit Rate & Extra Monthly Budget -->
-      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-
-        <!-- 1. AI Model Split (Complex Reasoning vs. Everyday Tasks) -->
-        <div class="sim-card rounded-2xl p-4 sm:p-5 shadow-md space-y-3.5 flex flex-col justify-between">
-          <div class="space-y-2">
-            <div class="flex items-center justify-between gap-2 border-b border-[var(--sim-border)] pb-3">
-              <h2 class="text-sm sm:text-base font-bold flex items-center gap-2">
-                <svg class="w-4 h-4 text-[#34A853] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
-                </svg>
-                <span>AI Model Split</span>
-              </h2>
-              <button
-                type="button"
-                onclick="handleModelMixSlider(80)"
-                class="px-2 py-1 rounded-lg text-[11px] font-semibold sim-subcard hover:border-[#4285F4] cursor-pointer shrink-0"
-              >
-                Reset 80/20
-              </button>
-            </div>
-            <p class="text-xs sim-muted">
-              Balance between <strong id="reasoningModelShortDesc">Gemini 4 Argon</strong> (complex coding) and <strong>Gemini 3.8 Flash</strong> (everyday coding).
+      <!-- Row 1: 4-Way Gemini 4 AI Model Mix (Auto-Normalizing to 100%) -->
+      <div class="sim-card rounded-2xl p-5 sm:p-6 shadow-md space-y-4">
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 border-b border-[var(--sim-border)] pb-3.5">
+          <div>
+            <h2 class="text-base sm:text-lg font-bold flex items-center gap-2">
+              <svg class="w-4 h-4 text-[#34A853] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+              </svg>
+              <span>AI Model Mix — Gemini 4 Fleet</span>
+              <span id="modelMixSumBadge" class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-[#34A853]/15 text-[#4ade80] border border-[#34A853]/30 font-mono-num">
+                Total: 100%
+              </span>
+            </h2>
+            <p class="text-xs sim-muted mt-0.5">
+              Distribute token volume across <strong>Gemini 4 Hydrogen</strong> (everyday coding), <strong>Neon</strong> (high-velocity frontier), <strong>Carbon</strong> (hardest long-horizon), and <strong>Argon</strong> (12-month Long GA). Sliders auto-balance to 100%.
             </p>
           </div>
-
-          <div class="space-y-2.5">
-            <div class="flex items-center justify-between text-xs font-bold">
-              <span class="px-2.5 py-1 rounded-lg bg-[#a855f7]/15 text-[#c084fc] border border-[#a855f7]/30 font-mono-num">
-                <span id="proMixModelNameLabel">Argon</span>: <span id="proMixPctLabel">20%</span>
-              </span>
-              <span class="px-2.5 py-1 rounded-lg bg-[#4285F4]/15 text-[#60a5fa] border border-[#4285F4]/30 font-mono-num">
-                Flash: <span id="flashMixPctLabel">80%</span>
-              </span>
-            </div>
-
-            <div class="space-y-1.5">
-              <input
-                id="modelMixSlider"
-                type="range"
-                min="0"
-                max="100"
-                step="1"
-                value="80"
-                oninput="handleModelMixSlider(this.value)"
-                class="google-slider"
-                style="background: linear-gradient(90deg, #9334E6 0%, #9334E6 20%, #4285F4 20%, #4285F4 100%);"
-              />
-              <div class="flex justify-between text-[11px] sim-muted">
-                <span>◀ Reasoning</span>
-                <span>50/50</span>
-                <span>Flash ▶</span>
-              </div>
-            </div>
+          <div class="flex flex-wrap items-center gap-2 shrink-0">
+            <button
+              type="button"
+              onclick="applyModelMixPreset('balanced')"
+              class="px-2.5 py-1.5 rounded-lg text-[11px] font-semibold sim-subcard hover:border-[#4285F4] cursor-pointer"
+            >
+              Balanced (50/30/10/10)
+            </button>
+            <button
+              type="button"
+              onclick="applyModelMixPreset('neon_hydrogen')"
+              class="px-2.5 py-1.5 rounded-lg text-[11px] font-semibold sim-subcard hover:border-[#06b6d4] cursor-pointer"
+            >
+              Hydrogen + Neon (60/40)
+            </button>
+            <button
+              type="button"
+              onclick="applyModelMixPreset('long_ga')"
+              class="px-2.5 py-1.5 rounded-lg text-[11px] font-semibold sim-subcard hover:border-[#a855f7] cursor-pointer"
+            >
+              Long GA (80H / 20Ar)
+            </button>
           </div>
         </div>
 
-        <!-- 2. Prompt vs. Response Ratio (Input vs. Output + Thinking) -->
+        <!-- Stacked 4-Model Mix Bar -->
+        <div class="space-y-1.5">
+          <div class="w-full h-3.5 rounded-full overflow-hidden flex bg-[var(--sim-surface-2)] border border-[var(--sim-border)]">
+            <div id="mixBarHydrogen" class="h-full bg-[#4285F4] transition-all duration-150" style="width: 50%"></div>
+            <div id="mixBarNeon" class="h-full bg-[#06b6d4] transition-all duration-150" style="width: 30%"></div>
+            <div id="mixBarCarbon" class="h-full bg-[#f59e0b] transition-all duration-150" style="width: 10%"></div>
+            <div id="mixBarArgon" class="h-full bg-[#a855f7] transition-all duration-150" style="width: 10%"></div>
+          </div>
+          <div class="flex flex-wrap items-center justify-between gap-2 text-[11px] font-mono-num">
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#4285F4] inline-block"></span>Hydrogen: <strong id="mixBarLabelHydrogen">50%</strong></span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#06b6d4] inline-block"></span>Neon: <strong id="mixBarLabelNeon">30%</strong></span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#f59e0b] inline-block"></span>Carbon: <strong id="mixBarLabelCarbon">10%</strong></span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#a855f7] inline-block"></span>Argon: <strong id="mixBarLabelArgon">10%</strong></span>
+          </div>
+        </div>
+
+        <!-- 4 Model Mix Sliders -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+          <!-- Hydrogen -->
+          <div class="p-3.5 rounded-xl sim-subcard space-y-2 border border-[#4285F4]/30">
+            <div class="flex items-center justify-between gap-2">
+              <div class="flex items-center gap-2 min-w-0">
+                <span class="w-6 h-6 rounded-lg bg-[#4285F4]/15 border border-[#4285F4]/40 text-[#60a5fa] flex items-center justify-center font-bold text-[11px] shrink-0">H</span>
+                <div class="min-w-0">
+                  <div class="text-xs font-bold truncate">Gemini 4 Hydrogen</div>
+                  <div class="text-[10px] sim-muted truncate">Everyday coding &amp; fast agents</div>
+                </div>
+              </div>
+              <div class="flex items-center gap-1 shrink-0">
+                <input
+                  id="mixInputHydrogen"
+                  type="number"
+                  min="0"
+                  max="100"
+                  step="1"
+                  value="50"
+                  oninput="handleModelMixChange('hydrogen', this.value)"
+                  class="w-14 px-1.5 py-1 rounded-lg sim-input text-right text-xs font-bold font-mono-num focus:outline-none focus:ring-2 focus:ring-[#4285F4]"
+                />
+                <span class="text-xs font-bold sim-muted">%</span>
+              </div>
+            </div>
+            <input
+              id="mixSliderHydrogen"
+              type="range"
+              min="0"
+              max="100"
+              step="1"
+              value="50"
+              oninput="handleModelMixChange('hydrogen', this.value)"
+              class="google-slider"
+            />
+          </div>
+
+          <!-- Neon -->
+          <div class="p-3.5 rounded-xl sim-subcard space-y-2 border border-[#06b6d4]/30">
+            <div class="flex items-center justify-between gap-2">
+              <div class="flex items-center gap-2 min-w-0">
+                <span class="w-6 h-6 rounded-lg bg-[#06b6d4]/15 border border-[#06b6d4]/40 text-[#22d3ee] flex items-center justify-center font-bold text-[11px] shrink-0">Ne</span>
+                <div class="min-w-0">
+                  <div class="text-xs font-bold truncate">Gemini 4 Neon</div>
+                  <div class="text-[10px] sim-muted truncate">High-velocity frontier coding</div>
+                </div>
+              </div>
+              <div class="flex items-center gap-1 shrink-0">
+                <input
+                  id="mixInputNeon"
+                  type="number"
+                  min="0"
+                  max="100"
+                  step="1"
+                  value="30"
+                  oninput="handleModelMixChange('neon', this.value)"
+                  class="w-14 px-1.5 py-1 rounded-lg sim-input text-right text-xs font-bold font-mono-num focus:outline-none focus:ring-2 focus:ring-[#06b6d4]"
+                />
+                <span class="text-xs font-bold sim-muted">%</span>
+              </div>
+            </div>
+            <input
+              id="mixSliderNeon"
+              type="range"
+              min="0"
+              max="100"
+              step="1"
+              value="30"
+              oninput="handleModelMixChange('neon', this.value)"
+              class="google-slider"
+            />
+          </div>
+
+          <!-- Carbon -->
+          <div class="p-3.5 rounded-xl sim-subcard space-y-2 border border-[#f59e0b]/30">
+            <div class="flex items-center justify-between gap-2">
+              <div class="flex items-center gap-2 min-w-0">
+                <span class="w-6 h-6 rounded-lg bg-[#f59e0b]/15 border border-[#f59e0b]/40 text-[#fbbf24] flex items-center justify-center font-bold text-[11px] shrink-0">C</span>
+                <div class="min-w-0">
+                  <div class="text-xs font-bold truncate">Gemini 4 Carbon</div>
+                  <div class="text-[10px] sim-muted truncate">Hardest long-horizon projects</div>
+                </div>
+              </div>
+              <div class="flex items-center gap-1 shrink-0">
+                <input
+                  id="mixInputCarbon"
+                  type="number"
+                  min="0"
+                  max="100"
+                  step="1"
+                  value="10"
+                  oninput="handleModelMixChange('carbon', this.value)"
+                  class="w-14 px-1.5 py-1 rounded-lg sim-input text-right text-xs font-bold font-mono-num focus:outline-none focus:ring-2 focus:ring-[#f59e0b]"
+                />
+                <span class="text-xs font-bold sim-muted">%</span>
+              </div>
+            </div>
+            <input
+              id="mixSliderCarbon"
+              type="range"
+              min="0"
+              max="100"
+              step="1"
+              value="10"
+              oninput="handleModelMixChange('carbon', this.value)"
+              class="google-slider"
+            />
+          </div>
+
+          <!-- Argon -->
+          <div class="p-3.5 rounded-xl sim-subcard space-y-2 border border-[#a855f7]/30">
+            <div class="flex items-center justify-between gap-2">
+              <div class="flex items-center gap-2 min-w-0">
+                <span class="w-6 h-6 rounded-lg bg-[#a855f7]/15 border border-[#a855f7]/40 text-[#c084fc] flex items-center justify-center font-bold text-[11px] shrink-0">Ar</span>
+                <div class="min-w-0">
+                  <div class="text-xs font-bold truncate">Gemini 4 Argon</div>
+                  <div class="text-[10px] sim-muted truncate">12-mo Long GA &amp; data controls</div>
+                </div>
+              </div>
+              <div class="flex items-center gap-1 shrink-0">
+                <input
+                  id="mixInputArgon"
+                  type="number"
+                  min="0"
+                  max="100"
+                  step="1"
+                  value="10"
+                  oninput="handleModelMixChange('argon', this.value)"
+                  class="w-14 px-1.5 py-1 rounded-lg sim-input text-right text-xs font-bold font-mono-num focus:outline-none focus:ring-2 focus:ring-[#a855f7]"
+                />
+                <span class="text-xs font-bold sim-muted">%</span>
+              </div>
+            </div>
+            <input
+              id="mixSliderArgon"
+              type="range"
+              min="0"
+              max="100"
+              step="1"
+              value="10"
+              oninput="handleModelMixChange('argon', this.value)"
+              class="google-slider"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 2: Prompt vs. Response Ratio, Context Cache Hit Rate & Extra Monthly Budget -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+
+        <!-- 1. Prompt vs. Response Ratio (Input vs. Output + Thinking) -->
         <div class="sim-card rounded-2xl p-4 sm:p-5 shadow-md space-y-3.5 flex flex-col justify-between">
           <div class="space-y-2">
             <div class="flex items-center justify-between gap-2 border-b border-[var(--sim-border)] pb-3">
@@ -1280,7 +1432,7 @@
           </div>
         </div>
 
-        <!-- 3. Context Cache Hit Rate (% of Prompts Served from Cache) -->
+        <!-- 2. Context Cache Hit Rate (% of Prompts Served from Cache) -->
         <div class="sim-card rounded-2xl p-4 sm:p-5 shadow-md space-y-3.5 flex flex-col justify-between">
           <div class="space-y-2">
             <div class="flex items-center justify-between gap-2 border-b border-[var(--sim-border)] pb-3">
@@ -1299,7 +1451,7 @@
               </button>
             </div>
             <p class="text-xs sim-muted">
-              Share of prompt tokens served from cache (~88% in Antigravity). Cached tokens cost <strong>5%</strong> of input on Argon and <strong>10%</strong> on Flash.
+              Share of prompt tokens served from cache (~88% in Antigravity). Cached tokens cost <strong>5%</strong> of uncached input across all Gemini 4 models (95% discount).
             </p>
           </div>
 
@@ -1331,7 +1483,7 @@
           </div>
         </div>
 
-        <!-- 4. Extra Monthly Budget (Optional) -->
+        <!-- 3. Extra Monthly Budget (Optional) -->
         <div class="sim-card rounded-2xl p-4 sm:p-5 shadow-md space-y-3.5 flex flex-col justify-between">
           <div class="space-y-2">
             <div class="flex items-center justify-between gap-2 border-b border-[var(--sim-border)] pb-3">
@@ -1385,7 +1537,7 @@
 
       </div>
 
-      <!-- Bottom Row: Model Rates, WTU Weights & Rate Period Presets -->
+      <!-- Row 3: Model Rates, WTU Weights & Rate Period Presets -->
       <div class="sim-card rounded-2xl p-5 sm:p-6 shadow-md space-y-5">
         <div class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-3 border-b border-[var(--sim-border)] pb-4">
           <div>
@@ -1393,7 +1545,7 @@
               Model Rates, WTU Weights &amp; Rate Period Presets
             </h2>
             <p class="text-xs sim-muted mt-0.5">
-              1M WTU = $2.00. Gemini 4 Argon has a 50% launch promo ending <strong>Nov 30, 2026</strong>; Gemini 3.8 Flash has a 50% promo ending <strong>Dec 31, 2026</strong>.
+              1M WTU = $2.00 · All Gemini 4 models carry a 5% cache weight. <strong>Carbon</strong> &amp; <strong>Argon</strong> have a 50% launch promo ending <strong>Nov 30, 2026</strong>; <strong>Neon</strong> &amp; <strong>Hydrogen</strong> are at Standard GA rates.
             </p>
           </div>
 
@@ -1404,269 +1556,229 @@
               onclick="applyPricingPreset('current_promo')"
               class="px-3 py-1.5 rounded-xl text-xs font-bold bg-[#4285F4]/20 text-[#60a5fa] border border-[#4285F4] cursor-pointer transition-all"
             >
-              Current Promo (to Nov 30: Argon 50% Off · Flash 50% Off)
+              Current Promo (to Nov 30: Carbon &amp; Argon 50% Off)
             </button>
             <button
-              id="presetBtnDec2026"
+              id="presetBtnStandard"
               type="button"
-              onclick="applyPricingPreset('dec_2026')"
+              onclick="applyPricingPreset('standard_ga')"
               class="px-3 py-1.5 rounded-xl text-xs font-semibold sim-subcard hover:border-[#4285F4] cursor-pointer transition-all"
             >
-              Dec 2026 (Argon Standard · Flash 50% Off)
-            </button>
-            <button
-              id="presetBtnJan2027"
-              type="button"
-              onclick="applyPricingPreset('jan_2027')"
-              class="px-3 py-1.5 rounded-xl text-xs font-semibold sim-subcard hover:border-[#4285F4] cursor-pointer transition-all"
-            >
-              Jan 2027+ (Standard Rates: 0% Promo)
+              Dec 1, 2026+ (Standard GA Rates: 0% Promo)
             </button>
           </div>
         </div>
 
-        <!-- Two Model Family Pricing Cards (Each with its own Discount Widget) -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        <!-- Four Gemini 4 Model Pricing Cards (2x2 Grid) -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
 
-          <!-- Gemini 4 Argon Pricing Card -->
-          <div class="p-5 rounded-2xl sim-subcard space-y-4">
+          <!-- 1. Gemini 4 Hydrogen Pricing Card -->
+          <div class="p-4 sm:p-5 rounded-2xl sim-subcard space-y-3.5">
             <div class="flex flex-wrap items-center justify-between gap-2">
               <div class="flex items-center gap-2.5">
-                <span class="w-9 h-9 rounded-xl bg-[#a855f7]/15 border border-[#a855f7]/40 text-[#c084fc] flex items-center justify-center font-bold text-xs">Argon</span>
+                <span class="w-9 h-9 rounded-xl bg-[#4285F4]/15 border border-[#4285F4]/40 text-[#60a5fa] flex items-center justify-center font-bold text-xs">H</span>
                 <div>
-                  <h3 class="text-sm sm:text-base font-bold">Gemini 4 Argon (Complex Coding · 5% Cache Wt)</h3>
-                  <p id="t4ProNetPricesLabel" class="text-xs sim-muted font-mono-num">Net: $2.00 In / $0.10 Cache / $10.00 Out per 1M (1.00 / 0.05 / 5.00 WTU)</p>
+                  <h3 class="text-sm sm:text-base font-bold">Gemini 4 Hydrogen (Everyday Coding · 5% Cache Wt)</h3>
+                  <p id="t4HydrogenNetPricesLabel" class="text-xs sim-muted font-mono-num">Net: $1.50 In / $0.075 Cache / $7.50 Out per 1M (0.75 / 0.0375 / 3.75 WTU)</p>
                 </div>
               </div>
-              <span id="proShareBadgeTab4" class="px-2.5 py-1 rounded-full text-xs font-semibold bg-[#a855f7]/15 text-[#c084fc] border border-[#a855f7]/30 font-mono-num">
-                Usage Share: 20%
+              <span id="hydrogenShareBadgeTab4" class="px-2.5 py-1 rounded-full text-xs font-semibold bg-[#4285F4]/15 text-[#60a5fa] border border-[#4285F4]/30 font-mono-num">
+                Usage Share: 50%
               </span>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label for="proInputPrice" class="block text-xs font-semibold mb-1.5">
-                  Standard Uncached Input Rate ($ / 1M)
-                </label>
+                <label for="hydrogenInputPrice" class="block text-xs font-semibold mb-1">Standard Uncached Input ($ / 1M)</label>
                 <div class="relative">
                   <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-bold sim-muted">$</span>
-                  <input
-                    id="proInputPrice"
-                    type="number"
-                    min="0.01"
-                    max="100"
-                    step="0.05"
-                    value="4.00"
-                    oninput="handlePricingChange()"
-                    class="w-full pl-7 pr-12 py-2.5 rounded-xl sim-input text-sm font-bold font-mono-num focus:outline-none focus:ring-2 focus:ring-[#a855f7]"
-                  />
+                  <input id="hydrogenInputPrice" type="number" min="0.01" max="100" step="0.05" value="1.50" oninput="handlePricingChange()" class="w-full pl-7 pr-12 py-2 rounded-xl sim-input text-sm font-bold font-mono-num focus:outline-none focus:ring-2 focus:ring-[#4285F4]" />
                   <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs sim-muted">/ 1M</span>
                 </div>
               </div>
-
               <div>
-                <label for="proOutputPrice" class="block text-xs font-semibold mb-1.5">
-                  Standard Output + Thinking Rate ($ / 1M)
-                </label>
+                <label for="hydrogenOutputPrice" class="block text-xs font-semibold mb-1">Standard Output + Thinking ($ / 1M)</label>
                 <div class="relative">
                   <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-bold sim-muted">$</span>
-                  <input
-                    id="proOutputPrice"
-                    type="number"
-                    min="0.01"
-                    max="200"
-                    step="0.10"
-                    value="20.00"
-                    oninput="handlePricingChange()"
-                    class="w-full pl-7 pr-12 py-2.5 rounded-xl sim-input text-sm font-bold font-mono-num focus:outline-none focus:ring-2 focus:ring-[#a855f7]"
-                  />
+                  <input id="hydrogenOutputPrice" type="number" min="0.01" max="200" step="0.05" value="7.50" oninput="handlePricingChange()" class="w-full pl-7 pr-12 py-2 rounded-xl sim-input text-sm font-bold font-mono-num focus:outline-none focus:ring-2 focus:ring-[#4285F4]" />
                   <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs sim-muted">/ 1M</span>
                 </div>
               </div>
             </div>
 
-            <!-- Reasoning Model Discount Widget -->
-            <div class="p-3.5 rounded-xl sim-card space-y-2.5 border border-[#a855f7]/30">
+            <div class="p-3 rounded-xl sim-card space-y-2 border border-[#4285F4]/30">
               <div class="flex flex-wrap items-center justify-between gap-2">
-                <div class="text-xs font-bold flex items-center gap-1.5 text-[#c084fc]">
-                  <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M17 17h.01M7 17L17 7M9.5 7a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0zm10 10a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
-                  </svg>
-                  <span id="proDiscountTitleLabel">Gemini 4 Argon Discount (%) — 50% Launch Promo to Nov 30</span>
-                </div>
+                <div class="text-xs font-bold text-[#60a5fa]">Gemini 4 Hydrogen Discount (%) — Standard GA</div>
                 <div class="flex items-center gap-1.5">
-                  <input
-                    id="proDiscountInput"
-                    type="number"
-                    min="0"
-                    max="90"
-                    step="1"
-                    value="50"
-                    oninput="handleModelDiscountChange('pro', this.value)"
-                    class="w-16 px-2 py-1 rounded-lg sim-input text-right text-xs font-bold font-mono-num focus:outline-none focus:ring-2 focus:ring-[#a855f7]"
-                  />
+                  <input id="hydrogenDiscountInput" type="number" min="0" max="90" step="1" value="0" oninput="handleModelDiscountChange('hydrogen', this.value)" class="w-14 px-2 py-1 rounded-lg sim-input text-right text-xs font-bold font-mono-num focus:outline-none focus:ring-2 focus:ring-[#4285F4]" />
                   <span class="text-xs font-bold">% off</span>
-                  <button
-                    type="button"
-                    onclick="handleModelDiscountChange('pro', 50)"
-                    class="px-2 py-1 rounded-lg text-[11px] font-semibold sim-subcard hover:border-[#a855f7] cursor-pointer"
-                  >
-                    50%
-                  </button>
-                  <button
-                    type="button"
-                    onclick="handleModelDiscountChange('pro', 0)"
-                    class="px-2 py-1 rounded-lg text-[11px] font-semibold sim-subcard hover:border-[#a855f7] cursor-pointer"
-                  >
-                    0%
-                  </button>
+                  <button type="button" onclick="handleModelDiscountChange('hydrogen', 0)" class="px-2 py-1 rounded-lg text-[11px] font-semibold sim-subcard hover:border-[#4285F4] cursor-pointer">0%</button>
                 </div>
               </div>
-              <input
-                id="proDiscountSlider"
-                type="range"
-                min="0"
-                max="90"
-                step="1"
-                value="50"
-                oninput="handleModelDiscountChange('pro', this.value)"
-                class="google-slider"
-              />
-              <div class="flex justify-between text-[11px] sim-muted font-mono-num">
-                <span>0% Standard (Dec 1+)</span>
-                <span>25%</span>
-                <span>50% Launch Promo</span>
-                <span>75%</span>
-                <span>90% Max</span>
-              </div>
+              <input id="hydrogenDiscountSlider" type="range" min="0" max="90" step="1" value="0" oninput="handleModelDiscountChange('hydrogen', this.value)" class="google-slider" />
             </div>
 
-            <div class="p-3.5 rounded-xl sim-card flex items-center justify-between text-xs">
-              <span class="sim-muted">
-                Effective Cost (<strong id="t4ProIoSplitLabel" class="text-[var(--sim-text)]">98% In [88% Cached] : 2% Out</strong>):
-              </span>
-              <span id="t4ProBlendedValue" class="text-sm font-bold font-mono-num text-[#c084fc]">$0.52 / 1M (261 WTU/1K)</span>
+            <div class="p-3 rounded-xl sim-card flex items-center justify-between text-xs">
+              <span class="sim-muted">Effective Cost (<strong id="t4HydrogenIoSplitLabel" class="text-[var(--sim-text)]">98% In [88% Cached] : 2% Out</strong>):</span>
+              <span id="t4HydrogenBlendedValue" class="text-sm font-bold font-mono-num text-[#60a5fa]">$0.39 / 1M (196 WTU/1K)</span>
             </div>
           </div>
 
-          <!-- Gemini Flash Pricing Card -->
-          <div class="p-5 rounded-2xl sim-subcard space-y-4">
-            <div class="flex items-center justify-between">
+          <!-- 2. Gemini 4 Neon Pricing Card -->
+          <div class="p-4 sm:p-5 rounded-2xl sim-subcard space-y-3.5">
+            <div class="flex flex-wrap items-center justify-between gap-2">
               <div class="flex items-center gap-2.5">
-                <span class="w-9 h-9 rounded-xl bg-[#4285F4]/15 border border-[#4285F4]/40 text-[#60a5fa] flex items-center justify-center font-bold text-sm">Flash</span>
+                <span class="w-9 h-9 rounded-xl bg-[#06b6d4]/15 border border-[#06b6d4]/40 text-[#22d3ee] flex items-center justify-center font-bold text-xs">Ne</span>
                 <div>
-                  <h3 class="text-sm sm:text-base font-bold">Gemini 3.8 Flash (Everyday Coding · 10% Cache Wt)</h3>
-                  <p id="t4FlashNetPricesLabel" class="text-xs sim-muted font-mono-num">Net: $0.75 In / $0.075 Cache / $3.75 Out per 1M (0.375 / 0.0375 / 1.875 WTU)</p>
+                  <h3 class="text-sm sm:text-base font-bold">Gemini 4 Neon (High-Velocity Frontier · 5% Cache Wt)</h3>
+                  <p id="t4NeonNetPricesLabel" class="text-xs sim-muted font-mono-num">Net: $3.00 In / $0.15 Cache / $15.00 Out per 1M (1.50 / 0.075 / 7.50 WTU)</p>
                 </div>
               </div>
-              <span id="flashShareBadgeTab4" class="px-2.5 py-1 rounded-full text-xs font-semibold bg-[#4285F4]/15 text-[#60a5fa] border border-[#4285F4]/30 font-mono-num">
-                Usage Share: 80%
+              <span id="neonShareBadgeTab4" class="px-2.5 py-1 rounded-full text-xs font-semibold bg-[#06b6d4]/15 text-[#22d3ee] border border-[#06b6d4]/30 font-mono-num">
+                Usage Share: 30%
               </span>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label for="flashInputPrice" class="block text-xs font-semibold mb-1.5">
-                  Standard Uncached Input Rate ($ / 1M)
-                </label>
+                <label for="neonInputPrice" class="block text-xs font-semibold mb-1">Standard Uncached Input ($ / 1M)</label>
                 <div class="relative">
                   <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-bold sim-muted">$</span>
-                  <input
-                    id="flashInputPrice"
-                    type="number"
-                    min="0.01"
-                    max="100"
-                    step="0.05"
-                    value="1.50"
-                    oninput="handlePricingChange()"
-                    class="w-full pl-7 pr-12 py-2.5 rounded-xl sim-input text-sm font-bold font-mono-num focus:outline-none focus:ring-2 focus:ring-[#4285F4]"
-                  />
+                  <input id="neonInputPrice" type="number" min="0.01" max="100" step="0.05" value="3.00" oninput="handlePricingChange()" class="w-full pl-7 pr-12 py-2 rounded-xl sim-input text-sm font-bold font-mono-num focus:outline-none focus:ring-2 focus:ring-[#06b6d4]" />
                   <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs sim-muted">/ 1M</span>
                 </div>
               </div>
-
               <div>
-                <label for="flashOutputPrice" class="block text-xs font-semibold mb-1.5">
-                  Standard Output + Thinking Rate ($ / 1M)
-                </label>
+                <label for="neonOutputPrice" class="block text-xs font-semibold mb-1">Standard Output + Thinking ($ / 1M)</label>
                 <div class="relative">
                   <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-bold sim-muted">$</span>
-                  <input
-                    id="flashOutputPrice"
-                    type="number"
-                    min="0.01"
-                    max="200"
-                    step="0.05"
-                    value="7.50"
-                    oninput="handlePricingChange()"
-                    class="w-full pl-7 pr-12 py-2.5 rounded-xl sim-input text-sm font-bold font-mono-num focus:outline-none focus:ring-2 focus:ring-[#4285F4]"
-                  />
+                  <input id="neonOutputPrice" type="number" min="0.01" max="200" step="0.10" value="15.00" oninput="handlePricingChange()" class="w-full pl-7 pr-12 py-2 rounded-xl sim-input text-sm font-bold font-mono-num focus:outline-none focus:ring-2 focus:ring-[#06b6d4]" />
                   <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs sim-muted">/ 1M</span>
                 </div>
               </div>
             </div>
 
-            <!-- Gemini Flash Discount Widget -->
-            <div class="p-3.5 rounded-xl sim-card space-y-2.5 border border-[#4285F4]/30">
+            <div class="p-3 rounded-xl sim-card space-y-2 border border-[#06b6d4]/30">
               <div class="flex flex-wrap items-center justify-between gap-2">
-                <div class="text-xs font-bold flex items-center gap-1.5 text-[#60a5fa]">
-                  <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M17 17h.01M7 17L17 7M9.5 7a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0zm10 10a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
-                  </svg>
-                  Gemini 3.8 Flash Discount (%) — 50% Promo to Dec 31
-                </div>
+                <div class="text-xs font-bold text-[#22d3ee]">Gemini 4 Neon Discount (%) — Standard GA</div>
                 <div class="flex items-center gap-1.5">
-                  <input
-                    id="flashDiscountInput"
-                    type="number"
-                    min="0"
-                    max="90"
-                    step="1"
-                    value="50"
-                    oninput="handleModelDiscountChange('flash', this.value)"
-                    class="w-16 px-2 py-1 rounded-lg sim-input text-right text-xs font-bold font-mono-num focus:outline-none focus:ring-2 focus:ring-[#4285F4]"
-                  />
+                  <input id="neonDiscountInput" type="number" min="0" max="90" step="1" value="0" oninput="handleModelDiscountChange('neon', this.value)" class="w-14 px-2 py-1 rounded-lg sim-input text-right text-xs font-bold font-mono-num focus:outline-none focus:ring-2 focus:ring-[#06b6d4]" />
                   <span class="text-xs font-bold">% off</span>
-                  <button
-                    type="button"
-                    onclick="handleModelDiscountChange('flash', 50)"
-                    class="px-2 py-1 rounded-lg text-[11px] font-semibold sim-subcard hover:border-[#4285F4] cursor-pointer"
-                  >
-                    50%
-                  </button>
-                  <button
-                    type="button"
-                    onclick="handleModelDiscountChange('flash', 0)"
-                    class="px-2 py-1 rounded-lg text-[11px] font-semibold sim-subcard hover:border-[#4285F4] cursor-pointer"
-                  >
-                    0%
-                  </button>
+                  <button type="button" onclick="handleModelDiscountChange('neon', 0)" class="px-2 py-1 rounded-lg text-[11px] font-semibold sim-subcard hover:border-[#06b6d4] cursor-pointer">0%</button>
                 </div>
               </div>
-              <input
-                id="flashDiscountSlider"
-                type="range"
-                min="0"
-                max="90"
-                step="1"
-                value="50"
-                oninput="handleModelDiscountChange('flash', this.value)"
-                class="google-slider"
-              />
-              <div class="flex justify-between text-[11px] sim-muted font-mono-num">
-                <span>0% Standard (Jan 1+)</span>
-                <span>25%</span>
-                <span>50% Promo</span>
-                <span>75%</span>
-                <span>90% Max</span>
+              <input id="neonDiscountSlider" type="range" min="0" max="90" step="1" value="0" oninput="handleModelDiscountChange('neon', this.value)" class="google-slider" />
+            </div>
+
+            <div class="p-3 rounded-xl sim-card flex items-center justify-between text-xs">
+              <span class="sim-muted">Effective Cost (<strong id="t4NeonIoSplitLabel" class="text-[var(--sim-text)]">98% In [88% Cached] : 2% Out</strong>):</span>
+              <span id="t4NeonBlendedValue" class="text-sm font-bold font-mono-num text-[#22d3ee]">$0.78 / 1M (391 WTU/1K)</span>
+            </div>
+          </div>
+
+          <!-- 3. Gemini 4 Carbon Pricing Card -->
+          <div class="p-4 sm:p-5 rounded-2xl sim-subcard space-y-3.5">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="flex items-center gap-2.5">
+                <span class="w-9 h-9 rounded-xl bg-[#f59e0b]/15 border border-[#f59e0b]/40 text-[#fbbf24] flex items-center justify-center font-bold text-xs">C</span>
+                <div>
+                  <h3 class="text-sm sm:text-base font-bold">Gemini 4 Carbon (Long-Horizon &amp; Research · 5% Cache Wt)</h3>
+                  <p id="t4CarbonNetPricesLabel" class="text-xs sim-muted font-mono-num">Net: $2.00 In / $0.10 Cache / $10.00 Out per 1M (1.00 / 0.05 / 5.00 WTU)</p>
+                </div>
+              </div>
+              <span id="carbonShareBadgeTab4" class="px-2.5 py-1 rounded-full text-xs font-semibold bg-[#f59e0b]/15 text-[#fbbf24] border border-[#f59e0b]/30 font-mono-num">
+                Usage Share: 10%
+              </span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label for="carbonInputPrice" class="block text-xs font-semibold mb-1">Standard Uncached Input ($ / 1M)</label>
+                <div class="relative">
+                  <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-bold sim-muted">$</span>
+                  <input id="carbonInputPrice" type="number" min="0.01" max="100" step="0.05" value="4.00" oninput="handlePricingChange()" class="w-full pl-7 pr-12 py-2 rounded-xl sim-input text-sm font-bold font-mono-num focus:outline-none focus:ring-2 focus:ring-[#f59e0b]" />
+                  <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs sim-muted">/ 1M</span>
+                </div>
+              </div>
+              <div>
+                <label for="carbonOutputPrice" class="block text-xs font-semibold mb-1">Standard Output + Thinking ($ / 1M)</label>
+                <div class="relative">
+                  <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-bold sim-muted">$</span>
+                  <input id="carbonOutputPrice" type="number" min="0.01" max="200" step="0.10" value="20.00" oninput="handlePricingChange()" class="w-full pl-7 pr-12 py-2 rounded-xl sim-input text-sm font-bold font-mono-num focus:outline-none focus:ring-2 focus:ring-[#f59e0b]" />
+                  <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs sim-muted">/ 1M</span>
+                </div>
               </div>
             </div>
 
-            <div class="p-3.5 rounded-xl sim-card flex items-center justify-between text-xs">
-              <span class="sim-muted">
-                Effective Cost (<strong id="t4FlashIoSplitLabel" class="text-[var(--sim-text)]">98% In [88% Cached] : 2% Out</strong>):
+            <div class="p-3 rounded-xl sim-card space-y-2 border border-[#f59e0b]/30">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <div class="text-xs font-bold text-[#fbbf24]">Gemini 4 Carbon Discount (%) — 50% Promo to Nov 30</div>
+                <div class="flex items-center gap-1.5">
+                  <input id="carbonDiscountInput" type="number" min="0" max="90" step="1" value="50" oninput="handleModelDiscountChange('carbon', this.value)" class="w-14 px-2 py-1 rounded-lg sim-input text-right text-xs font-bold font-mono-num focus:outline-none focus:ring-2 focus:ring-[#f59e0b]" />
+                  <span class="text-xs font-bold">% off</span>
+                  <button type="button" onclick="handleModelDiscountChange('carbon', 50)" class="px-2 py-1 rounded-lg text-[11px] font-semibold sim-subcard hover:border-[#f59e0b] cursor-pointer">50%</button>
+                  <button type="button" onclick="handleModelDiscountChange('carbon', 0)" class="px-2 py-1 rounded-lg text-[11px] font-semibold sim-subcard hover:border-[#f59e0b] cursor-pointer">0%</button>
+                </div>
+              </div>
+              <input id="carbonDiscountSlider" type="range" min="0" max="90" step="1" value="50" oninput="handleModelDiscountChange('carbon', this.value)" class="google-slider" />
+            </div>
+
+            <div class="p-3 rounded-xl sim-card flex items-center justify-between text-xs">
+              <span class="sim-muted">Effective Cost (<strong id="t4CarbonIoSplitLabel" class="text-[var(--sim-text)]">98% In [88% Cached] : 2% Out</strong>):</span>
+              <span id="t4CarbonBlendedValue" class="text-sm font-bold font-mono-num text-[#fbbf24]">$0.52 / 1M (261 WTU/1K)</span>
+            </div>
+          </div>
+
+          <!-- 4. Gemini 4 Argon Pricing Card -->
+          <div class="p-4 sm:p-5 rounded-2xl sim-subcard space-y-3.5">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="flex items-center gap-2.5">
+                <span class="w-9 h-9 rounded-xl bg-[#a855f7]/15 border border-[#a855f7]/40 text-[#c084fc] flex items-center justify-center font-bold text-xs">Ar</span>
+                <div>
+                  <h3 class="text-sm sm:text-base font-bold">Gemini 4 Argon (12-Mo Long GA · 5% Cache Wt)</h3>
+                  <p id="t4ArgonNetPricesLabel" class="text-xs sim-muted font-mono-num">Net: $2.00 In / $0.10 Cache / $10.00 Out per 1M (1.00 / 0.05 / 5.00 WTU)</p>
+                </div>
+              </div>
+              <span id="argonShareBadgeTab4" class="px-2.5 py-1 rounded-full text-xs font-semibold bg-[#a855f7]/15 text-[#c084fc] border border-[#a855f7]/30 font-mono-num">
+                Usage Share: 10%
               </span>
-              <span id="t4FlashBlendedValue" class="text-sm font-bold font-mono-num text-[#60a5fa]">$0.23 / 1M (114 WTU/1K)</span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label for="argonInputPrice" class="block text-xs font-semibold mb-1">Standard Uncached Input ($ / 1M)</label>
+                <div class="relative">
+                  <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-bold sim-muted">$</span>
+                  <input id="argonInputPrice" type="number" min="0.01" max="100" step="0.05" value="4.00" oninput="handlePricingChange()" class="w-full pl-7 pr-12 py-2 rounded-xl sim-input text-sm font-bold font-mono-num focus:outline-none focus:ring-2 focus:ring-[#a855f7]" />
+                  <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs sim-muted">/ 1M</span>
+                </div>
+              </div>
+              <div>
+                <label for="argonOutputPrice" class="block text-xs font-semibold mb-1">Standard Output + Thinking ($ / 1M)</label>
+                <div class="relative">
+                  <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-bold sim-muted">$</span>
+                  <input id="argonOutputPrice" type="number" min="0.01" max="200" step="0.10" value="20.00" oninput="handlePricingChange()" class="w-full pl-7 pr-12 py-2 rounded-xl sim-input text-sm font-bold font-mono-num focus:outline-none focus:ring-2 focus:ring-[#a855f7]" />
+                  <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs sim-muted">/ 1M</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-3 rounded-xl sim-card space-y-2 border border-[#a855f7]/30">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <div class="text-xs font-bold text-[#c084fc]">Gemini 4 Argon Discount (%) — 50% Promo to Nov 30</div>
+                <div class="flex items-center gap-1.5">
+                  <input id="argonDiscountInput" type="number" min="0" max="90" step="1" value="50" oninput="handleModelDiscountChange('argon', this.value)" class="w-14 px-2 py-1 rounded-lg sim-input text-right text-xs font-bold font-mono-num focus:outline-none focus:ring-2 focus:ring-[#a855f7]" />
+                  <span class="text-xs font-bold">% off</span>
+                  <button type="button" onclick="handleModelDiscountChange('argon', 50)" class="px-2 py-1 rounded-lg text-[11px] font-semibold sim-subcard hover:border-[#a855f7] cursor-pointer">50%</button>
+                  <button type="button" onclick="handleModelDiscountChange('argon', 0)" class="px-2 py-1 rounded-lg text-[11px] font-semibold sim-subcard hover:border-[#a855f7] cursor-pointer">0%</button>
+                </div>
+              </div>
+              <input id="argonDiscountSlider" type="range" min="0" max="90" step="1" value="50" oninput="handleModelDiscountChange('argon', this.value)" class="google-slider" />
+            </div>
+
+            <div class="p-3 rounded-xl sim-card flex items-center justify-between text-xs">
+              <span class="sim-muted">Effective Cost (<strong id="t4ArgonIoSplitLabel" class="text-[var(--sim-text)]">98% In [88% Cached] : 2% Out</strong>):</span>
+              <span id="t4ArgonBlendedValue" class="text-sm font-bold font-mono-num text-[#c084fc]">$0.52 / 1M (261 WTU/1K)</span>
             </div>
           </div>
 
@@ -1680,7 +1792,7 @@
                 Overall Blended Cost &amp; WTU Weight (w/ Context Caching)
               </span>
               <span id="t4DiscountActiveBadge" class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-[#34A853]/15 text-[#4ade80] border border-[#34A853]/30 font-mono-num">
-                Argon 50% off · Flash 50% off · 88% Cached
+                50% H · 30% Ne · 10% C · 10% Ar · 88% Cached
               </span>
             </div>
             <div class="text-xs sim-muted">
@@ -1690,13 +1802,13 @@
           <div class="flex items-center gap-4">
             <div class="text-right">
               <div class="text-xs sim-muted">Effective Rate / 1M Tokens</div>
-              <div id="t4CombinedRate" class="text-xl font-bold font-mono-num text-[#4ade80]">$0.29 / 1M</div>
-              <div id="t4CombinedWtuPer1K" class="text-[11px] font-mono-num sim-muted">143.3 WTU / 1K tokens</div>
+              <div id="t4CombinedRate" class="text-xl font-bold font-mono-num text-[#4ade80]">$0.53 / 1M</div>
+              <div id="t4CombinedWtuPer1K" class="text-[11px] font-mono-num sim-muted">267.2 WTU / 1K tokens</div>
             </div>
             <div class="text-right pl-4 border-l border-[var(--sim-border)]">
               <div class="text-xs sim-muted">Tokens per $1.00 (0.5M WTU)</div>
-              <div id="t4TokensPerDollar" class="text-xl font-bold font-mono-num text-[#60a5fa]">3.49M</div>
-              <div id="t4TokensPerSeatLabel" class="text-[11px] font-mono-num sim-muted">13.08M / Plus seat / wk</div>
+              <div id="t4TokensPerDollar" class="text-xl font-bold font-mono-num text-[#60a5fa]">1.87M</div>
+              <div id="t4TokensPerSeatLabel" class="text-[11px] font-mono-num sim-muted">7.02M / Plus seat / wk</div>
             </div>
           </div>
         </div>
@@ -1776,15 +1888,11 @@
       tier: 'plus',           // 'standard' ($2.50/wk = 1.25M WTU) | 'plus' ($3.75/wk = 1.875M WTU)
       regionalEndpoint: false,// false = Global (1.00x WTU), true = Regional (+10% = 1.10x WTU)
 
-      // Models Usage (Model Mix, I/O Split, Context Cache Hit Rate, Pricing, Discounts, Extra Budget)
-      activePreset: 'current_promo', // 'current_promo' | 'dec_2026' | 'jan_2027' | 'custom'
-      flashPct: 80,           // Default 80% Flash & 20% Gemini 4 Argon
-      proPct: 20,
+      // Models Usage (4-way Gemini 4 Mix, I/O Split, Context Cache Hit Rate, Pricing, Discounts, Extra Budget)
+      activePreset: 'current_promo', // 'current_promo' | 'standard_ga' | 'custom'
       inputPct: 98,           // Default 98% Input (Prompt) & 2% Output (incl. Thinking)
       outputPct: 2,
-      cacheHitPct: 88,        // Default 88% of Prompt tokens served from Context Cache
-      proDiscountPct: 50,     // Default 50% Launch Promo for Gemini 4 Argon (through Nov 30, 2026)
-      flashDiscountPct: 50,   // Default 50% Promo for Gemini 3.8 Flash (through Dec 31, 2026)
+      cacheHitPct: 88,        // Default 88% of Prompt tokens served from Context Cache (5% cache weight across all Gemini 4 models)
       additionalMonthlySpend: 0, // Additional opt-in PAYG spend per month ($ USD, default 0)
 
       // User Distribution (Default 30-40-30) & Weekly Cache-Inclusive Token Usage (Power 25M, Regular 10M, Occasional 3M)
@@ -1794,13 +1902,22 @@
         light: { pct: 30, weeklyBurnM: 3.00 }
       },
 
-      // Standard list pricing for Gemini 4 Argon & Gemini 3.8 Flash ($/1M tokens; 1M WTU = $2.00)
-      pricing: {
-        proInput: 4.00,
-        proOutput: 20.00,
-        flashInput: 1.50,
-        flashOutput: 7.50
+      // Gemini 4 Fleet: Standard list pricing ($/1M tokens; 1M WTU = $2.00; 5% cached input weight)
+      // Carbon & Argon carry a 50% launch promo through Nov 30, 2026; Hydrogen & Neon are at Standard GA rates.
+      models: {
+        hydrogen: { pct: 50, input: 1.50, output: 7.50, discountPct: 0 },
+        neon:     { pct: 30, input: 3.00, output: 15.00, discountPct: 0 },
+        carbon:   { pct: 10, input: 4.00, output: 20.00, discountPct: 50 },
+        argon:    { pct: 10, input: 4.00, output: 20.00, discountPct: 50 }
       }
+    };
+
+    const MODEL_KEYS = ['hydrogen', 'neon', 'carbon', 'argon'];
+    const MODEL_META = {
+      hydrogen: { cap: 'Hydrogen', short: 'H',  color: '#4285F4', listIn: 1.50, listOut: 7.50,  promoPct: 0 },
+      neon:     { cap: 'Neon',     short: 'Ne', color: '#06b6d4', listIn: 3.00, listOut: 15.00, promoPct: 0 },
+      carbon:   { cap: 'Carbon',   short: 'C',  color: '#f59e0b', listIn: 4.00, listOut: 20.00, promoPct: 50 },
+      argon:    { cap: 'Argon',    short: 'Ar', color: '#a855f7', listIn: 4.00, listOut: 20.00, promoPct: 50 }
     };
 
     const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
@@ -1914,31 +2031,24 @@
       const uncachedInShare = inWeight * (1 - cacheHitRate);
       const cachedInShare = inWeight * cacheHitRate;
 
-      const proDiscountFactor = Math.max(0.01, 1 - (state.proDiscountPct / 100));
-      const flashDiscountFactor = Math.max(0.01, 1 - (state.flashDiscountPct / 100));
+      // All Gemini 4 models (Hydrogen, Neon, Carbon, Argon) carry a 5% context cache weight (95% discount)
+      const cacheRatio = 0.05;
+      const modelMetrics = {};
+      let weightedRateSum = 0;
 
-      // Cache weight relative to uncached input: 5% on Gemini 4 Argon, 10% on Gemini 3.8 Flash
-      const proCacheRatio = 0.05;
-      const flashCacheRatio = 0.10;
+      MODEL_KEYS.forEach(k => {
+        const cfg = state.models[k];
+        const discountFactor = Math.max(0.01, 1 - (cfg.discountPct / 100));
+        const inputNet = cfg.input * discountFactor * regionalMultiplier;
+        const cachedNet = inputNet * cacheRatio;
+        const outputNet = cfg.output * discountFactor * regionalMultiplier;
+        const blended = (uncachedInShare * inputNet) + (cachedInShare * cachedNet) + (outWeight * outputNet);
+        const wtuPer1K = (blended / 2.0) * 1000;
+        modelMetrics[k] = { inputNet, cachedNet, outputNet, blended, wtuPer1K };
+        weightedRateSum += (cfg.pct / 100) * blended;
+      });
 
-      const proInputNet = state.pricing.proInput * proDiscountFactor * regionalMultiplier;
-      const proCachedNet = proInputNet * proCacheRatio;
-      const proOutputNet = state.pricing.proOutput * proDiscountFactor * regionalMultiplier;
-
-      const flashInputNet = state.pricing.flashInput * flashDiscountFactor * regionalMultiplier;
-      const flashCachedNet = flashInputNet * flashCacheRatio;
-      const flashOutputNet = state.pricing.flashOutput * flashDiscountFactor * regionalMultiplier;
-
-      const proBlended = (uncachedInShare * proInputNet) + (cachedInShare * proCachedNet) + (outWeight * proOutputNet);
-      const flashBlended = (uncachedInShare * flashInputNet) + (cachedInShare * flashCachedNet) + (outWeight * flashOutputNet);
-
-      const proWtuPer1K = (proBlended / 2.0) * 1000;
-      const flashWtuPer1K = (flashBlended / 2.0) * 1000;
-
-      const proShare = state.proPct / 100;
-      const flashShare = state.flashPct / 100;
-
-      const effectiveRatePerM = Math.max(0.0001, (proShare * proBlended) + (flashShare * flashBlended));
+      const effectiveRatePerM = Math.max(0.0001, weightedRateSum);
       const effectiveWtuPer1K = (effectiveRatePerM / 2.0) * 1000;
 
       const weeklyCreditPerLicense = getWeeklyCreditPerLicense();
@@ -2017,18 +2127,8 @@
         uncachedInShare,
         cachedInShare,
         outWeight,
-        proCacheRatio,
-        flashCacheRatio,
-        proInputNet,
-        proCachedNet,
-        proOutputNet,
-        flashInputNet,
-        flashCachedNet,
-        flashOutputNet,
-        proBlended,
-        flashBlended,
-        proWtuPer1K,
-        flashWtuPer1K,
+        cacheRatio,
+        modelMetrics,
         effectiveRatePerM,
         effectiveWtuPer1K,
         weeklyCreditPerLicense,
@@ -2165,14 +2265,71 @@
       renderAll();
     }
 
-    function handleModelMixSlider(val) {
-      const flashPct = Math.max(0, Math.min(100, parseInt(val, 10) || 0));
-      state.flashPct = flashPct;
-      state.proPct = 100 - flashPct;
+    function syncModelMixInputs() {
+      MODEL_KEYS.forEach(k => {
+        const cap = MODEL_META[k].cap;
+        const inp = document.getElementById(`mixInput${cap}`);
+        const sld = document.getElementById(`mixSlider${cap}`);
+        if (inp) inp.value = state.models[k].pct;
+        if (sld) sld.value = state.models[k].pct;
+      });
+    }
 
-      const slider = document.getElementById('modelMixSlider');
-      slider.value = flashPct;
-      slider.style.background = `linear-gradient(90deg, #9334E6 0%, #9334E6 ${state.proPct}%, #4285F4 ${state.proPct}%, #4285F4 100%)`;
+    function handleModelMixChange(modelKey, rawVal) {
+      const val = Math.max(0, Math.min(100, parseInt(rawVal, 10) || 0));
+      state.models[modelKey].pct = val;
+
+      const otherKeys = MODEL_KEYS.filter(k => k !== modelKey);
+      const remaining = 100 - val;
+      const otherSum = otherKeys.reduce((acc, k) => acc + state.models[k].pct, 0);
+
+      if (otherSum === 0) {
+        const baseShare = Math.floor(remaining / otherKeys.length);
+        let assigned = 0;
+        otherKeys.forEach((k, idx) => {
+          if (idx === otherKeys.length - 1) {
+            state.models[k].pct = remaining - assigned;
+          } else {
+            state.models[k].pct = baseShare;
+            assigned += baseShare;
+          }
+        });
+      } else {
+        let assigned = 0;
+        otherKeys.forEach((k, idx) => {
+          if (idx === otherKeys.length - 1) {
+            state.models[k].pct = Math.max(0, remaining - assigned);
+          } else {
+            const share = Math.round((state.models[k].pct / otherSum) * remaining);
+            state.models[k].pct = Math.min(remaining - assigned, Math.max(0, share));
+            assigned += state.models[k].pct;
+          }
+        });
+      }
+
+      syncModelMixInputs();
+      triggerWizardNudge();
+      renderAll();
+    }
+
+    function applyModelMixPreset(preset) {
+      if (preset === 'balanced') {
+        state.models.hydrogen.pct = 50;
+        state.models.neon.pct = 30;
+        state.models.carbon.pct = 10;
+        state.models.argon.pct = 10;
+      } else if (preset === 'neon_hydrogen') {
+        state.models.hydrogen.pct = 60;
+        state.models.neon.pct = 40;
+        state.models.carbon.pct = 0;
+        state.models.argon.pct = 0;
+      } else if (preset === 'long_ga') {
+        state.models.hydrogen.pct = 80;
+        state.models.neon.pct = 0;
+        state.models.carbon.pct = 0;
+        state.models.argon.pct = 20;
+      }
+      syncModelMixInputs();
       triggerWizardNudge();
       renderAll();
     }
@@ -2284,55 +2441,49 @@
     }
 
     function handleModelDiscountChange(modelKey, rawVal) {
+      if (!state.models[modelKey]) return;
       const val = Math.max(0, Math.min(90, parseFloat(rawVal) || 0));
       state.activePreset = 'custom';
-      if (modelKey === 'pro') {
-        state.proDiscountPct = val;
-        document.getElementById('proDiscountInput').value = val;
-        document.getElementById('proDiscountSlider').value = val;
-      } else {
-        state.flashDiscountPct = val;
-        document.getElementById('flashDiscountInput').value = val;
-        document.getElementById('flashDiscountSlider').value = val;
-      }
+      state.models[modelKey].discountPct = val;
+      const inp = document.getElementById(`${modelKey}DiscountInput`);
+      const sld = document.getElementById(`${modelKey}DiscountSlider`);
+      if (inp) inp.value = val;
+      if (sld) sld.value = val;
       triggerWizardNudge();
       renderAll();
     }
 
     function handlePricingChange() {
       state.activePreset = 'custom';
-      state.pricing.proInput = Math.max(0.01, parseFloat(document.getElementById('proInputPrice').value) || 0.01);
-      state.pricing.proOutput = Math.max(0.01, parseFloat(document.getElementById('proOutputPrice').value) || 0.01);
-      state.pricing.flashInput = Math.max(0.01, parseFloat(document.getElementById('flashInputPrice').value) || 0.01);
-      state.pricing.flashOutput = Math.max(0.01, parseFloat(document.getElementById('flashOutputPrice').value) || 0.01);
+      MODEL_KEYS.forEach(k => {
+        const inEl = document.getElementById(`${k}InputPrice`);
+        const outEl = document.getElementById(`${k}OutputPrice`);
+        if (inEl) state.models[k].input = Math.max(0.01, parseFloat(inEl.value) || 0.01);
+        if (outEl) state.models[k].output = Math.max(0.01, parseFloat(outEl.value) || 0.01);
+      });
       triggerWizardNudge();
       renderAll();
     }
 
     function applyPricingPreset(preset) {
-      state.activePreset = preset;
-      state.pricing = { proInput: 4.00, proOutput: 20.00, flashInput: 1.50, flashOutput: 7.50 };
+      state.activePreset = (preset === 'standard_ga') ? 'standard_ga' : 'current_promo';
 
-      if (preset === 'current_promo' || preset === 'latest_public') {
-        state.activePreset = 'current_promo';
-        state.proDiscountPct = 50;
-        state.flashDiscountPct = 50;
-      } else if (preset === 'dec_2026') {
-        state.proDiscountPct = 0;
-        state.flashDiscountPct = 50;
-      } else if (preset === 'jan_2027') {
-        state.proDiscountPct = 0;
-        state.flashDiscountPct = 0;
-      }
+      MODEL_KEYS.forEach(k => {
+        const meta = MODEL_META[k];
+        state.models[k].input = meta.listIn;
+        state.models[k].output = meta.listOut;
+        state.models[k].discountPct = (state.activePreset === 'current_promo') ? meta.promoPct : 0;
 
-      document.getElementById('proDiscountInput').value = state.proDiscountPct;
-      document.getElementById('proDiscountSlider').value = state.proDiscountPct;
-      document.getElementById('flashDiscountInput').value = state.flashDiscountPct;
-      document.getElementById('flashDiscountSlider').value = state.flashDiscountPct;
-      document.getElementById('proInputPrice').value = state.pricing.proInput.toFixed(2);
-      document.getElementById('proOutputPrice').value = state.pricing.proOutput.toFixed(2);
-      document.getElementById('flashInputPrice').value = state.pricing.flashInput.toFixed(2);
-      document.getElementById('flashOutputPrice').value = state.pricing.flashOutput.toFixed(2);
+        const inEl = document.getElementById(`${k}InputPrice`);
+        const outEl = document.getElementById(`${k}OutputPrice`);
+        const dInEl = document.getElementById(`${k}DiscountInput`);
+        const dSlEl = document.getElementById(`${k}DiscountSlider`);
+        if (inEl) inEl.value = state.models[k].input.toFixed(2);
+        if (outEl) outEl.value = state.models[k].output.toFixed(2);
+        if (dInEl) dInEl.value = state.models[k].discountPct;
+        if (dSlEl) dSlEl.value = state.models[k].discountPct;
+      });
+
       triggerWizardNudge();
       renderAll();
     }
@@ -2573,8 +2724,14 @@
         { id: 'modBurnSlider', val: Math.min(80, state.cohorts.moderate.weeklyBurnM), min: 0.5, max: 80, color: '#FBBC04' },
         { id: 'lightBurnSlider', val: Math.min(30, state.cohorts.light.weeklyBurnM), min: 0.25, max: 30, color: '#4285F4' },
         { id: 'cacheHitSlider', val: state.cacheHitPct, min: 0, max: 98, color: '#34A853' },
-        { id: 'proDiscountSlider', val: state.proDiscountPct, min: 0, max: 90, color: '#9334E6' },
-        { id: 'flashDiscountSlider', val: state.flashDiscountPct, min: 0, max: 90, color: '#4285F4' }
+        { id: 'mixSliderHydrogen', val: state.models.hydrogen.pct, min: 0, max: 100, color: '#4285F4' },
+        { id: 'mixSliderNeon', val: state.models.neon.pct, min: 0, max: 100, color: '#06b6d4' },
+        { id: 'mixSliderCarbon', val: state.models.carbon.pct, min: 0, max: 100, color: '#f59e0b' },
+        { id: 'mixSliderArgon', val: state.models.argon.pct, min: 0, max: 100, color: '#a855f7' },
+        { id: 'hydrogenDiscountSlider', val: state.models.hydrogen.discountPct, min: 0, max: 90, color: '#4285F4' },
+        { id: 'neonDiscountSlider', val: state.models.neon.discountPct, min: 0, max: 90, color: '#06b6d4' },
+        { id: 'carbonDiscountSlider', val: state.models.carbon.discountPct, min: 0, max: 90, color: '#f59e0b' },
+        { id: 'argonDiscountSlider', val: state.models.argon.discountPct, min: 0, max: 90, color: '#a855f7' }
       ];
       sliders.forEach(s => {
         const el = document.getElementById(s.id);
@@ -2791,9 +2948,19 @@
       document.getElementById('totalFleetWeeklyDemandLabel').textContent =
         `${fmtM(m.totalWeeklyBurnM, 2)} tokens / wk (${fmtM(m.totalWeeklyBurnWtuM, 2)} WTU)`;
 
-      // Panel 4: AI Model & Budget Settings Updates
-      document.getElementById('proMixPctLabel').textContent = `${state.proPct}%`;
-      document.getElementById('flashMixPctLabel').textContent = `${state.flashPct}%`;
+      // Panel 4: AI Model & Budget Settings Updates (4-Model Gemini 4 Fleet)
+      const mixSum = MODEL_KEYS.reduce((acc, k) => acc + state.models[k].pct, 0);
+      const mixSumBadge = document.getElementById('modelMixSumBadge');
+      if (mixSumBadge) mixSumBadge.textContent = `Total: ${mixSum}%`;
+
+      MODEL_KEYS.forEach(k => {
+        const cap = MODEL_META[k].cap;
+        const barEl = document.getElementById(`mixBar${cap}`);
+        const barLblEl = document.getElementById(`mixBarLabel${cap}`);
+        if (barEl) barEl.style.width = `${state.models[k].pct}%`;
+        if (barLblEl) barLblEl.textContent = `${state.models[k].pct}%`;
+      });
+
       document.getElementById('inputMixPctLabel').textContent = `${state.inputPct}%`;
       document.getElementById('outputMixPctLabel').textContent = `${state.outputPct}%`;
 
@@ -2815,8 +2982,7 @@
       // Highlight active Rate Period Preset button
       const presetBtns = {
         current_promo: document.getElementById('presetBtnCurrent'),
-        dec_2026: document.getElementById('presetBtnDec2026'),
-        jan_2027: document.getElementById('presetBtnJan2027')
+        standard_ga: document.getElementById('presetBtnStandard')
       };
       Object.entries(presetBtns).forEach(([key, btn]) => {
         if (!btn) return;
@@ -2827,32 +2993,45 @@
         }
       });
 
-      document.getElementById('proShareBadgeTab4').textContent = `Usage Share: ${state.proPct}%`;
-      document.getElementById('flashShareBadgeTab4').textContent = `Usage Share: ${state.flashPct}%`;
+      const fmtTrim = (n, dec) => n.toFixed(dec).replace(/(\.\d*?[1-9])0+$/, '$1').replace(/\.0+$/, '');
+      const ioCacheSplitText = `${state.inputPct}% In [${state.cacheHitPct}% Cached] : ${state.outputPct}% Out`;
 
-      const proInWtu = (m.proInputNet / 2.0).toFixed(2);
-      const proCacheWtu = (m.proCachedNet / 2.0).toFixed(3).replace(/0+$/, '').replace(/\.$/, '');
-      const proOutWtu = (m.proOutputNet / 2.0).toFixed(2);
-      document.getElementById('t4ProNetPricesLabel').textContent =
-        `Net: $${m.proInputNet.toFixed(2)} In / $${m.proCachedNet.toFixed(2)} Cache / $${m.proOutputNet.toFixed(2)} Out per 1M (${proInWtu} / ${proCacheWtu} / ${proOutWtu} WTU)`;
+      MODEL_KEYS.forEach(k => {
+        const cap = MODEL_META[k].cap;
+        const mm = m.modelMetrics[k];
+        const shareBadge = document.getElementById(`${k}ShareBadgeTab4`);
+        if (shareBadge) shareBadge.textContent = `Usage Share: ${state.models[k].pct}%`;
 
-      const flashInWtu = (m.flashInputNet / 2.0).toFixed(3).replace(/0+$/, '').replace(/\.$/, '');
-      const flashCacheWtu = (m.flashCachedNet / 2.0).toFixed(4).replace(/0+$/, '').replace(/\.$/, '');
-      const flashOutWtu = (m.flashOutputNet / 2.0).toFixed(3).replace(/0+$/, '').replace(/\.$/, '');
-      document.getElementById('t4FlashNetPricesLabel').textContent =
-        `Net: $${m.flashInputNet.toFixed(2)} In / $${m.flashCachedNet.toFixed(3).replace(/0+$/, '').replace(/\.$/, '')} Cache / $${m.flashOutputNet.toFixed(2)} Out per 1M (${flashInWtu} / ${flashCacheWtu} / ${flashOutWtu} WTU)`;
+        const netLbl = document.getElementById(`t4${cap}NetPricesLabel`);
+        if (netLbl) {
+          const inWtu = fmtTrim(mm.inputNet / 2.0, 3);
+          const cacheWtu = fmtTrim(mm.cachedNet / 2.0, 4);
+          const outWtu = fmtTrim(mm.outputNet / 2.0, 3);
+          const cacheUsd = mm.cachedNet < 0.10 ? mm.cachedNet.toFixed(3).replace(/0+$/, '') : mm.cachedNet.toFixed(2);
+          netLbl.textContent =
+            `Net: $${mm.inputNet.toFixed(2)} In / $${cacheUsd} Cache / $${mm.outputNet.toFixed(2)} Out per 1M (${inWtu} / ${cacheWtu} / ${outWtu} WTU)`;
+        }
+
+        const ioEl = document.getElementById(`t4${cap}IoSplitLabel`);
+        if (ioEl) ioEl.textContent = ioCacheSplitText;
+
+        const blendedEl = document.getElementById(`t4${cap}BlendedValue`);
+        if (blendedEl) {
+          blendedEl.textContent = `$${mm.blended.toFixed(2)} / 1M (${mm.wtuPer1K.toFixed(0)} WTU/1K)`;
+        }
+      });
 
       const regSuffix = state.regionalEndpoint ? ' · Regional +10%' : '';
+      const activeMixParts = MODEL_KEYS
+        .filter(k => state.models[k].pct > 0)
+        .map(k => {
+          const d = state.models[k].discountPct;
+          return d > 0 ? `${state.models[k].pct}% ${MODEL_META[k].short} (-${d}%)` : `${state.models[k].pct}% ${MODEL_META[k].short}`;
+        })
+        .join(' · ');
       document.getElementById('t4DiscountActiveBadge').textContent =
-        `Argon ${state.proDiscountPct}% off · Flash ${state.flashDiscountPct}% off · ${state.cacheHitPct}% Cached${regSuffix}`;
+        `${activeMixParts} · ${state.cacheHitPct}% Cached${regSuffix}`;
 
-      const ioCacheSplitText = `${state.inputPct}% In [${state.cacheHitPct}% Cached] : ${state.outputPct}% Out`;
-      document.getElementById('t4ProIoSplitLabel').textContent = ioCacheSplitText;
-      document.getElementById('t4FlashIoSplitLabel').textContent = ioCacheSplitText;
-      document.getElementById('t4ProBlendedValue').textContent =
-        `$${m.proBlended.toFixed(2)} / 1M (${m.proWtuPer1K.toFixed(0)} WTU/1K)`;
-      document.getElementById('t4FlashBlendedValue').textContent =
-        `$${m.flashBlended.toFixed(2)} / 1M (${m.flashWtuPer1K.toFixed(0)} WTU/1K)`;
       document.getElementById('t4CombinedRate').textContent = `$${m.effectiveRatePerM.toFixed(2)} / 1M`;
       const combinedWtuEl = document.getElementById('t4CombinedWtuPer1K');
       if (combinedWtuEl) combinedWtuEl.textContent = `${m.effectiveWtuPer1K.toFixed(1)} WTU / 1K tokens`;
