@@ -1183,30 +1183,24 @@
               </span>
             </h2>
             <p class="text-xs sim-muted mt-0.5">
-              Distribute token volume across <strong>Gemini 4 Hydrogen</strong> (everyday coding), <strong>Neon</strong> (high-velocity frontier), <strong>Carbon</strong> (hardest long-horizon), and <strong>Argon</strong> (12-month Long GA). Sliders auto-balance to 100%.
+              Drag any slider below (or inside each model card) to set your team's usage share across <strong>Hydrogen</strong>, <strong>Neon</strong>, <strong>Carbon</strong>, and <strong>Argon</strong>. Unlocked models auto-balance to 100%; click the lock icon to pin any model.
             </p>
           </div>
           <div class="flex flex-wrap items-center gap-2 shrink-0">
             <button
               type="button"
-              onclick="applyModelMixPreset('balanced')"
+              onclick="applyEqualModelMix()"
               class="px-2.5 py-1.5 rounded-lg text-[11px] font-semibold sim-subcard hover:border-[#4285F4] cursor-pointer"
             >
-              Balanced (50/30/10/10)
+              Equal Split (25% each)
             </button>
             <button
+              id="unlockAllModelsBtn"
               type="button"
-              onclick="applyModelMixPreset('neon_hydrogen')"
-              class="px-2.5 py-1.5 rounded-lg text-[11px] font-semibold sim-subcard hover:border-[#06b6d4] cursor-pointer"
+              onclick="unlockAllModels()"
+              class="hidden px-2.5 py-1.5 rounded-lg text-[11px] font-semibold sim-subcard hover:border-[#FBBC04] text-[#facc15] cursor-pointer"
             >
-              Hydrogen + Neon (60/40)
-            </button>
-            <button
-              type="button"
-              onclick="applyModelMixPreset('long_ga')"
-              class="px-2.5 py-1.5 rounded-lg text-[11px] font-semibold sim-subcard hover:border-[#a855f7] cursor-pointer"
-            >
-              Long GA (80H / 20Ar)
+              Unlock All
             </button>
           </div>
         </div>
@@ -1214,16 +1208,16 @@
         <!-- Stacked 4-Model Mix Bar -->
         <div class="space-y-1.5">
           <div class="w-full h-3.5 rounded-full overflow-hidden flex bg-[var(--sim-surface-2)] border border-[var(--sim-border)]">
-            <div id="mixBarHydrogen" class="h-full bg-[#4285F4] transition-all duration-150" style="width: 50%"></div>
-            <div id="mixBarNeon" class="h-full bg-[#06b6d4] transition-all duration-150" style="width: 30%"></div>
-            <div id="mixBarCarbon" class="h-full bg-[#f59e0b] transition-all duration-150" style="width: 10%"></div>
-            <div id="mixBarArgon" class="h-full bg-[#a855f7] transition-all duration-150" style="width: 10%"></div>
+            <div id="mixBarHydrogen" class="h-full bg-[#4285F4] transition-all duration-150" style="width: 25%"></div>
+            <div id="mixBarNeon" class="h-full bg-[#06b6d4] transition-all duration-150" style="width: 25%"></div>
+            <div id="mixBarCarbon" class="h-full bg-[#f59e0b] transition-all duration-150" style="width: 25%"></div>
+            <div id="mixBarArgon" class="h-full bg-[#a855f7] transition-all duration-150" style="width: 25%"></div>
           </div>
           <div class="flex flex-wrap items-center justify-between gap-2 text-[11px] font-mono-num">
-            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#4285F4] inline-block"></span>Hydrogen: <strong id="mixBarLabelHydrogen">50%</strong></span>
-            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#06b6d4] inline-block"></span>Neon: <strong id="mixBarLabelNeon">30%</strong></span>
-            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#f59e0b] inline-block"></span>Carbon: <strong id="mixBarLabelCarbon">10%</strong></span>
-            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#a855f7] inline-block"></span>Argon: <strong id="mixBarLabelArgon">10%</strong></span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#4285F4] inline-block"></span>Hydrogen: <strong id="mixBarLabelHydrogen">25%</strong></span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#06b6d4] inline-block"></span>Neon: <strong id="mixBarLabelNeon">25%</strong></span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#f59e0b] inline-block"></span>Carbon: <strong id="mixBarLabelCarbon">25%</strong></span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#a855f7] inline-block"></span>Argon: <strong id="mixBarLabelArgon">25%</strong></span>
           </div>
         </div>
 
@@ -1231,7 +1225,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
           <!-- Hydrogen -->
           <div class="p-3.5 rounded-xl sim-subcard space-y-2 border border-[#4285F4]/30">
-            <div class="flex items-center justify-between gap-2">
+            <div class="flex items-center justify-between gap-1.5">
               <div class="flex items-center gap-2 min-w-0">
                 <span class="w-6 h-6 rounded-lg bg-[#4285F4]/15 border border-[#4285F4]/40 text-[#60a5fa] flex items-center justify-center font-bold text-[11px] shrink-0">H</span>
                 <div class="min-w-0">
@@ -1240,15 +1234,16 @@
                 </div>
               </div>
               <div class="flex items-center gap-1 shrink-0">
+                <button id="mixLockHydrogen" type="button" onclick="toggleModelLock('hydrogen')" title="Lock/unlock Hydrogen share" class="px-1.5 py-1 rounded-lg text-[11px] sim-input hover:border-[#4285F4] cursor-pointer">🔓</button>
                 <input
                   id="mixInputHydrogen"
                   type="number"
                   min="0"
                   max="100"
                   step="1"
-                  value="50"
+                  value="25"
                   oninput="handleModelMixChange('hydrogen', this.value)"
-                  class="w-14 px-1.5 py-1 rounded-lg sim-input text-right text-xs font-bold font-mono-num focus:outline-none focus:ring-2 focus:ring-[#4285F4]"
+                  class="w-12 px-1.5 py-1 rounded-lg sim-input text-right text-xs font-bold font-mono-num focus:outline-none focus:ring-2 focus:ring-[#4285F4]"
                 />
                 <span class="text-xs font-bold sim-muted">%</span>
               </div>
@@ -1259,7 +1254,7 @@
               min="0"
               max="100"
               step="1"
-              value="50"
+              value="25"
               oninput="handleModelMixChange('hydrogen', this.value)"
               class="google-slider"
             />
@@ -1267,7 +1262,7 @@
 
           <!-- Neon -->
           <div class="p-3.5 rounded-xl sim-subcard space-y-2 border border-[#06b6d4]/30">
-            <div class="flex items-center justify-between gap-2">
+            <div class="flex items-center justify-between gap-1.5">
               <div class="flex items-center gap-2 min-w-0">
                 <span class="w-6 h-6 rounded-lg bg-[#06b6d4]/15 border border-[#06b6d4]/40 text-[#22d3ee] flex items-center justify-center font-bold text-[11px] shrink-0">Ne</span>
                 <div class="min-w-0">
@@ -1276,15 +1271,16 @@
                 </div>
               </div>
               <div class="flex items-center gap-1 shrink-0">
+                <button id="mixLockNeon" type="button" onclick="toggleModelLock('neon')" title="Lock/unlock Neon share" class="px-1.5 py-1 rounded-lg text-[11px] sim-input hover:border-[#06b6d4] cursor-pointer">🔓</button>
                 <input
                   id="mixInputNeon"
                   type="number"
                   min="0"
                   max="100"
                   step="1"
-                  value="30"
+                  value="25"
                   oninput="handleModelMixChange('neon', this.value)"
-                  class="w-14 px-1.5 py-1 rounded-lg sim-input text-right text-xs font-bold font-mono-num focus:outline-none focus:ring-2 focus:ring-[#06b6d4]"
+                  class="w-12 px-1.5 py-1 rounded-lg sim-input text-right text-xs font-bold font-mono-num focus:outline-none focus:ring-2 focus:ring-[#06b6d4]"
                 />
                 <span class="text-xs font-bold sim-muted">%</span>
               </div>
@@ -1295,7 +1291,7 @@
               min="0"
               max="100"
               step="1"
-              value="30"
+              value="25"
               oninput="handleModelMixChange('neon', this.value)"
               class="google-slider"
             />
@@ -1303,7 +1299,7 @@
 
           <!-- Carbon -->
           <div class="p-3.5 rounded-xl sim-subcard space-y-2 border border-[#f59e0b]/30">
-            <div class="flex items-center justify-between gap-2">
+            <div class="flex items-center justify-between gap-1.5">
               <div class="flex items-center gap-2 min-w-0">
                 <span class="w-6 h-6 rounded-lg bg-[#f59e0b]/15 border border-[#f59e0b]/40 text-[#fbbf24] flex items-center justify-center font-bold text-[11px] shrink-0">C</span>
                 <div class="min-w-0">
@@ -1312,15 +1308,16 @@
                 </div>
               </div>
               <div class="flex items-center gap-1 shrink-0">
+                <button id="mixLockCarbon" type="button" onclick="toggleModelLock('carbon')" title="Lock/unlock Carbon share" class="px-1.5 py-1 rounded-lg text-[11px] sim-input hover:border-[#f59e0b] cursor-pointer">🔓</button>
                 <input
                   id="mixInputCarbon"
                   type="number"
                   min="0"
                   max="100"
                   step="1"
-                  value="10"
+                  value="25"
                   oninput="handleModelMixChange('carbon', this.value)"
-                  class="w-14 px-1.5 py-1 rounded-lg sim-input text-right text-xs font-bold font-mono-num focus:outline-none focus:ring-2 focus:ring-[#f59e0b]"
+                  class="w-12 px-1.5 py-1 rounded-lg sim-input text-right text-xs font-bold font-mono-num focus:outline-none focus:ring-2 focus:ring-[#f59e0b]"
                 />
                 <span class="text-xs font-bold sim-muted">%</span>
               </div>
@@ -1331,7 +1328,7 @@
               min="0"
               max="100"
               step="1"
-              value="10"
+              value="25"
               oninput="handleModelMixChange('carbon', this.value)"
               class="google-slider"
             />
@@ -1339,7 +1336,7 @@
 
           <!-- Argon -->
           <div class="p-3.5 rounded-xl sim-subcard space-y-2 border border-[#a855f7]/30">
-            <div class="flex items-center justify-between gap-2">
+            <div class="flex items-center justify-between gap-1.5">
               <div class="flex items-center gap-2 min-w-0">
                 <span class="w-6 h-6 rounded-lg bg-[#a855f7]/15 border border-[#a855f7]/40 text-[#c084fc] flex items-center justify-center font-bold text-[11px] shrink-0">Ar</span>
                 <div class="min-w-0">
@@ -1348,15 +1345,16 @@
                 </div>
               </div>
               <div class="flex items-center gap-1 shrink-0">
+                <button id="mixLockArgon" type="button" onclick="toggleModelLock('argon')" title="Lock/unlock Argon share" class="px-1.5 py-1 rounded-lg text-[11px] sim-input hover:border-[#a855f7] cursor-pointer">🔓</button>
                 <input
                   id="mixInputArgon"
                   type="number"
                   min="0"
                   max="100"
                   step="1"
-                  value="10"
+                  value="25"
                   oninput="handleModelMixChange('argon', this.value)"
-                  class="w-14 px-1.5 py-1 rounded-lg sim-input text-right text-xs font-bold font-mono-num focus:outline-none focus:ring-2 focus:ring-[#a855f7]"
+                  class="w-12 px-1.5 py-1 rounded-lg sim-input text-right text-xs font-bold font-mono-num focus:outline-none focus:ring-2 focus:ring-[#a855f7]"
                 />
                 <span class="text-xs font-bold sim-muted">%</span>
               </div>
@@ -1367,7 +1365,7 @@
               min="0"
               max="100"
               step="1"
-              value="10"
+              value="25"
               oninput="handleModelMixChange('argon', this.value)"
               class="google-slider"
             />
@@ -1583,8 +1581,21 @@
                 </div>
               </div>
               <span id="hydrogenShareBadgeTab4" class="px-2.5 py-1 rounded-full text-xs font-semibold bg-[#4285F4]/15 text-[#60a5fa] border border-[#4285F4]/30 font-mono-num">
-                Usage Share: 50%
+                Usage Share: 25%
               </span>
+            </div>
+
+            <!-- Interactive Usage Share Slider (2-way synced with AI Model Mix) -->
+            <div class="p-3 rounded-xl sim-card space-y-2 border border-[#4285F4]/30">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <div class="text-xs font-bold text-[#60a5fa]">Usage Share (%) — Auto-Balances to 100%</div>
+                <div class="flex items-center gap-1.5">
+                  <button id="cardMixLockHydrogen" type="button" onclick="toggleModelLock('hydrogen')" title="Lock/unlock Hydrogen share" class="px-1.5 py-1 rounded-lg text-[11px] sim-input hover:border-[#4285F4] cursor-pointer">🔓</button>
+                  <input id="cardMixInputHydrogen" type="number" min="0" max="100" step="1" value="25" oninput="handleModelMixChange('hydrogen', this.value)" class="w-14 px-2 py-1 rounded-lg sim-input text-right text-xs font-bold font-mono-num focus:outline-none focus:ring-2 focus:ring-[#4285F4]" />
+                  <span class="text-xs font-bold">%</span>
+                </div>
+              </div>
+              <input id="cardMixSliderHydrogen" type="range" min="0" max="100" step="1" value="25" oninput="handleModelMixChange('hydrogen', this.value)" class="google-slider" />
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -1635,8 +1646,21 @@
                 </div>
               </div>
               <span id="neonShareBadgeTab4" class="px-2.5 py-1 rounded-full text-xs font-semibold bg-[#06b6d4]/15 text-[#22d3ee] border border-[#06b6d4]/30 font-mono-num">
-                Usage Share: 30%
+                Usage Share: 25%
               </span>
+            </div>
+
+            <!-- Interactive Usage Share Slider (2-way synced with AI Model Mix) -->
+            <div class="p-3 rounded-xl sim-card space-y-2 border border-[#06b6d4]/30">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <div class="text-xs font-bold text-[#22d3ee]">Usage Share (%) — Auto-Balances to 100%</div>
+                <div class="flex items-center gap-1.5">
+                  <button id="cardMixLockNeon" type="button" onclick="toggleModelLock('neon')" title="Lock/unlock Neon share" class="px-1.5 py-1 rounded-lg text-[11px] sim-input hover:border-[#06b6d4] cursor-pointer">🔓</button>
+                  <input id="cardMixInputNeon" type="number" min="0" max="100" step="1" value="25" oninput="handleModelMixChange('neon', this.value)" class="w-14 px-2 py-1 rounded-lg sim-input text-right text-xs font-bold font-mono-num focus:outline-none focus:ring-2 focus:ring-[#06b6d4]" />
+                  <span class="text-xs font-bold">%</span>
+                </div>
+              </div>
+              <input id="cardMixSliderNeon" type="range" min="0" max="100" step="1" value="25" oninput="handleModelMixChange('neon', this.value)" class="google-slider" />
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -1687,8 +1711,21 @@
                 </div>
               </div>
               <span id="carbonShareBadgeTab4" class="px-2.5 py-1 rounded-full text-xs font-semibold bg-[#f59e0b]/15 text-[#fbbf24] border border-[#f59e0b]/30 font-mono-num">
-                Usage Share: 10%
+                Usage Share: 25%
               </span>
+            </div>
+
+            <!-- Interactive Usage Share Slider (2-way synced with AI Model Mix) -->
+            <div class="p-3 rounded-xl sim-card space-y-2 border border-[#f59e0b]/30">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <div class="text-xs font-bold text-[#fbbf24]">Usage Share (%) — Auto-Balances to 100%</div>
+                <div class="flex items-center gap-1.5">
+                  <button id="cardMixLockCarbon" type="button" onclick="toggleModelLock('carbon')" title="Lock/unlock Carbon share" class="px-1.5 py-1 rounded-lg text-[11px] sim-input hover:border-[#f59e0b] cursor-pointer">🔓</button>
+                  <input id="cardMixInputCarbon" type="number" min="0" max="100" step="1" value="25" oninput="handleModelMixChange('carbon', this.value)" class="w-14 px-2 py-1 rounded-lg sim-input text-right text-xs font-bold font-mono-num focus:outline-none focus:ring-2 focus:ring-[#f59e0b]" />
+                  <span class="text-xs font-bold">%</span>
+                </div>
+              </div>
+              <input id="cardMixSliderCarbon" type="range" min="0" max="100" step="1" value="25" oninput="handleModelMixChange('carbon', this.value)" class="google-slider" />
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -1740,8 +1777,21 @@
                 </div>
               </div>
               <span id="argonShareBadgeTab4" class="px-2.5 py-1 rounded-full text-xs font-semibold bg-[#a855f7]/15 text-[#c084fc] border border-[#a855f7]/30 font-mono-num">
-                Usage Share: 10%
+                Usage Share: 25%
               </span>
+            </div>
+
+            <!-- Interactive Usage Share Slider (2-way synced with AI Model Mix) -->
+            <div class="p-3 rounded-xl sim-card space-y-2 border border-[#a855f7]/30">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <div class="text-xs font-bold text-[#c084fc]">Usage Share (%) — Auto-Balances to 100%</div>
+                <div class="flex items-center gap-1.5">
+                  <button id="cardMixLockArgon" type="button" onclick="toggleModelLock('argon')" title="Lock/unlock Argon share" class="px-1.5 py-1 rounded-lg text-[11px] sim-input hover:border-[#a855f7] cursor-pointer">🔓</button>
+                  <input id="cardMixInputArgon" type="number" min="0" max="100" step="1" value="25" oninput="handleModelMixChange('argon', this.value)" class="w-14 px-2 py-1 rounded-lg sim-input text-right text-xs font-bold font-mono-num focus:outline-none focus:ring-2 focus:ring-[#a855f7]" />
+                  <span class="text-xs font-bold">%</span>
+                </div>
+              </div>
+              <input id="cardMixSliderArgon" type="range" min="0" max="100" step="1" value="25" oninput="handleModelMixChange('argon', this.value)" class="google-slider" />
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -1903,12 +1953,12 @@
       },
 
       // Gemini 4 Fleet: Standard list pricing ($/1M tokens; 1M WTU = $2.00; 5% cached input weight)
-      // Carbon & Argon carry a 50% launch promo through Nov 30, 2026; Hydrogen & Neon are at Standard GA rates.
+      // Neutral equal split (25% each) by default — fully configurable via responsive sliders with per-model locks.
       models: {
-        hydrogen: { pct: 50, input: 1.50, output: 7.50, discountPct: 0 },
-        neon:     { pct: 30, input: 3.00, output: 15.00, discountPct: 0 },
-        carbon:   { pct: 10, input: 4.00, output: 20.00, discountPct: 50 },
-        argon:    { pct: 10, input: 4.00, output: 20.00, discountPct: 50 }
+        hydrogen: { pct: 25, locked: false, input: 1.50, output: 7.50, discountPct: 0 },
+        neon:     { pct: 25, locked: false, input: 3.00, output: 15.00, discountPct: 0 },
+        carbon:   { pct: 25, locked: false, input: 4.00, output: 20.00, discountPct: 50 },
+        argon:    { pct: 25, locked: false, input: 4.00, output: 20.00, discountPct: 50 }
       }
     };
 
@@ -2266,28 +2316,76 @@
     }
 
     function syncModelMixInputs() {
+      let anyLocked = false;
       MODEL_KEYS.forEach(k => {
         const cap = MODEL_META[k].cap;
-        const inp = document.getElementById(`mixInput${cap}`);
-        const sld = document.getElementById(`mixSlider${cap}`);
-        if (inp) inp.value = state.models[k].pct;
-        if (sld) sld.value = state.models[k].pct;
+        const pct = state.models[k].pct;
+        const locked = state.models[k].locked;
+        if (locked) anyLocked = true;
+
+        ['mixInput', 'cardMixInput'].forEach(prefix => {
+          const el = document.getElementById(`${prefix}${cap}`);
+          if (el) el.value = pct;
+        });
+        ['mixSlider', 'cardMixSlider'].forEach(prefix => {
+          const el = document.getElementById(`${prefix}${cap}`);
+          if (el) el.value = pct;
+        });
+        ['mixLock', 'cardMixLock'].forEach(prefix => {
+          const btn = document.getElementById(`${prefix}${cap}`);
+          if (btn) {
+            btn.textContent = locked ? '🔒' : '🔓';
+            btn.classList.toggle('border-[#FBBC04]', locked);
+            btn.classList.toggle('text-[#facc15]', locked);
+          }
+        });
       });
+      const unlockBtn = document.getElementById('unlockAllModelsBtn');
+      if (unlockBtn) unlockBtn.classList.toggle('hidden', !anyLocked);
+    }
+
+    function toggleModelLock(modelKey) {
+      if (!state.models[modelKey]) return;
+      state.models[modelKey].locked = !state.models[modelKey].locked;
+      syncModelMixInputs();
+      renderAll();
+    }
+
+    function unlockAllModels() {
+      MODEL_KEYS.forEach(k => { state.models[k].locked = false; });
+      syncModelMixInputs();
+      renderAll();
     }
 
     function handleModelMixChange(modelKey, rawVal) {
-      const val = Math.max(0, Math.min(100, parseInt(rawVal, 10) || 0));
-      state.models[modelKey].pct = val;
-
+      if (!state.models[modelKey]) return;
       const otherKeys = MODEL_KEYS.filter(k => k !== modelKey);
-      const remaining = 100 - val;
-      const otherSum = otherKeys.reduce((acc, k) => acc + state.models[k].pct, 0);
+      const lockedOthers = otherKeys.filter(k => state.models[k].locked);
+      const unlockedOthers = otherKeys.filter(k => !state.models[k].locked);
 
-      if (otherSum === 0) {
-        const baseShare = Math.floor(remaining / otherKeys.length);
+      const lockedOthersSum = lockedOthers.reduce((acc, k) => acc + state.models[k].pct, 0);
+      const maxAllowed = Math.max(0, 100 - lockedOthersSum);
+
+      if (unlockedOthers.length === 0) {
+        // All other 3 models are locked; this model holds the exact remaining budget
+        state.models[modelKey].pct = maxAllowed;
+        syncModelMixInputs();
+        renderAll();
+        return;
+      }
+
+      const parsed = parseInt(rawVal, 10);
+      const clamped = Math.max(0, Math.min(maxAllowed, Number.isNaN(parsed) ? 0 : parsed));
+      state.models[modelKey].pct = clamped;
+
+      const remaining = maxAllowed - clamped;
+      const unlockedSum = unlockedOthers.reduce((acc, k) => acc + state.models[k].pct, 0);
+
+      if (unlockedSum === 0) {
+        const baseShare = Math.floor(remaining / unlockedOthers.length);
         let assigned = 0;
-        otherKeys.forEach((k, idx) => {
-          if (idx === otherKeys.length - 1) {
+        unlockedOthers.forEach((k, idx) => {
+          if (idx === unlockedOthers.length - 1) {
             state.models[k].pct = remaining - assigned;
           } else {
             state.models[k].pct = baseShare;
@@ -2296,11 +2394,11 @@
         });
       } else {
         let assigned = 0;
-        otherKeys.forEach((k, idx) => {
-          if (idx === otherKeys.length - 1) {
+        unlockedOthers.forEach((k, idx) => {
+          if (idx === unlockedOthers.length - 1) {
             state.models[k].pct = Math.max(0, remaining - assigned);
           } else {
-            const share = Math.round((state.models[k].pct / otherSum) * remaining);
+            const share = Math.round((state.models[k].pct / unlockedSum) * remaining);
             state.models[k].pct = Math.min(remaining - assigned, Math.max(0, share));
             assigned += state.models[k].pct;
           }
@@ -2312,23 +2410,11 @@
       renderAll();
     }
 
-    function applyModelMixPreset(preset) {
-      if (preset === 'balanced') {
-        state.models.hydrogen.pct = 50;
-        state.models.neon.pct = 30;
-        state.models.carbon.pct = 10;
-        state.models.argon.pct = 10;
-      } else if (preset === 'neon_hydrogen') {
-        state.models.hydrogen.pct = 60;
-        state.models.neon.pct = 40;
-        state.models.carbon.pct = 0;
-        state.models.argon.pct = 0;
-      } else if (preset === 'long_ga') {
-        state.models.hydrogen.pct = 80;
-        state.models.neon.pct = 0;
-        state.models.carbon.pct = 0;
-        state.models.argon.pct = 20;
-      }
+    function applyEqualModelMix() {
+      MODEL_KEYS.forEach(k => {
+        state.models[k].pct = 25;
+        state.models[k].locked = false;
+      });
       syncModelMixInputs();
       triggerWizardNudge();
       renderAll();
@@ -2728,6 +2814,10 @@
         { id: 'mixSliderNeon', val: state.models.neon.pct, min: 0, max: 100, color: '#06b6d4' },
         { id: 'mixSliderCarbon', val: state.models.carbon.pct, min: 0, max: 100, color: '#f59e0b' },
         { id: 'mixSliderArgon', val: state.models.argon.pct, min: 0, max: 100, color: '#a855f7' },
+        { id: 'cardMixSliderHydrogen', val: state.models.hydrogen.pct, min: 0, max: 100, color: '#4285F4' },
+        { id: 'cardMixSliderNeon', val: state.models.neon.pct, min: 0, max: 100, color: '#06b6d4' },
+        { id: 'cardMixSliderCarbon', val: state.models.carbon.pct, min: 0, max: 100, color: '#f59e0b' },
+        { id: 'cardMixSliderArgon', val: state.models.argon.pct, min: 0, max: 100, color: '#a855f7' },
         { id: 'hydrogenDiscountSlider', val: state.models.hydrogen.discountPct, min: 0, max: 90, color: '#4285F4' },
         { id: 'neonDiscountSlider', val: state.models.neon.discountPct, min: 0, max: 90, color: '#06b6d4' },
         { id: 'carbonDiscountSlider', val: state.models.carbon.discountPct, min: 0, max: 90, color: '#f59e0b' },
